@@ -1,11 +1,12 @@
 const mongoose = require('mongoose');
+
 const Schema = mongoose.Schema;
 
 const category = new Schema({
     nameCategory:{type:String},
-    listChildItemsCategory:{
-        type:Array
-    }
+    iconCategory:{type:String},
+    listCategory:{type:Array,default:[]},
+    slug:{type:String},
 },{
     timestamps:true,
 })

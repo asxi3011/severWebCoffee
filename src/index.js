@@ -11,7 +11,9 @@ app.get('/', function (req, res) {
 })
 app.use(express.urlencoded({extended: true}))
 app.use(express.json());
-route(app);
+app.set('views',(path.join(__dirname,'resources/views')));
+app.use(express.static(path.join(__dirname, 'public')));
+
 const db = require('./config/db');
 db.connect();
 
@@ -19,8 +21,7 @@ app.engine('.hbs', exphbs(
   {extname:".hbs"}
 ));
 app.set('view engine', '.hbs');
-app.set('views',(path.join(__dirname,'resources/views')));
-app.use(express.static(path.join(__dirname, 'public')));
+route(app);
 app.listen(3000, () => {
   console.log(`Example app listening at http://localhost:3000`)
 })
