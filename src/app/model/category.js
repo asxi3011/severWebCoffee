@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 const category = new Schema({
     nameCategory:{type:String},
     iconCategory:{type:String},
-    listCategory:{type:Array,default:[]},
+    listCategory:{type:Array},
     slug:{type:String},
 },{
     timestamps:true,

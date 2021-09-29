@@ -1,11 +1,12 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-mongoose.plugin(slug);
+
 const itemCategory = new Schema({
     nameItemCategory:{type:String},
-    listChild:{
+    listProduct:{
         type:Array
-    }
+    },
+    slug:{type:String},
 },{
     timestamps:true,
 })

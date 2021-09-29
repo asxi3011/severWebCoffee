@@ -1,32 +1,37 @@
 <div class="container pd-bd">
     <h1>Danh Sách Category</h1>
-<form method="POST" action="updateCategory">
+<form method="POST" name="frmStoreItemCategory" action="storeItemCategory">
   <div id="appendLineAddCategory">
     <div class="mb-3">
       
-    <select name="nameCategory" class="form-control" id="slc_choose_category" required>
+    <select name="idCategory" class="form-control" id="slc_choose_category" required>
         <option value="">-Chọn category-</option>
         {{#each data}}
-        <option value="{{this.nameCategory}}">{{this.nameCategory}}</option>
+        <option value="{{this._id}}">{{this.nameCategory}}</option>
         {{/each}}
     </select>
    </div>
 
     <div class="mb-3">
     <h3  class="form-label">Danh sách các mục con</h3>
+      
       <div id='appendContentListChild'>
-    
+        
+           
+        
       </div>
-     
+    
+        
    </div>
   </div>
   <div class="mb-3 btn btn-success  w-100" id="btn_ThemLine_Category">
         +
   </div>
 
-  <button type="submit" class="btn btn-primary" >Lưu</button>
+  <button type="submit" id="btn_submit_Child" class="btn btn-primary" disabled>Lưu</button>
 
 </form>
+<form method="POST" action="12" name="frmUpdateCategory"></form>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
@@ -35,21 +40,31 @@
       var element_line_category = $('#appendLineAddCategory');
       var elemt_select_category = $('#slc_choose_category');
       var element_line_listChild = $('#appendContentListChild');
-      
+      var frmStoreItemCategory = document.forms['frmStoreItemCategory'];
+      var frmUpdateCategory = document.forms['frmUpdateCategory'];
+      var btn_submit_Child = $('#btn_submit_Child');
       var countElemet = 0;
        
         btnThemLine.on('click',function(){
+         
+        
           if(elemt_select_category.val()){
-             countElemet++;
-          console.log(countElemet);
+        
+          countElemet++;
+
           var name ='listCategory';
         element_line_category.append(renderLine(countElemet,name))
         var btn_of_line = $(`.btn-remove-Categroy-line-${countElemet}`);
          var parent_btn_of_line = $(`.number-element-${countElemet}`);
+          var element_count_listChild = document.querySelectorAll('.input-child-category')
+          toggleDisabledWithLength(element_count_listChild.length,btn_submit_Child);
         btn_of_line.on('click',function(){
           parent_btn_of_line.remove();
-       
+            var element_count_listChild = document.querySelectorAll('.input-child-category')
+             toggleDisabledWithLength(element_count_listChild.length,btn_submit_Child);
         })
+          
+          
         }
         else{
           alert('Vui lòng chọn category')
@@ -59,25 +74,36 @@
         })
   
       elemt_select_category.change(function(){
-          if(elemt_select_category.val()){
-          axios.get('getChildCategory', {
-            nameCategory: elemt_select_category.val(),
-          })
-          .then(function (response) {
-            const childCategory = response.data;
-            var htmlListChild = [];
-            var name='listCategory';
-            childCategory.forEach(element=>{
-              htmlListChild.push(renderList(element,name))
-            }) 
-           
-              element_line_listChild.html(htmlListChild.join('')) ;
-          })
+          if(elemt_select_category.val() != "")
+          {
+                var id =elemt_select_category.val();
+          const item = getListCategory(id);
+          item.then(data=>{
+            
+           var dulieu = data.data;
+           var test = [];
+           dulieu.forEach(element=>{
+             test.push(renderList(element,'nameCategory'));
+           })
+           element_line_listChild.html(test);
+        
+          
+            
+              })
           }
-      })
       
+      })
+     
 
-  
+    async function getListCategory(id){
+      try{
+        const reponse = await axios.get(`getItemCategory/${id}`)
+        return reponse
+      }  
+      catch (error){
+        console.log(error);
+      }
+    }
   })
 
  

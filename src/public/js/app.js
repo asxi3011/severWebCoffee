@@ -1,7 +1,7 @@
 function renderList(listItem,name){
     return `
     <div class="d-flex gap-3 align-items-center mt-3">
-   <input name="${name}" type="text" class="form-control" value=${listItem} disabled>
+   <input name="${name}" type="text" class="form-control" value="${listItem}" disabled>
    <div class="btn btn-danger">Xoá</div>
    <div class="btn btn-warning">Sửa</div>
    </div> `
@@ -10,7 +10,7 @@ function renderList(listItem,name){
     return `<div class="mb-3 number-element-${index}">
       <label  class="form-label">Tên category con</label>
       <div class="d-flex gap-3 align-items-center">
-      <input name="${name}" type="text" class="form-control" required>
+      <input name="${name}" type="text" class="form-control input-child-category" required>
       <div  class="btn-remove-Categroy-line-${index} btn btn-danger rounded-circle fs-normal">X</div>
       </div >
     </div>`
@@ -39,7 +39,7 @@ function renderList(listItem,name){
         btnDisable.removeAttr('disabled','disabled')
      }
   }
-  function checkboxValidation(ChkAll,checkboxName,ChkItem,btnDisabled){
+  function checkboxValidation(ChkAll,checkboxName,ChkItem,btnDisabled   ){
    // event check box all
       
       ChkAll.change(function(){

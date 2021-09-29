@@ -17,14 +17,17 @@ router.delete('/Category/bin/deleteOutBinCategory/:id',me.deleteOutBinCategory);
 router.post('/Category/bin/optionServiceBin',me.optionServiceBin);
 //pageAddCategory
 router.get('/Category',me.Category);
+router.get('/Category/edit/:id',me.editCategory);
 router.post('/storeCategory',me.storeCategory)
 router.post('/updateCategory',me.updateCategory)
 router.delete('/removeCategory/:id',me.removeCategory)
 router.delete('/removeManyCategory',me.removeManyCategory)
 
+//Item Category
 router.get('/addProduct',me.addProduct);
-router.get('/getChildCategory',me.getChildCategory)
+router.get('/getItemCategory/:id',me.getItemCategory)
 router.get('/addChildCategory',me.addChildCategory);
+router.post('/storeItemCategory',me.storeItemCategory);
 
 
 

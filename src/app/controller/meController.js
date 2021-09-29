@@ -1,8 +1,8 @@
 
 const Category = require('../model/category')
-
+const ItemCategory = require('../model/itemCategory')
 class meControllers{
-    // Category > ChildCategory > Product
+    // Category > Item Category > Product
     
     //Bin
     binCategory(req,res,next){
@@ -16,7 +16,7 @@ class meControllers{
                 return element;
         });
           
-            res.render('bin',{layout:'main_NoHD',data:newData})
+            res.render('bin',{data:newData})
         })
         .catch((err)=>{
             res.send(err);
@@ -74,11 +74,11 @@ class meControllers{
         }
 
     }
-    //Page Add Category 
+    //Page Category 
     Category(req,res,next){  
         Promise.all([Category.find().lean(),Category.countDocumentsDeleted()])
         .then(([data,numTrash])=>{
-            res.render('Category',{layout:'main_NoHD',data:data,numTrash:numTrash});
+            res.render('Category',{data:data,numTrash:numTrash});
         })
     }
     storeCategory(req,res,next){    
@@ -148,13 +148,24 @@ class meControllers{
          
            
     }
-    updateCategory(req,res,next){
+    editCategory(req,res,next){
         
-        Category.updateOne({nameCategory:req.body.nameCategory},{$addToSet:{listCategory: req.body.listCategory }})
+        var id = req.params.id;
+        Category.findById({_id:id})
+        .lean()
+        .then(data=>{
+            res.render('edit',{data:data});
+        })
+       
+       
+    }
+    updateCategory(req,res,next){
+        Category.updateMany({_id:req.body.idCategory},{$addToSet:{listCategory: req.body.listCategory}})
         .lean()
         .then(data=>{
             res.json(data);
         })
+     
     }
     removeCategory(req,res,next){
         Category.delete({_id:req.params.id})
@@ -177,23 +188,102 @@ class meControllers{
             res.render('SomeThingWrong');
         })
     }
+
+    
     //Page Add Child Category
     addChildCategory(req,res,next){
         Category.find()
         .lean()
         .then(data=>{
             //res.json(data)
-            res.render('addChildCategory',{layout:'main_NoHD',data:data})
+            res.render('addChildCategory',{data:data})
         })
    
     }
-    getChildCategory(req,res,next){
-        Category.findOne({nameCategory:req.params.nameCategory})
+    getItemCategory(req,res,next){
+        Category.findOne({_id:req.params.id})
         .lean()
         .then(reponse=>{
-            res.json(reponse.listCategory);
+            var idItemCategory = reponse.listCategory;
+            ItemCategory.find({_id:{$in:idItemCategory}})
+            .lean()
+            .then(data=>{
+                var nameItem = data.map(element=>element.nameItemCategory);
+                res.json(nameItem);
+            })
+           
         })
         .catch(next)
+    }
+    storeItemCategory(req,res,next){
+        var itemCategory = req.body.listCategory;
+       var idCategory = req.body.idCategory;
+        ItemCategory.find({nameItemCategory:itemCategory},function(err,data){
+            if(data.length==0){
+                if(Array.isArray(itemCategory))
+                {
+                    try{
+                        var ArrayCategory = [];
+                        itemCategory.forEach((element,index) => {
+                            var slug = ChangeToSlug(element)
+                            var nameLowerCase = element.toLowerCase();
+                           
+                            var newItemCategory = new ItemCategory({
+                                nameItemCategory:nameLowerCase,
+                            slug:slug,
+                            })
+                            ArrayCategory.push(newItemCategory);
+                    
+                        });
+                        ItemCategory.insertMany(ArrayCategory,function(err,data){
+                            if(err){
+                                res.json('save failed')
+                            }else{
+                                const arrayIdItem =data.map(element=>element._id);
+                                Category.findByIdAndUpdate({_id:idCategory},{$addToSet:{listCategory:arrayIdItem}})
+                                .lean()
+                                .then(data=>{
+                                    res.redirect('back');
+                                })
+                                
+                               
+                            }
+                        });
+                        
+                    }
+                    catch{
+                        res.json('Save fail. Try again !')
+                    }
+                }
+                else
+                {
+                    var slug = ChangeToSlug(itemCategory)
+                    var newItemCategory = new ItemCategory({
+                        nameItemCategory: itemCategory,
+                     
+                        slug:slug,
+                    })
+                    newItemCategory.save(function(err,data){
+                        if(err){
+                            res.json('save fail : ' +err)
+                        }else{
+                         
+                            Category.findByIdAndUpdate({_id:req.body.idCategory},{$addToSet:{listCategory: data._id}})
+                            .lean()
+                            .then(data=>{
+                                res.redirect('back');
+                            })
+                            
+                        }
+                    });
+                } 
+            }
+            else{
+                res.json('loi trung ten');
+            }
+           
+        })
+         
     }
     //Page Add Product 
     addProduct(req,res,next){

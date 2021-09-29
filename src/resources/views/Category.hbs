@@ -1,3 +1,5 @@
+
+
 <div class="container pd-bd">
     <h1>Category</h1>
 <div>
@@ -28,9 +30,8 @@
         <div class="form-check">
           <input class="form-check-input" type="checkbox" value="{{this._id}}" name="select_Category[]">
         </div>
-        
         <div class="btn btn-danger my-2" data-bs-toggle="modal" data-bs-target="#ModalDelete" data-id="{{this._id}}">Xoá</div>
-        <div class="btn btn-warning my-2">Sửa</div>
+        <button class="btn btn-warning my-2 btn_edit_category" type="button" value="{{this._id}}">Sửa</button>
        
       </div>
       {{/each}}
@@ -93,7 +94,7 @@
     </div>
   </div>
 </div>
-
+<form name="frmCategoryEdit" method="GET"></form>
 <script>
   document.addEventListener('DOMContentLoaded',function(){
       
@@ -114,8 +115,8 @@
       var formRemoveItemCategory = document.forms['removeItemCategory'];
       var removeManyCategory = document.forms['removeManyCategory'];
       var storeCategory = document.forms['storeCategory'];
-
-
+      var btn_edit_category = $('.btn_edit_category');
+      var frmCategoryEdit = document.forms['frmCategoryEdit'];
 
     
       btnSubmit.on('click',function(e){
@@ -143,7 +144,6 @@
              nameTrung.forEach(element=>{
                arrayNameTrung.push(element.nameCategory);
              })
-            
             alert(`Category Name : ${arrayNameTrung} đã có trong hệ thống`)
           }else{
               location.reload();
@@ -193,6 +193,11 @@
               }
             })
 
+            btn_edit_category.on('click',function(e){
+              var id = e.target.value;
+                frmCategoryEdit.action = `category/edit/${id}`;
+                frmCategoryEdit.submit();
+            })
             //Checkbox Valdation
             checkboxValidation(chkCheckAll,checkboxName,CategoryItemcheckbox,btn_Remove_Many);
              

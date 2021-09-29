@@ -1,0 +1,31 @@
+ {{!-- {{#if data}} --}}
+<div class="container pd-bd">
+      <form method="POST" action="bin/optionServiceBin">
+    <div class="d-flex my-2 align-items-center">
+        <div>
+            <a href="/me/category"><i class="fas fa-chevron-left"></i>Quay lại</a>
+        </div>
+    </div>
+ 
+  <div id='appendListCategory'>
+      Thông tin chi tiết
+      {{#with data}}
+      <div class="my-3 d-flex align-items-center gap-3">
+        <input name="nameCategory" type="text" value="{{nameCategory}}" class="form-control" >
+        <input class="form-control" name="chkItemCategoryDeleted[]" type="text" value="{{iconCategory}}" >
+        <div class="form-check">
+          
+         
+        </div>
+        <button type="submit" class="btn btn-primary my-2 btn-restore" >Lưu</button>
+       
+      </div>
+      {{/with}}
+     
+    
+  </div>
+  </form>
+</div>
+ {{!-- {{else}}
+           {{>Pagenotfound}}
+{{/if}} --}}
