@@ -1,0 +1,205 @@
+<div class="container pd-bd">
+    <h1>Category</h1>
+<div>
+     
+    <div class="d-flex my-2 align-items-center justify-content-between">
+      <a href="category/bin" class="a-none btn btn-danger">
+          <i class="fas fa-trash"></i> Thùng rác 
+          {{#if numTrash}}
+          ({{numTrash}})
+          {{/if}}
+      </a>
+      <div class="d-flex gap-3"> 
+      <span class="d-flex align-items-center gap-2">
+      <input class="form-check-input" type="checkbox" value="" id="chkCheckAll"> <span>SelectAll</span> 
+      </span>
+      <button type="button" class="btn btn-danger" id="btn_Remove_Many"  data-bs-toggle="modal" data-bs-target="#ModalDeleteMany"disabled>
+          Xoá các mục được chọn
+      </button>
+      </div>
+    </div>
+    
+  <form method="POST" name="removeManyCategory" action="removeManyCategory?_method=DELETE">
+  <div id='appendListCategory'>
+    {{#if data}}
+      {{#each data}}
+      <div class="my-3 d-flex align-items-center gap-3">
+        <input name="nameCategory" type="text" value="{{nameCategory}}" class="form-control name-Already" disabled>
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" value="{{this._id}}" name="select_Category[]">
+        </div>
+        
+        <div class="btn btn-danger my-2" data-bs-toggle="modal" data-bs-target="#ModalDelete" data-id="{{this._id}}">Xoá</div>
+        <div class="btn btn-warning my-2">Sửa</div>
+       
+      </div>
+      {{/each}}
+      {{else}}
+           {{>empty}}
+    {{/if}}
+  </div>
+  </form>
+  <form method="POST" action="storeCategory">
+  <div id="appendLineAddCategory">
+  
+  </div>
+  
+  <div class="btn btn-success mb-3 w-100 fw-bold fs-4" id="btn_ThemLine_Category">
+      +
+  </div>
+  <div class="d-flex flex-row-reverse">
+  <button type="submit" id="btn_submit_Category" class="btn btn-primary" disabled>Lưu</button>
+  </div>
+  </form>
+</div>
+
+<form name="removeItemCategory" method="POST" ></form>
+</div>
+
+<div class="modal fade" id="ModalDelete" tabindex="-1" aria-labelledby="TitleModalDelete" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="TitleModalDelete">Thông báo</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Bạn muốn xoá file này ?
+        <div class="fs-normal text-danger"> (Các dữ liệu con bên trong sẽ biến mất.)</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Huỷ bỏ</button>
+        <button type="button" class="btn btn-danger del-category" >Xoá </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="ModalDeleteMany" tabindex="-1" aria-labelledby="TitleModalDeleteMany" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-danger" id="TitleModalDeleteMany">Thông báo</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Bạn muốn xoá những file này ?
+        <div class="fs-normal text-danger"> (Các dữ liệu con bên trong sẽ biến mất.)</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Huỷ bỏ</button>
+        <button type="button" class="btn btn-danger del-many-category" >Xoá Tất Cả</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded',function(){
+      
+      
+      // Khai báo biến
+      var btnThemLine = $('#btn_ThemLine_Category')
+      var element_line_category = $('#appendLineAddCategory');
+       var CategoryItemcheckbox = $('input[name="select_Category[]"]');
+       var btn_Remove_Many = $('#btn_Remove_Many')
+       var chkCheckAll = $('#chkCheckAll');
+      var btnSubmit =$('#btn_submit_Category');
+      var ModalDelete = document.getElementById('ModalDelete');
+      var ModalDeleteMany = document.getElementById('ModalDeleteMany');
+      var countElemet = 0;
+      var name ='nameCategory';
+      var icon ='iconCategory';
+      var checkboxName = 'select_Category[]';
+      var formRemoveItemCategory = document.forms['removeItemCategory'];
+      var removeManyCategory = document.forms['removeManyCategory'];
+      var storeCategory = document.forms['storeCategory'];
+
+
+
+    
+      btnSubmit.on('click',function(e){
+        e.preventDefault();
+        var array = [];
+        var arrayIcon = [];
+        var inputName = document.querySelectorAll('div#appendLineAddCategory input[name="nameCategory"]');
+         var inputicon = document.querySelectorAll('div#appendLineAddCategory input[name="iconCategory"]');
+        for (let i = 0; i < inputName.length; i++) {
+          array.push(inputName[i].value);
+          arrayIcon.push(inputicon[i].value)
+        }
+
+        axios.post('storeCategory', {
+          nameCategory:array,
+          iconCategory:arrayIcon,
+        })
+        .then(function (response) {
+          var kq = response.data;
+          console.log(kq.kq);
+         
+          if(kq.kq===0){
+            var nameTrung=kq.dataErr;
+            var arrayNameTrung =[];
+             nameTrung.forEach(element=>{
+               arrayNameTrung.push(element.nameCategory);
+             })
+            
+            alert(`Category Name : ${arrayNameTrung} đã có trong hệ thống`)
+          }else{
+              location.reload();
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        }); 
+        
+      })
+        btnThemLine.on('click',function(){
+          countElemet++;
+          element_line_category.append(renderLineWithIcon(countElemet,name,icon))
+          var btn_of_line = $(`.btn-remove-Categroy-line-${countElemet}`); //btn đỏ của từng dòng
+          var parent_btn_of_line = $(`.number-element-${countElemet}`);  //div cha của btn đỏ
+          var elementChildNodeAppendLine =element_line_category.children().length; //đếm length các phẩn tử con của id "appendLineAddCategory"
+          toggleDisabledWithLength(elementChildNodeAppendLine,btnSubmit);  //Vô hiệu hoá btn Lưu khi ấn nút thêm line xanh lá
+          btn_of_line.on('click',function(){
+              parent_btn_of_line.remove();
+              //Vô hiệu hoá btn Lưu khi ấn nút xoá line đỏ
+              var elementChildNodeAppendLine =element_line_category.children().length;
+              toggleDisabledWithLength(elementChildNodeAppendLine,btnSubmit);
+          })
+        })
+          //Show Modal Delete
+          ModalDelete.addEventListener('show.bs.modal', function (event) {
+            // Button that triggered the modal  
+             
+             var button = event.relatedTarget;
+              var idCategory = button.getAttribute('data-id')
+            // Extract info from data-bs-* attributes
+              var delCategory=document.querySelector('.del-category');
+         
+              delCategory.onclick =function(){
+                formRemoveItemCategory.action =`removeCategory/${idCategory}?_method=DELETE`;
+                formRemoveItemCategory.submit();
+              }
+            })
+            //Show Modal DeleteMany
+             ModalDeleteMany.addEventListener('show.bs.modal', function (event) {
+            // Button that triggered the modal  
+             var button = event.relatedTarget;
+               var delCategory=document.querySelector('.del-many-category');
+              delCategory.onclick =function(){
+                removeManyCategory.action =`removeManyCategory?_method=DELETE`;
+                removeManyCategory.submit();
+              }
+            })
+
+            //Checkbox Valdation
+            checkboxValidation(chkCheckAll,checkboxName,CategoryItemcheckbox,btn_Remove_Many);
+             
+     
+
+    
+})
+
+</script>
+

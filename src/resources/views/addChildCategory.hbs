@@ -60,7 +60,7 @@
   
       elemt_select_category.change(function(){
           if(elemt_select_category.val()){
-          axios.post('getChildCategory', {
+          axios.get('getChildCategory', {
             nameCategory: elemt_select_category.val(),
           })
           .then(function (response) {

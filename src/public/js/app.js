@@ -6,7 +6,6 @@ function renderList(listItem,name){
    <div class="btn btn-warning">Sửa</div>
    </div> `
   }
-
   function renderLine(index,name){
     return `<div class="mb-3 number-element-${index}">
       <label  class="form-label">Tên category con</label>
@@ -32,7 +31,6 @@ function renderList(listItem,name){
                 </div>
             </div>`
   }
-
   function toggleDisabledWithLength(conditionsLength,btnDisable){
      if(conditionsLength<=0){
         btnDisable.attr('disabled','disabled')
@@ -41,3 +39,21 @@ function renderList(listItem,name){
         btnDisable.removeAttr('disabled','disabled')
      }
   }
+  function checkboxValidation(ChkAll,checkboxName,ChkItem,btnDisabled){
+   // event check box all
+      
+      ChkAll.change(function(){
+      var isChecked = $(this).prop('checked');
+      ChkItem.prop('checked',isChecked);
+      var lengthChkChecked = $(`input[name="${checkboxName}"]:checked`).length;
+      toggleDisabledWithLength(lengthChkChecked,btnDisabled);
+      })
+      // event Child check box
+      ChkItem.change(function(){
+      var lengthChkChecked = $(`input[name="${checkboxName}"]:checked`).length;
+      var isCheckAll = ChkItem.length === lengthChkChecked;
+      ChkAll.prop('checked',isCheckAll);
+      toggleDisabledWithLength(lengthChkChecked,btnDisabled);
+      })
+      
+}
