@@ -1,0 +1,32 @@
+
+ {{!-- {{#if data}} --}}
+<div class="container pd-admin">
+      <form method="POST" action="/me/updateCategory?_method=PUT">
+    <div class="d-flex my-2 align-items-center">  
+        <div>
+            <a href="/me/category"><i class="fas fa-chevron-left"></i>Quay lại</a>
+        </div>
+    </div>
+ 
+  <div id='appendListCategory'>
+      Thông tin chi tiết
+      {{#with data}}
+      <div class="my-3 d-flex align-items-center gap-3">
+        <input name="nameCategory" type="text" value="{{nameCategory}}" class="form-control" >
+        <input class="form-control" name="iconCategory" type="text" value="{{iconCategory}}" >
+        <input name="idCategory" type="text" value="{{_id}}" hidden>
+        <button type="submit" class="btn btn-primary my-2 btn-restore" >Lưu</button>
+       
+      </div>
+      {{/with}}
+     
+    
+  </div>
+  </form>
+</div>
+<script>
+
+</script>
+ {{!-- {{else}}
+           {{>Pagenotfound}}
+{{/if}} --}}

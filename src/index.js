@@ -4,7 +4,8 @@ const path = require('path');
 const port = process.env.PORT; //heoroku port
 const route = require('./route/index.js')
 const methodOverride = require('method-override');
-
+const multer  = require('multer');
+const upload = multer({ dest: 'uploads/' })
 const app = express()
 
 app.get('/', function (req, res) {

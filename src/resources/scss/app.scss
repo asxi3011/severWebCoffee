@@ -17,6 +17,9 @@ body{
 .pd-bd{
     padding: 16px 20px;
 }
+.pd-admin{
+    padding: 16px 120px;
+}
 .pd-bd-y-0{
     padding: 0 20px;
 }
@@ -125,4 +128,12 @@ body{
 }
 .bg-unwhite{
     background-color: #f3f4f6;
+}
+
+.table-dashboard{
+    width: 22%;
+    height: 120px;
+    border-radius: 8px;
+    line-height: 120px;
+    font-size: 1.6rem;
 }

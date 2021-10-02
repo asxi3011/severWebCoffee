@@ -1,0 +1,194 @@
+<style>
+  .input_thongso_products{
+    border-radius: 8px;
+    outline: none;
+    border: 1px solid;
+    padding: 4px 8px;
+  }
+</style>
+
+<div class="container pd-admin">
+    <h1>Thêm sản phẩm</h1>
+<form method="POST" action="storeProduct" enctype="multipart/form-data">
+  <div class="mb-3">
+      <h3>Chọn category</h3>
+      <select name="Category" class="form-control" id="slc_choose_category" required>
+        <option value="">-Chọn category-</option>
+        {{#each dataCategory}}
+        <option value="{{this._id}}">{{this.nameCategory}}</option>
+        {{/each}}
+      </select>
+      <div id="notifycation_validation_slc_Category">
+        
+      </div>
+  </div>
+    <div class="mb-3">
+              <h3>Chọn item category</h3>
+       <select name="ItemCategory" class="form-control" id="slc_choose_Itemcategory" required disabled>
+       
+    </select>
+    </div>
+
+    
+  <div class="mb-3">
+    <label  class="form-label">Tên sản phẩm</label>
+     <input name="nameProduct" type="text" class="form-control" placeholder="VD: iphone 13" >
+  </div>
+  <div class="mb-3">
+    <label  class="form-label">Giá niêm yết</label>
+    <input name="PriceRoot" type="text" class="form-control" placeholder="VD: 23000 (đơn vị là VND)"  >
+  </div>
+  
+    <div class="mb-3">
+    <label  class="form-label">Chọn hình đại diện sản phẩm</label>
+    <div>
+    <input type="file" name="imageRepresent" required>
+    </div>
+    </div>
+    
+    <div class="mb-3">
+    <label  class="form-label">Phiên bản màu: </label>
+    
+    <div class="color-file mb-3 d-flex align-items-center gap-3">  
+      <div>
+        <input name="name_color" type="text" placeholder="Màu" required>
+      </div>
+      <div>
+         <input name="price_color" type="text" placeholder="Giá" required>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <span>Hình đính kèm: </span> 
+        <span> <input class=" col-form-label" type="file" name="listImageDetails" required></span>
+      </div>
+    </div>
+    <div id="appendInputColor">
+
+    </div>
+    
+    
+      <span class="btn btn-success mb-3" id="btn_ThemMau">
+                  Thêm màu
+     </span>
+    </div>
+ 
+ 
+  <div class="mb-3">
+          <div class="my-3">Trạng thái</div> <!--1.Hoạt động , Hết hàng , sắp  về-->
+       <select name="statusProduct" class="form-control" id="slc_choose_status" required>
+        <option value="active">Có sẵn</option>
+        <option value="soon">Sắp về</option>
+    </select>
+    </div>
+  <div class="mb-3">
+    <label  class="form-label">Mô tả</label>
+    <input type="text" class="form-control" >
+  </div>
+  <div class="mb-3">
+    <label  class="form-label">Thông số kỹ thuật</label>
+    <div class="row">
+       <div class="col-12 test-left">
+                 <div class="specifications-products">   
+                     <div class="title-specifications-products fw-bold">
+                         
+                     </div>
+                     <div class="content-specifications-products pd-bd" id="appenHTMLSpecification_products">
+                          
+                      
+                     </div>
+                      
+                </div>
+                <div class="btn btn-success mb-3 w-100 fw-bold fs-4" id="btn_ThemLine_Specification">
+                  +
+              </div>
+            </div>
+    </div>
+   
+  </div>
+ 
+  <button type="submit" class="btn btn-primary" id="btnSubmit" disabled>Submit</button>
+</form>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded',function(){
+      var elemt_select_category = $('#slc_choose_category');
+      var slc_select_Itemcategory = $('#slc_choose_Itemcategory');
+      var notifycation_validation_slc_Category =$('#notifycation_validation_slc_Category');
+      var appenHTMLSpecification_products = $('#appenHTMLSpecification_products');
+      var btnThemLine = $('#btn_ThemLine_Specification');
+      var btn_ThemMau = $('#btn_ThemMau');
+      var appendInputColor = $('#appendInputColor');
+      var countElemet = 0;
+      var countMauElement =0;
+      var btnSubmit = $('#btnSubmit');
+      elemt_select_category.change(function(){
+        loadDuLieu();
+      })
+    
+    btnThemLine.on('click',function(){
+
+          countElemet++;
+          console.log(123);
+          var title = 'titleSpecification';
+          var detail = 'detailSpecification'
+          appenHTMLSpecification_products.append(renderItemSpecifications(countElemet,title,detail));
+          
+          var btn_of_line = $(`.btn-remove-specification-line-${countElemet}`); //btn đỏ của từng dòng
+          var parent_btn_of_line = $(`.number-element-${countElemet}`);  //div cha của btn đỏ
+          var elementChildNodeAppendLine =appenHTMLSpecification_products.children().length; //đếm length các phẩn tử con của id "appendLineAddCategory"
+          toggleDisabledWithLength(elementChildNodeAppendLine,btnSubmit);  //Vô hiệu hoá btn Lưu khi ấn nút thêm line xanh lá
+          btn_of_line.on('click',function(){
+              parent_btn_of_line.remove();
+              //Vô hiệu hoá btn Lưu khi ấn nút xoá line đỏ
+              var elementChildNodeAppendLine =appenHTMLSpecification_products.children().length;
+              toggleDisabledWithLength(elementChildNodeAppendLine,btnSubmit);
+              
+          })
+          
+        })
+  btn_ThemMau.on('click',function(){
+    countMauElement++;
+    appendInputColor.append(renderMoreColor(countMauElement));
+    var btn_remove_color =$(`.btn-remove-color-${countMauElement}`);
+      var parent_btn_remove_color = $(`.color-file-${countMauElement}`);
+    btn_remove_color.on('click',function(){
+        parent_btn_remove_color.remove();
+    })
+  
+  
+  })
+    function loadDuLieu(){
+    if(elemt_select_category.val() != "")
+          {
+               
+              var id =elemt_select_category.val();
+              const item = getListCategory(id);
+              item.then(response=>{  
+               var Item = response.data.Item;
+              var htmlSlcItemCategory = renderOptionSelect(Item);
+              slc_select_Itemcategory.html(htmlSlcItemCategory);
+               slc_select_Itemcategory.removeAttr('disabled','disabled');
+               notifycation_validation_slc_Category.html(``);
+          })
+          }
+    else{
+       notifycation_validation_slc_Category.html(`<div class="text-danger">Vui lòng chọn category</div>`);
+       slc_select_Itemcategory.html("");
+       slc_select_Itemcategory.attr('disabled','disabled');
+
+    }
+      
+  }
+
+   async function getListCategory(id){
+      try{
+        const reponse = await axios.get(`getItemCategory/${id}`)
+        return reponse
+      }  
+      catch (error){
+        console.log(error);
+      }
+    }
+  })
+ 
+</script>

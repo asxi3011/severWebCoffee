@@ -15,20 +15,36 @@ router.get('/Category/bin',me.binCategory);
 router.put('/Category/bin/restoreCategory/:id',me.restoreCategory);
 router.delete('/Category/bin/deleteOutBinCategory/:id',me.deleteOutBinCategory);
 router.post('/Category/bin/optionServiceBin',me.optionServiceBin);
-//pageAddCategory
+//page Category
 router.get('/Category',me.Category);
 router.get('/Category/edit/:id',me.editCategory);
+router.put('/updateCategory',me.updateCategory) // doi sang method put
 router.post('/storeCategory',me.storeCategory)
-router.post('/updateCategory',me.updateCategory)
 router.delete('/removeCategory/:id',me.removeCategory)
 router.delete('/removeManyCategory',me.removeManyCategory)
 
 //Item Category
-router.get('/addProduct',me.addProduct);
 router.get('/getItemCategory/:id',me.getItemCategory)
-router.get('/addChildCategory',me.addChildCategory);
+router.get('/ItemCategory',me.ItemCategory);
+router.get('/ItemCategory/edit/:id',me.editItemCategory);
+router.put('/updateItemCategory',me.updateItemCategory) 
 router.post('/storeItemCategory',me.storeItemCategory);
+router.delete('/removeItemCategory/:id',me.removeItemCategory);
+router.delete('/removeManyItemCategory/',me.removeManyItemCategory);
 
+//Bin Item Category
+router.get('/:slugCategory/binItemCategory',me.binItemCategory);
+router.put('/:slugCategory/bin/restoreItemCategory/:id',me.restoreItemCategory);
+router.delete('/:slugCategory/bin/deleteOutBinItemCategory/:id',me.deleteOutBinItemCategory);
+router.post('/:slugCategory/bin/optionServiceBinItemCategory',me.optionServiceBinItemCategory);
+
+//Product
+router.get('/Product',me.Product);
+router.post('/storeProduct',me.storeProduct);
+
+
+//admin
+router.get('/dashboard',me.dashboard);
 
 
 module.exports = router; 
