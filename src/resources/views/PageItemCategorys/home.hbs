@@ -177,8 +177,13 @@
       })
     btn_submit_Child.on('click',function(e){
           e.preventDefault();
-          var valueListCategory = $('#appendLineAddCategory input[name="listCategory"]').serialize();
+          var nodeListCategory = document.querySelectorAll('#appendLineAddCategory input[name="listCategory"]');
+          var valueListCategory = [];
+          nodeListCategory.forEach(element=>{
+            valueListCategory.push(element.value);
+          })
         
+          console.log(valueListCategory);
           axios.post('storeItemCategory', {
             idCategory: elemt_select_category.val(),
             listCategory:valueListCategory ,
