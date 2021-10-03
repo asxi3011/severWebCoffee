@@ -353,13 +353,10 @@ class meControllers{
     storeItemCategory(req,res,next){
        var listRoot = req.body.listCategory;
        var idCategory = req.body.idCategory;
-       var CovertCategory = listRoot.replace(/listCategory=/g,"");
-       var testCategory = CovertCategory.replace(/%20/g," ");
-      var  itemCategory = testCategory.split('&');
-           ItemCategory.find({nameItemCategory:itemCategory},function(err,data){
+           ItemCategory.find({nameItemCategory:listRoot},function(err,data){
                     try{
                         var ArrayCategory = [];
-                        itemCategory.forEach((element,index) => {
+                        listRoot.forEach((element,index) => {
                             var slug = ChangeToSlug(element)
                             var nameNormalize = normalization(element);
                            
