@@ -1,5 +1,8 @@
 
 <div class="container pd-admin">
+    <div class="pd-bd-admin box-shadow-1 text-white bg-child-admin">
+
+   
     <h1>Thùng rác</h1>
      <form method="POST" action="bin/optionServiceBin">
     <div class="d-flex my-2 align-items-center justify-content-between">
@@ -25,20 +28,34 @@
  
   <div id='appendListCategory'>
     {{#if data}}
+      
+      <table class="table table-success table-striped my-3 align-middle text-center ">
+           <tr>
+              <th class="">STT</th>
+              <th class="">Tên Category</th>
+              <th class="">icon</th>
+              <th>Ngày xoá</th>
+              <th class=""></th>
+              <th class="">Thao tác</th> 
+            </tr>
       {{#each data}}
-      <div class="my-3 d-flex align-items-center gap-3">
-        <input name="nameCategory" type="text" value="{{nameCategory}}" class="form-control" disabled>
-           <input name="timeDeleted" type="text" value="{{this.date}}" class="form-control" disabled>
-        <div class="form-check">
-          <input class="form-check-input" name="chkItemCategoryDeleted[]" type="checkbox" value="{{this._id}}" >
-         
-        </div>
 
-        <div class="btn btn-danger my-2 fs-normal" data-bs-toggle="modal" data-bs-target="#ModalDelete" data-id="{{this._id}}">Xoá vĩnh viễn</div>
-        <button type="button" class="btn btn-success my-2 btn-restore" value="{{this._id}}" >Hồi phục</button>
-       
-      </div>
+            <tr>
+              <td class="">{{inc @index}}</td>
+              <td class="">{{nameCategory}}</td>
+              <td class="">{{this.iconCategory}}</td>
+              <td>{{this.date}}</td>
+              <td class=""> <input class="form-check-input" type="checkbox" value="{{this._id}}" name="chkItemCategoryDeleted[]"></td>
+              <td class="">
+                    <div class="btn btn-dark-custom my-2" data-bs-toggle="modal" data-bs-target="#ModalDelete" data-id="{{this._id}}">Xoá</div>
+                 <button class="btn btn-blue-custom my-2 btn-restore" type="button" value="{{this._id}}">Sửa</button>
+              </td> 
+            </tr>
+
+
       {{/each}}
+      </table>
+     
       {{else}}
            {{>empty}}
     {{/if}}
@@ -48,6 +65,7 @@
 
 
 <form name="removeItemCategory" method="POST" ></form>
+ </div>
 </div>
 
 <div class="modal fade" id="ModalDelete" tabindex="-1" aria-labelledby="TitleModal" aria-hidden="true">

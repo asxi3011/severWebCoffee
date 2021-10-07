@@ -1,27 +1,29 @@
-<style>
-  .input_thongso_products{
-    border-radius: 8px;
-    outline: none;
-    border: 1px solid;
-    padding: 4px 8px;
-  }
-</style>
 
 <div class="container pd-admin">
-    <h1>Thêm sản phẩm</h1>
-<form method="POST" action="storeProduct" enctype="multipart/form-data">
-  <div class="mb-3">
-      <h3>Chọn category</h3>
-      <select name="Category" class="form-control" id="slc_choose_category" required>
+   <div class="pd-bd-admin box-shadow-1 text-white bg-child-admin">
+
+<div>
+    <h3>chọn Category</h3>
+    <div class="d-flex my-2 align-items-center justify-content-between">
+      <a class="a-none btn btn-dark-custom" id="btn_Trash_Product">
+          <i class="fas fa-trash"></i> Thùng rác 
+         
+      </a>
+      <div class="d-flex gap-3"> 
+      <span class="d-flex align-items-center gap-2">
+      <input class="form-check-input" type="checkbox" value="" id="chkCheckAll"> <span>SelectAll</span> 
+      </span>
+      <button type="button" class="btn btn-danger" id="btn_Remove_Many"  data-bs-toggle="modal" data-bs-target="#ModalDeleteMany"disabled>
+          Xoá các mục được chọn
+      </button>
+      </div>
+    </div>
+    <select name="idCategory" class="form-control" id="slc_choose_category" required>
         <option value="">-Chọn category-</option>
         {{#each dataCategory}}
         <option value="{{this._id}}">{{this.nameCategory}}</option>
         {{/each}}
-      </select>
-      <div id="notifycation_validation_slc_Category">
-        
-      </div>
-  </div>
+    </select>
     <div class="mb-3">
               <h3>Chọn item category</h3>
        <select name="ItemCategory" class="form-control" id="slc_choose_Itemcategory" required disabled>
@@ -30,159 +32,215 @@
     </div>
 
     
-  <div class="mb-3">
-    <label  class="form-label">Tên sản phẩm</label>
-     <input name="nameProduct" type="text" class="form-control" placeholder="VD: iphone 13" >
-  </div>
-  <div class="mb-3">
-    <label  class="form-label">Giá niêm yết</label>
-    <input name="PriceRoot" type="text" class="form-control" placeholder="VD: 23000 (đơn vị là VND)"  >
-  </div>
-  
-    <div class="mb-3">
-    <label  class="form-label">Chọn hình đại diện sản phẩm</label>
-    <div>
-    <input type="file" name="imageRepresent" required>
-    </div>
-    </div>
+</div>
+<div>
     
-    <div class="mb-3">
-    <label  class="form-label">Phiên bản màu: </label>
-    
-    <div class="color-file mb-3 d-flex align-items-center gap-3">  
-      <div>
-        <input name="name_color" type="text" placeholder="Màu" required>
-      </div>
-      <div>
-         <input name="price_color" type="text" placeholder="Giá" required>
-      </div>
-      <div class="d-flex align-items-center gap-2">
-        <span>Hình đính kèm: </span> 
-        <span> <input class=" col-form-label" type="file" name="listImageDetails" required></span>
-      </div>
-    </div>
-    <div id="appendInputColor">
+</div>
+<form name="frmRemoveManyProduct" method="POST">
+<div id="appendTable">
 
-    </div>
-    
-    
-      <span class="btn btn-success mb-3" id="btn_ThemMau">
-                  Thêm màu
-     </span>
-    </div>
- 
- 
-  <div class="mb-3">
-          <div class="my-3">Trạng thái</div> <!--1.Hoạt động , Hết hàng , sắp  về-->
-       <select name="statusProduct" class="form-control" id="slc_choose_status" required>
-        <option value="active">Có sẵn</option>
-        <option value="soon">Sắp về</option>
-    </select>
-    </div>
-  <div class="mb-3">
-    <label  class="form-label">Mô tả</label>
-    <input type="text" class="form-control" >
-  </div>
-  <div class="mb-3">
-    <label  class="form-label">Thông số kỹ thuật</label>
-    <div class="row">
-       <div class="col-12 test-left">
-                 <div class="specifications-products">   
-                     <div class="title-specifications-products fw-bold">
-                         
-                     </div>
-                     <div class="content-specifications-products pd-bd" id="appenHTMLSpecification_products">
-                          
-                      
-                     </div>
-                      
-                </div>
-                <div class="btn btn-success mb-3 w-100 fw-bold fs-4" id="btn_ThemLine_Specification">
-                  +
-              </div>
-            </div>
-    </div>
-   
-  </div>
- 
-  <button type="submit" class="btn btn-primary" id="btnSubmit" disabled>Submit</button>
+</div>
 </form>
 </div>
+</div>
+<form name="frmRemoveProduct" method="POST"></form>
 
+<div class="modal fade" id="ModalDelete" tabindex="-1" aria-labelledby="TitleModalDelete" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="TitleModalDelete">Thông báo</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Bạn muốn xoá file này ?
+        <div class="fs-normal text-danger"> (Các dữ liệu con bên trong sẽ biến mất.)</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Huỷ bỏ</button>
+        <button type="button" class="btn btn-danger del-category" >Xoá </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="ModalDeleteMany" tabindex="-1" aria-labelledby="TitleModalDeleteMany" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-danger" id="TitleModalDeleteMany">Thông báo</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Bạn muốn xoá những file này ?
+        <div class="fs-normal text-danger"> (Các dữ liệu con bên trong sẽ biến mất.)</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Huỷ bỏ</button>
+        <button type="button" class="btn btn-danger del-many-category" >Xoá Tất Cả</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<form method="GET" name="renderEDIT"></form>
 <script>
   document.addEventListener('DOMContentLoaded',function(){
       var elemt_select_category = $('#slc_choose_category');
       var slc_select_Itemcategory = $('#slc_choose_Itemcategory');
       var notifycation_validation_slc_Category =$('#notifycation_validation_slc_Category');
       var appenHTMLSpecification_products = $('#appenHTMLSpecification_products');
+      var btn_Trash_Product = $('#btn_Trash_Product');
       var btnThemLine = $('#btn_ThemLine_Specification');
       var btn_ThemMau = $('#btn_ThemMau');
       var appendInputColor = $('#appendInputColor');
+      var appendTable =$('#appendTable');
       var countElemet = 0;
       var countMauElement =0;
       var btnSubmit = $('#btnSubmit');
+      var frmRemoveProduct = document.forms['frmRemoveProduct'];
+      var CategoryKey = 'SelectCategoryProduct'
+      var ItemSelectKey = 'SelectItemCategoryProduct'
+      var categorySelected = sessionStorage.getItem(CategoryKey);
+      var ItemCategorySelected = sessionStorage.getItem(ItemSelectKey);
+      var btn_Remove_Many = $('#btn_Remove_Many');
+     var renderEDIT = document.forms['renderEDIT'];
+      elemt_select_category.val(categorySelected);
+     
+      loadDuLieu();
+
       elemt_select_category.change(function(){
         loadDuLieu();
       })
-    
-    btnThemLine.on('click',function(){
+      
+      var ModalDelete = document.getElementById('ModalDelete')
+        ModalDelete.addEventListener('show.bs.modal', function (event) {
+        // Button that triggered the modal
+        var button = event.relatedTarget
+        // Extract info from data-bs-* attributes
+        var idProduct = button.getAttribute('data-idItemCategory')
+        var delCategory=document.querySelector('.del-category');
+         
+          delCategory.onclick =function(){
+            frmRemoveProduct.action = `removeProduct/${idProduct}?_method=DELETE`;
+            frmRemoveProduct.submit();
+          }
+      
+      })
 
-          countElemet++;
-          console.log(123);
-          var title = 'titleSpecification';
-          var detail = 'detailSpecification'
-          appenHTMLSpecification_products.append(renderItemSpecifications(countElemet,title,detail));
-          
-          var btn_of_line = $(`.btn-remove-specification-line-${countElemet}`); //btn đỏ của từng dòng
-          var parent_btn_of_line = $(`.number-element-${countElemet}`);  //div cha của btn đỏ
-          var elementChildNodeAppendLine =appenHTMLSpecification_products.children().length; //đếm length các phẩn tử con của id "appendLineAddCategory"
-          toggleDisabledWithLength(elementChildNodeAppendLine,btnSubmit);  //Vô hiệu hoá btn Lưu khi ấn nút thêm line xanh lá
-          btn_of_line.on('click',function(){
-              parent_btn_of_line.remove();
-              //Vô hiệu hoá btn Lưu khi ấn nút xoá line đỏ
-              var elementChildNodeAppendLine =appenHTMLSpecification_products.children().length;
-              toggleDisabledWithLength(elementChildNodeAppendLine,btnSubmit);
-              
-          })
-          
-        })
-  btn_ThemMau.on('click',function(){
-    countMauElement++;
-    appendInputColor.append(renderMoreColor(countMauElement));
-    var btn_remove_color =$(`.btn-remove-color-${countMauElement}`);
-      var parent_btn_remove_color = $(`.color-file-${countMauElement}`);
-    btn_remove_color.on('click',function(){
-        parent_btn_remove_color.remove();
-    })
-  
-  
-  })
+        var ModalDeleteMany = document.getElementById('ModalDeleteMany')
+      //Show Modal DeleteMany
+        ModalDeleteMany.addEventListener('show.bs.modal', function (event) {
+      // Button that triggered the modal  
+        var button = event.relatedTarget;
+          var delCategory=document.querySelector('.del-many-category');
+        delCategory.onclick =function(){
+            var frmRemoveManyItemCategory = document.forms['frmRemoveManyProduct'];
+             frmRemoveManyItemCategory.action=`removeManyProduct/?_method=DELETE`;
+             frmRemoveManyItemCategory.submit();
+        }
+
+        
+      })
+
     function loadDuLieu(){
     if(elemt_select_category.val() != "")
           {
-               
+            
+              sessionStorage.setItem(CategoryKey,elemt_select_category.val());
               var id =elemt_select_category.val();
+               
               const item = getListCategory(id);
               item.then(response=>{  
-               var Item = response.data.Item;
-              var htmlSlcItemCategory = renderOptionSelect(Item);
-              slc_select_Itemcategory.html(htmlSlcItemCategory);
-               slc_select_Itemcategory.removeAttr('disabled','disabled');
-               notifycation_validation_slc_Category.html(``);
+                  if(response.data.Item.length>0){
+                         
+                    var Item = response.data.Item;
+                    var htmlSlcItemCategory = renderOptionSelect(Item);
+                    slc_select_Itemcategory.html(htmlSlcItemCategory);
+                    
+                    slc_select_Itemcategory.removeAttr('disabled','disabled');
+                    notifycation_validation_slc_Category.html();
+                                 slc_select_Itemcategory.val(ItemCategorySelected);
+                               changeItemCategory();
+                              
+                        slc_select_Itemcategory.change(function(){
+                         
+                          changeItemCategory();
+                             
+                   })
+                   
+                  }
+                  else{
+                      //show modal vui lòng nhập category;(làm FE SAU)
+                      alert('Vui lòng nhập thêm category');
+                  }
+                
           })
           }
     else{
        notifycation_validation_slc_Category.html(`<div class="text-danger">Vui lòng chọn category</div>`);
-       slc_select_Itemcategory.html("");
+       slc_select_Itemcategory.html("");    
        slc_select_Itemcategory.attr('disabled','disabled');
 
     }
       
-  }
-
+    }
+    function changeItemCategory(){  
+        
+        var idItemCategory = slc_select_Itemcategory.val();
+        
+        if (idItemCategory != ""){
+             
+                sessionStorage.setItem(ItemSelectKey,slc_select_Itemcategory.val());
+             const product = getListProduct(idItemCategory);
+        product.then(reponsedata=>{
+            var product = reponsedata.data.dataProduct;
+            var htmlRowTable = [];
+              product.forEach((element,index)=>{
+                  var arrayColor = element.listColorDetails;
+                  var nameColor = arrayColor.map(element=>element.name);
+                
+                htmlRowTable.push(renderTableListProduct(index+1,element.nameProduct,element.imageRepresent,element.priceStandard,element.status,nameColor,element._id))
+              })
+              if(htmlRowTable != ""){
+                var htmlFullTable = renderTableProduct(htmlRowTable.join(" "));
+                appendTable.html(htmlFullTable);
+              btn_Trash_Product.attr('href',`binProduct/${idItemCategory}`);
+                              var chkCheckAll = $('#chkCheckAll');
+                              var checkboxName = 'chkName[]';
+                              var Itemcheckbox = $('input[name="chkName[]"]');
+                              checkboxValidation(chkCheckAll,checkboxName,Itemcheckbox,btn_Remove_Many);
+                               var btn_edit = $(".btn-edit-Item");
+                               btn_edit.on("click",function(e){
+                                  var idProduct = e.target.value;
+                                  renderEDIT.action = `editProduct/${idProduct}`
+                                  renderEDIT.submit();
+                               })
+              }
+              else{
+                  appendTable.html(empty);
+                      btn_Trash_Product.attr('href',`binProduct/${idItemCategory}`);
+              }
+        })
+        }     
+        else{
+          appendTable.html('<div class="text-danger">Vui lòng chọn item category</div')
+        }
+     }
+    
    async function getListCategory(id){
       try{
         const reponse = await axios.get(`getItemCategory/${id}`)
+        return reponse
+      }  
+      catch (error){
+        console.log(error);
+      }
+    }
+     async function getListProduct(id){
+      try{
+        const reponse = await axios.get(`getProduct/${id}`)
         return reponse
       }  
       catch (error){

@@ -16,11 +16,16 @@ app.use(express.json());
 app.set('views',(path.join(__dirname,'resources/views')));
 app.use(express.static(path.join(__dirname, 'public')));
 
+
 const db = require('./config/db');
 db.connect();
 
 app.engine('.hbs', exphbs(
-  {extname:".hbs"}
+  {extname:".hbs",
+  helpers: {
+    inc: function (index) { return index+1; },
+}}
+  
 ));
 
 

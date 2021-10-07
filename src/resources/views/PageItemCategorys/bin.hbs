@@ -1,4 +1,5 @@
 <div class="container pd-admin">
+   <div class="pd-bd-admin box-shadow-1 text-white bg-child-admin">
     <h1>Thùng rác</h1>
     
      <form method="POST" action=" bin/optionServiceBinItemCategory">
@@ -25,20 +26,33 @@
  
   <div id='appendListCategory'>
     {{#if data}}
+    
+     
+       <table class="table table-success table-striped my-3 align-middle text-center ">
+           <tr>
+              <th class="">STT</th>
+              <th class="">Tên nhãn hàng</th>
+              <th>Ngày xoá</th>
+              <th></th>
+              <th class="">Thao tác</th> 
+          </tr>
       {{#each data}}
-      <div class="my-3 d-flex align-items-center gap-3">
-        <input name="" type="text" value="{{this.name}}" class="form-control" disabled>
-           <input name="timeDeleted" type="text" value="{{timeDeleted}}" class="form-control" disabled>
-        <div class="form-check">
-          <input class="form-check-input" name="chkItemCategoryDeleted[]" type="checkbox" value="{{id}}" >
-         
-        </div>
 
-        <div class="btn btn-danger my-2 fs-normal" data-bs-toggle="modal" data-bs-target="#ModalDelete" data-id="{{this.id}}">Xoá vĩnh viễn</div>
-        <button type="button" class="btn btn-success my-2 btn-restore" value="{{this.id}}" >Hồi phục</button>
-       
-      </div>
+            <tr>
+              <td class="">{{inc @index}}</td>
+              <td class="">{{name}}</td>
+              <td class="">{{timeDeleted}}</td>
+            
+              <td class=""> <input class="form-check-input" type="checkbox" value="{{id}}" name="chkItemCategoryDeleted[]"></td>
+              <td class="">
+                  <div class="btn btn-dark-custom my-2 fs-normal" data-bs-toggle="modal" data-bs-target="#ModalDelete" data-id="{{this.id}}">Xoá vĩnh viễn</div>
+                 <button type="button" class="btn btn-success my-2 btn-restore" value="{{this.id}}" >Hồi phục</button>
+              </td> 
+            </tr>
+
+
       {{/each}}
+      </table>
       {{else}}
            {{>empty}}
     {{/if}}
@@ -49,7 +63,7 @@
 
 <form name="removeItemCategory" method="POST" ></form>
 </div>
-
+</div>
 <div class="modal fade" id="ModalDelete" tabindex="-1" aria-labelledby="TitleModal" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
