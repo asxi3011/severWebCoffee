@@ -1,6 +1,7 @@
 
 <div class="container pd-admin">
-    <h1>Danh Sách Category</h1>
+      <div class="pd-bd-admin box-shadow-1 text-white bg-child-admin">
+         <h1>Danh Sách Category</h1>
 
 
     <div class="mb-3">
@@ -18,7 +19,7 @@
    <div class="mb-3">
     <h3  class="form-label">Danh sách các mục con</h3>
       <div class="d-flex my-2 align-items-center justify-content-between">
-      <a class="a-none btn btn-danger" id="btn_Bin_itemCategory">
+      <a class="a-none btn btn-dark-custom" id="btn_Bin_itemCategory">
           <i class="fas fa-trash"></i> Thùng rác (<span id="numberTrashItemCategory">0</span>)
       </a>
       <div class="d-flex gap-3"> 
@@ -52,6 +53,8 @@
 
 
     <form action="" name="frmRemoveItemCategory" method="POST"></form>
+      </div>
+   
 
 </div>
 
@@ -215,22 +218,21 @@
               const item = getListCategory(id);
               item.then(response=>{  
               
-              
               var dulieu = response.data.Item;
               var slugCategory = response.data.slugCategory;
               var numTrash = response.data.numTrash;
               var htmlItemCategory = [];
               btn_Bin_itemCategory.attr('href',`${slugCategory}/binItemCategory`);
               element_numberTrashItemCategory.html(numTrash);
-              dulieu.forEach(element=>{
-                htmlItemCategory.push(renderList(element.name,'nameItemCategory',element.id));
+              dulieu.forEach((element,index)=>{
+                htmlItemCategory.push(renderList(index+1,element.name,element.id));
               })
                
               if(htmlItemCategory.length === 0){
                 element_line_listChild.html(empty());
               }
               else{
-                    element_line_listChild.html(htmlItemCategory);
+                    element_line_listChild.html(renderTableItemCategory(htmlItemCategory.join("")));
                      var chkCheckAll = $('#chkCheckAll');
                       var checkboxName = 'select_Category[]';
                       var CategoryItemcheckbox = $('input[name="select_Category[]"]');

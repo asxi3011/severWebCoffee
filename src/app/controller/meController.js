@@ -30,7 +30,7 @@ class meControllers{
             newData = newData.map(element=>{
                 element.date = element.deletedAt.toLocaleString("en-US")
                 return element;
-        });
+         });
           
             res.render('PageCategorys/bin',{layout:'admin',data:newData})
         })
@@ -343,12 +343,11 @@ class meControllers{
                 var Item = arrayNotDeleted.map(element=>{return{name:element.nameItemCategory,id:element._id}});
                 var slugCategory = reponse.slug;
                  res.json({Item:Item,slugCategory:slugCategory,numTrash:arrayDeleted.length});
-            
-              
             })
-           
         })
-        .catch(next)
+        .catch(err=>{
+            res.status(404).json({Msg:"Không có dữ liệu"});
+        })
     }
     storeItemCategory(req,res,next){
        var listRoot = req.body.listCategory;
@@ -440,12 +439,124 @@ class meControllers{
         .lean()
         .then(data=>{
 
-            res.render('PageProducts/home',{layout:'admin',dataCategory:data});
+            res.render('PageProducts/add',{layout:'admin',dataCategory:data});
         })
       
     }
+    getProduct(req,res,next){
+       var idItemCategory=req.params.id
+        ItemCategory.findOne({_id:idItemCategory})
+        .lean()
+        .then(data=>{
+            var listIdProduct = data.listProduct;
+            Product.find({_id:{$in:listIdProduct}})
+            .lean()
+            .then(dataProduct=>{
+                res.json({dataProduct:dataProduct});
+            });
+        
+          
+        })
+        
+    }
+    listProduct(req,res,next){
+        Category.find()
+        .lean()
+        .then(data=>{
+
+            res.render('PageProducts/home',{layout:'admin',dataCategory:data});
+        })
+    }
     storeProduct(req,res,next){
+     
+        cpUpload(req,res,function(err) {
+            
+            var ArrayFileImageRepresent = req.files['imageRepresent'];
+            var ArrayFileImageColor = req.files['listImageDetails'];
+            var ArrayNameColor = req.body.new_name_color;
+            var ArrayPrice = req.body.new_price_color;
+            var ArrayStatusColor = req.body.new_status_color;
+            var idCategory = req.body.Category;
+            var idItemCategory = req.body.ItemCategory;
+            var ArraytitleSpecification =req.body.titleSpecification;
+            var ArraydetailSpecification =req.body.detailSpecification;
+            var ArrayColorDetails = ArrayFileImageColor.map((element,index)=>{
+               
+                    var covertPrice = Number(ArrayPrice[index]);
+                    if(covertPrice === NaN){
+                        res.json('lỗi nhập chữ vào ô giá')
+                    }
+                    else{
+                     
+                        return {name:ArrayNameColor[index],price:covertPrice,status:ArrayStatusColor[index],image:element.filename}
+                    }
+               
+              
+            })
+            var listSpecifications = ArraytitleSpecification.map((element,index)=>{
+                return {title:element,details:ArraydetailSpecification[index]};
+            })
+             var nameProduct=normalization(req.body.nameProduct);
+            var slug = ChangeToSlug(nameProduct);
+            const newProduct = new Product({
+                nameProduct: nameProduct,
+                priceStandard:req.body.PriceRoot,
+                listColorDetails:ArrayColorDetails,
+                imageRepresent:ArrayFileImageRepresent[0].filename,
+                listSpecifications:listSpecifications,
+                status:req.body.statusProduct,
+                slug: slug,
+            })
+            
+            newProduct.save(function(err,data) {
+                if(err){
+                    res.json(err)
+                }else{
+                   
+                    ItemCategory.findOneAndUpdate({_id:idItemCategory},{$addToSet:{listProduct:data._id}},function(err) {
+                        if(err){
+                            res.json(err);
+                        }else{
+                            res.redirect('back');
+                        }
+                    })
+                    
+                }
+            })
+            
        
+          
+        })
+        
+        
+        
+        
+    }
+    removeProduct(req,res,next){
+    
+        Product.delete({_id:req.params.id})
+        .lean()
+        .then(data=>{
+            res.redirect('back');
+        })
+        .catch(()=>{
+            res.render('SomeThingWrong');
+        })
+    }
+
+    removeManyProduct(req,res,next){
+        
+        Product.delete({_id:{$in:req.body.chkName}})
+        .lean()
+        .then(data=>{
+            res.redirect('back');
+        })
+        .catch(()=>{
+            res.render('SomeThingWrong');
+        })
+    }
+
+    updateProduct(req,res,next){
         cpUpload(req,res,function(err) {
             
             var ArrayFileImageRepresent = req.files['imageRepresent'];
@@ -487,36 +598,138 @@ class meControllers{
             var slug = ChangeToSlug(nameProduct);
             const newProduct = new Product({
                 nameProduct: nameProduct,
-                priceStandard:normalization(req.body.PriceRoot),
+                priceStandard:req.body.PriceRoot,
                 listColorDetails:ArrayColorDetails,
                 imageRepresent:ArrayFileImageRepresent[0].filename,
                 listSpecifications:listSpecifications,
                 status:req.body.statusProduct,
                 slug: slug,
             })
-            
-            newProduct.save(function(err,data) {
-                if(err){
-                    res.json(err)
-                }else{
+            res.json(newProduct);
+        
+        
+        })
+    }
+    editProduct(req,res,next){
+        Product.findById({_id:req.params.id})
+        .lean()
+        .then(data=>{
+            var typeColor =data.listColorDetails;
+            var listSpecifications = data.listSpecifications;
+            res.render('PageProducts/edit',{layout:'admin',product:data,typeColor:typeColor,listSpecifications:listSpecifications})
+        })
+    }
+    //Bin Product
+    binProduct(req,res,next){
+
+        ItemCategory.findOne({_id:req.params.idItemCategory})
+        .lean()
+        .then(data=>{
+                var idProduct = data.listProduct;
+    
+                Product.findDeleted({_id:{$in:idProduct}})
+                .lean()
+                .then(dataDelete=>{
+                    var Item = dataDelete.map(element=>{
+                        element.dateDeleted = element.deletedAt.toLocaleString("en-US");
+                        return element;
+                    });
+                  
+                    res.render('PageProducts/bin',{layout:'admin',data:Item,idItemCategory:req.params.idItemCategory});
+                })
+                
+            })
+           
+        .catch(next)
+       // res.json(req.params.idItemCategory);
+    }
+    restoreProduct(req,res,next){
+        Product.restore({_id:req.params.id},function(err){
+            if(err){
+                res.json(err);
+            }
+            else{
+                res.redirect('back');
+            }
+        })
+        
+    }
+    deleteOutBinProduct(req,res,next){
+        var idItemCategory = req.params.idItemCategory;
+        var idProduct = req.params.id;
+       
+        Product.findByIdAndDelete({_id:idProduct})
+        .then(data=>{
+                ItemCategory.findOne({_id:idItemCategory})
+               .lean()
+              .then(reponse=>{
+                    var listProduct= reponse.listProduct;
+                
+                    //trả về mảng mới kh chưa mấy p tử đã xoá
+                    var newlist = listProduct.filter(element=> !idProduct.includes(element.toString()));
                    
-                    ItemCategory.findOneAndUpdate({_id:idItemCategory},{$addToSet:{listProduct:data._id}},function(err) {
+                    ItemCategory.updateOne({_id:idItemCategory},{$set:{listProduct:newlist}},function(err){
                         if(err){
                             res.json(err);
-                        }else{
+                        }
+                        else{
                             res.redirect('back');
                         }
                     })
                     
-                }
-            })
-            
-          
+                     
+                })
+               
         })
-       
-          
+        .catch(next);
         
     }
+    optionServiceBinProduct(req,res,next){
+        var caseAction = req.body.slc_action_bin;
+        var groupId = req.body.chkName;
+        var idItemCategory =req.body.idItemCategory;
+        if(caseAction ==='delete'){
+            Product.deleteMany({_id:{$in:groupId}})
+            .then(data=>{
+                  
+                    ItemCategory.findOne({_id:idItemCategory})
+                   .lean()
+                  .then(reponse=>{
+                        var listProduct= reponse.listProduct;
+                    
+                        //trả về mảng mới kh chưa mấy p tử đã xoá
+                        var newlist = listProduct.filter(element=> !groupId.includes(element.toString()));
+                        ItemCategory.updateOne({_id:idItemCategory},{$set:{listProduct:newlist}},function(err){
+                            if(err){
+                                res.json(err);
+                            }
+                            else{
+                                res.redirect('back');
+                            }
+                        })
+                        
+                         
+                    })
+                   
+            })
+            .catch(next);
+    
+        }
+        else if (caseAction =='restore'){
+            Product.restore({_id:{$in:groupId}},function(err){
+                if(err){
+                    res.json(err);
+                }
+                else{
+                    res.redirect('back');
+                }
+            })
+        }
+        else{
+            res.render('Pagenotfound');
+        }
+    }
+   
     dashboard(req,res,next){
       
             res.render('dashboard',{layout:'admin'});

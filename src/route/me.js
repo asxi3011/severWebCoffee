@@ -38,10 +38,22 @@ router.put('/:slugCategory/bin/restoreItemCategory/:id',me.restoreItemCategory);
 router.delete('/:slugCategory/bin/deleteOutBinItemCategory/:id',me.deleteOutBinItemCategory);
 router.post('/:slugCategory/bin/optionServiceBinItemCategory',me.optionServiceBinItemCategory);
 
+
+
 //Product
 router.get('/Product',me.Product);
+router.get('/getProduct/:id',me.getProduct);
+router.get('/editProduct/:id',me.editProduct);
+router.get('/listProduct',me.listProduct);
+router.put('/updateProduct',me.updateProduct) 
 router.post('/storeProduct',me.storeProduct);
-
+router.delete('/removeProduct/:id',me.removeProduct);
+router.delete('/removeManyProduct',me.removeManyProduct);
+//Bin Product
+router.get('/binProduct/:idItemCategory',me.binProduct);
+router.put('/bin/restoreProduct/:id',me.restoreProduct);
+router.delete('/:idItemCategory/bin/deleteOutBinProduct/:id',me.deleteOutBinProduct);
+router.post('/:slugItemCategory/bin/optionServiceBinProduct',me.optionServiceBinProduct);
 
 //admin
 router.get('/dashboard',me.dashboard);

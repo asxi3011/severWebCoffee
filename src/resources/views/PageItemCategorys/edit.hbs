@@ -1,6 +1,8 @@
  
  {{!-- {{#if data}} --}}
 <div class="container pd-admin">
+   <div class="pd-bd-admin box-shadow-1 text-white bg-child-admin">
+
       <form method="POST" action="/me/updateItemCategory?_method=PUT">
     <div class="d-flex my-2 align-items-center">  
         <div>
@@ -9,10 +11,13 @@
     </div>
  
   <div id='appendListCategory'>
-      Thông tin chi tiết
+     
       {{#with data}}
-      <div class="my-3 d-flex align-items-center gap-3">
-        <input name="nameItemCategory" type="text" value="{{nameItemCategory}}" class="form-control" >
+      <div class="my-3">
+
+
+        <label for="inputPassword5" class="form-label">Tên nhãn hàng</label>
+        <input type="text" id="inputPassword5"  name="nameItemCategory" class="form-control" value="{{nameItemCategory}}">
         <input name="idItemCategory" type="text" value="{{_id}}" hidden>
         <button type="submit" class="btn btn-primary my-2 btn-restore" >Lưu</button>
       </div>
@@ -21,6 +26,7 @@
     
   </div>
   </form>
+  </div>
 </div>
 <script>
 
