@@ -2,24 +2,35 @@
  {{!-- {{#if data}} --}}
 <div class="container pd-admin">
    <div class="pd-bd-admin box-shadow-1 text-white bg-child-admin">
-      <form method="POST" action="/me/updateCategory?_method=PUT">
+      <form method="POST" action="/me/updateCategory?_method=PUT" enctype="multipart/form-data">
     <div class="d-flex my-2 align-items-center">  
         <div>
             <a href="/me/category"><i class="fas fa-chevron-left"></i>Quay lại</a>
         </div>
     </div>
  
-  <div id='appendListCategory'>
+  <div >
       Thông tin chi tiết
       {{#with data}}
-      <div class="my-3 d-flex align-items-center gap-3">
-        <input name="nameCategory" type="text" value="{{nameCategory}}" class="form-control" >
-        <input class="form-control" name="iconCategory" type="text" value="{{iconCategory}}" >
-        <input name="idCategory" type="text" value="{{_id}}" hidden>
-        <button type="submit" class="btn btn-primary my-2 btn-restore" >Lưu</button>
-       
+      <div class="my-3">
+     
+         <div class="my-3">
+            <label  class="form-label">Tên category</label>
+            <input name="nameCategory" type="text" value="{{nameCategory}}" class="form-control" required>
+          </div>
+              <input name="idCategory" type="text" value="{{_id}}" hidden>
+            <input id="imgCategory" name="imageCategory" type="file" hidden>
+            <label for="imgCategory" class="img-50">
+                <img id="previewImgCategory" src="/uploads/{{this.imageCategory}}" alt="">
+            </label>
+            <label id="fileNameCategory" for="imgCategory" class="my-3">{{this.imageCategory}}</label>
+         
+              
       </div>
+       
       {{/with}}
+      <button type="submit" class="btn btn-primary my-2" >Lưu</button>
+     
      
     
   </div>
@@ -27,7 +38,17 @@
   </div>
 </div>
 <script>
-
+    var imgCategory = document.getElementById('imgCategory');
+    var previewImgCategory = document.getElementById('previewImgCategory');
+    var fileNameCategory = document.getElementById('fileNameCategory');
+    imgCategory.onchange = evt => {
+    const [file] = imgCategory.files
+    if (file) {
+      console.log(file);
+      previewImgCategory.src = URL.createObjectURL(file);
+      fileNameCategory.innerText = file.name;
+    }
+}
 </script>
  {{!-- {{else}}
            {{>Pagenotfound}}

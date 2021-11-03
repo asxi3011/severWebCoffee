@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const me = require('../app/controller/meController.js');
+var validate =require('../resources/validate/user.validate');
+
+
 //Quy chuẩn dùng Method
 // GET : Dùng để lấy dữ liệu
 // POST : Dùng để lưu dữ liệu,ng dùng
@@ -50,13 +53,26 @@ router.post('/storeProduct',me.storeProduct);
 router.delete('/removeProduct/:id',me.removeProduct);
 router.delete('/removeManyProduct',me.removeManyProduct);
 //Bin Product
-router.get('/binProduct/:idItemCategory',me.binProduct);
+router.get('/binProduct/:idCategory',me.binProduct);
 router.put('/bin/restoreProduct/:id',me.restoreProduct);
 router.delete('/:idItemCategory/bin/deleteOutBinProduct/:id',me.deleteOutBinProduct);
 router.post('/:slugItemCategory/bin/optionServiceBinProduct',me.optionServiceBinProduct);
 
 //admin
-router.get('/dashboard',me.dashboard);
+router.get('/dashboard',validate.roleAdmin,me.dashboard);
+//order
+router.get('/listOrder/:status',me.listOrderPending);
+router.get('/listOrder',me.listOrder);
+router.get('/detailsOrder/:id',me.detailsOrder);
+router.post('/activeDonHang',me.activeDonHang);
+router.get('/countOrderPending',me.countOrderPending);
+
+//Topping
+router.get('/listTopping',me.listTopping);
+router.get('/Topping',me.addTopping);
+router.put('/storeTopping',me.storeTopping);
+
+
 
 
 module.exports = router; 

@@ -20,85 +20,40 @@
         <option value="{{this._id}}">{{this.nameCategory}}</option>
         {{/each}}
       </select>
-      <div id="notifycation_validation_slc_Category">
-        
-      </div>
-  </div>
-    <div class="mb-3">
-              <h3>Chọn item category</h3>
-       <select name="ItemCategory" class="form-control" id="slc_choose_Itemcategory" required disabled>
-       
-    </select>
-    </div>
-
     
+  </div>
+  
   <div class="mb-3">
     <label  class="form-label">Tên sản phẩm</label>
-     <input name="nameProduct" type="text" class="form-control" placeholder="VD: iphone 13" >
+     <input name="nameProduct" type="text" class="form-control" placeholder="VD: Cà phê sữa" >
   </div>
   <div class="mb-3">
-    <label  class="form-label">Giá niêm yết</label>
+    <label  class="form-label">Giá</label>
     <input name="PriceRoot" type="text" class="form-control" placeholder="VD: 23000 (đơn vị là VND)"  >
   </div>
   
     <div class="mb-3">
-    <label  class="form-label">Chọn hình đại diện sản phẩm</label>
+    <label  class="form-label">Hình sản phẩm</label>
     <div>
-    <input type="file" name="imageRepresent" required>
-    </div>
-    </div>
     
     <div class="mb-3">
-    <label  class="form-label">Phiên bản màu: </label>
-    
-    <div class="color-file mb-3 d-flex align-items-center gap-3 ">  
-      <div>
-        <input name="new_name_color[]" type="text" placeholder="Màu" required>
-      </div>
-      <div>
-         <input name="new_price_color[]" type="text" placeholder="Giá" required>
-      </div>
-      <div>
-        <select name="new_status_color[]" class="form-control" id="slc_choose_Itemcategory">
-         <option value="active">Có sẵn</option>
-         <option value="soldout">Hết hàng</option>
-       </select>
-      </div>
-      <div class="d-flex align-items-center gap-2">
-         <input class=" col-form-label" type="file" name="listImageDetails" required>
-      </div>
-
+    <input class="form-control" name="imageProduct" type="file" required>
+</div>
     </div>
-    <div id="appendInputColor">
-
     </div>
     
-    
-      <span class="btn btn-blue-custom mb-3" id="btn_ThemMau">
-                  Thêm màu
-     </span>
-    </div>
- 
- 
   <div class="mb-3">
-          <div class="my-3">Trạng thái</div> <!--1.Hoạt động , Hết hàng , sắp  về-->
-       <select name="statusProduct" class="form-control" id="slc_choose_status" required>
-        <option value="active">Có sẵn</option>
-        <option value="soon">Sắp về</option>
-    </select>
-    </div>
-  <div class="mb-3">
-    <label  class="form-label">Mô tả</label>
-    <input type="text" class="form-control" name="product_Description">
+    Mô tả:
+  
+  <textarea class="form-control" name="productDescription"></textarea>
+
   </div>
   <div class="mb-3">
-    <label  class="form-label">Thông số kỹ thuật</label>
+    <label  class="form-label">Size</label>
     <div class="row">
        <div class="col-12 test-left">
                  <div class="specifications-products">   
-                     <div class="title-specifications-products fw-bold">
-                         
-                     </div>
+                   
                      <div class="content-specifications-products pd-bd" id="appenHTMLSpecification_products">
                           
                       
@@ -111,6 +66,28 @@
             </div>
     </div>
    
+  </div>
+
+  <div class="mb-3">
+       <label  class="form-label">Chọn topping</label>
+       <div class="row">
+        <div class="col-6">
+          <div class="row">
+       {{#each dataTopping}}
+       
+         <div class="col-6 my-2">
+            <div class="d-flex gap-2 align-items-baseline">
+          <input name="extraTopping[]" type="checkbox" value="{{this._id}}" class="form-check-input"> {{this.name}}
+        </div>
+
+         </div>
+        
+      
+       
+       {{/each}}
+       </div>
+        </div>
+       </div>
   </div>
  
   <button type="submit" class="btn btn-primary" id="btnSubmit" disabled>Submit</button>
@@ -134,11 +111,14 @@
       })
     
     btnThemLine.on('click',function(){
-
-          countElemet++;
-          console.log(123);
-          var title = 'titleSpecification';
-          var detail = 'detailSpecification'
+           var elementChildNodeAppendLine =appenHTMLSpecification_products.children().length;
+           if(elementChildNodeAppendLine>=3){
+             alert("Chỉ được thêm 3 size")
+           }else{
+               countElemet++;
+        
+          var title = 'listSize[]';
+          var detail = 'listPriceExtra[]'
           appenHTMLSpecification_products.append(renderItemSpecifications(countElemet,title,detail));
           
           var btn_of_line = $(`.btn-remove-specification-line-${countElemet}`); //btn đỏ của từng dòng
@@ -149,9 +129,14 @@
               parent_btn_of_line.remove();
               //Vô hiệu hoá btn Lưu khi ấn nút xoá line đỏ
               var elementChildNodeAppendLine =appenHTMLSpecification_products.children().length;
+             
               toggleDisabledWithLength(elementChildNodeAppendLine,btnSubmit);
+             
+              
               
           })
+           }
+        
           
         })
   btn_ThemMau.on('click',function(){

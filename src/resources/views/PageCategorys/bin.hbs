@@ -29,7 +29,7 @@
   <div id='appendListCategory'>
     {{#if data}}
       
-      <table class="table table-success table-striped my-3 align-middle text-center ">
+      <table class="table table-success table-text-form table-striped my-3 align-middle text-center ">
            <tr>
               <th class="">STT</th>
               <th class="">Tên Category</th>
@@ -43,12 +43,12 @@
             <tr>
               <td class="">{{inc @index}}</td>
               <td class="">{{nameCategory}}</td>
-              <td class="">{{this.iconCategory}}</td>
+              <td class=""><img src="/uploads/{{this.imageCategory}}" alt=""></td>
               <td>{{this.date}}</td>
               <td class=""> <input class="form-check-input" type="checkbox" value="{{this._id}}" name="chkItemCategoryDeleted[]"></td>
               <td class="">
                     <div class="btn btn-dark-custom my-2" data-bs-toggle="modal" data-bs-target="#ModalDelete" data-id="{{this._id}}">Xoá</div>
-                 <button class="btn btn-blue-custom my-2 btn-restore" type="button" value="{{this._id}}">Sửa</button>
+                 <button class="btn btn-success my-2 btn-restore" type="button" value="{{this._id}}">Hồi phục</button>
               </td> 
             </tr>
 

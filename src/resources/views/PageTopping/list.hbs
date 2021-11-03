@@ -1,0 +1,110 @@
+
+<div class="container pd-admin">
+      <div class="pd-bd-admin box-shadow-1 text-white bg-child-admin">
+       
+
+    
+ 
+  
+   <div class="mb-3">
+    <h3  class="form-label">Danh sách Topping</h3>
+      <div class="d-flex my-2 align-items-center justify-content-between">
+      <a class="a-none btn btn-dark-custom" id="btn_Bin_itemCategory">
+          <i class="fas fa-trash"></i> Thùng rác (<span id="numberTrashItemCategory">0</span>)
+      </a>
+      <div class="d-flex gap-3"> 
+      <span class="d-flex align-items-center gap-2">
+      <input class="form-check-input" type="checkbox" value="" id="chkCheckAll"> <span>SelectAll</span> 
+      </span>
+      <button type="button" class="btn btn-danger" id="btn_Remove_Many"  data-bs-toggle="modal" data-bs-target="#ModalDeleteMany"disabled>
+          Xoá các mục được chọn
+      </button>
+      </div>
+    </div>
+        <form method="POST" name="removeManyItemCategory">
+      <div id='appendContentListChild'>
+        <table class="table table-success table-striped table-text-form">
+                <tr>
+                    <th class="">#</th>
+                    <th class="">Tên</th>
+                    <th class="">Giá</th>
+                    <th class="">Đơn vị</th>
+                    <th class="">Thao tác</th>
+                </tr>
+                {{#each data}}
+                 <tr>
+                    <td class="">{{inc @index}}</td>
+                    <td class="">{{name}}</td>
+                    <td class="">{{priceExtra}}</td>
+                    <td class="">{{unit}}</td>
+                    <td class="">Chức năng</td>
+                </tr>
+                {{/each}}
+        </table>
+           
+        
+      </div>
+      </form>
+        
+   </div>
+  
+  
+
+  <button type="submit" id="btn_submit_Child" class="btn btn-primary" disabled>Lưu</button>
+
+
+
+    <form action="" name="frmRemoveItemCategory" method="POST"></form>
+      </div>
+   
+
+</div>
+
+<div class="modal fade" id="ModalDelete" tabindex="-1" aria-labelledby="TitleModalDelete" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="TitleModalDelete">Thông báo</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Bạn muốn xoá file này ?
+        <div class="fs-normal text-danger"> (Các dữ liệu con bên trong sẽ biến mất.)</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Huỷ bỏ</button>
+        <button type="button" class="btn btn-danger del-category" >Xoá </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="ModalDeleteMany" tabindex="-1" aria-labelledby="TitleModalDeleteMany" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-danger" id="TitleModalDeleteMany">Thông báo</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Bạn muốn xoá những file này ?
+        <div class="fs-normal text-danger"> (Các dữ liệu con bên trong sẽ biến mất.)</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Huỷ bỏ</button>
+        <button type="button" class="btn btn-danger del-many-category" >Xoá Tất Cả</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<form name="editItemCategory" method="GET"></form>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+  
+   
+  
+
+ 
+
+</script>

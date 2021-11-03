@@ -32,7 +32,12 @@
             <!-- Navbar-->
             <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i>{{user.hoten}}</a>
+        
+              
+    
+
+                    
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                         <li><a class="dropdown-item" href="#!">Settings</a></li>
                         <li><a class="dropdown-item" href="#!">Activity Log</a></li>
@@ -61,7 +66,7 @@
                             <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav">
                                     <a class="nav-link" href="/me/category">Category</a>
-                                    <a class="nav-link" href="/me/itemcategory">Item Category</a>
+                                
                                       <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseError" aria-expanded="false" aria-controls="pagesCollapseError">
                                         Products
                                         <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
@@ -75,7 +80,19 @@
                                     </div>
                                 </nav>
                             </div>
+                              <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#toppingSide" aria-expanded="false" aria-controls="collapseLayouts">
+                                <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                                Topping
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
 
+                            <div class="collapse" id="toppingSide" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="/me/listTopping">Danh sách Topping</a>
+                                    <a class="nav-link" href="/me/Topping">Thêm Topping</a>
+                            
+                                </nav>
+                            </div>
                             <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayoutsDonHang" aria-expanded="false" aria-controls="collapseLayouts">
                                 <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
                                 Đơn hàng
@@ -83,8 +100,14 @@
                             </a>
                             <div class="collapse" id="collapseLayoutsDonHang" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" href="layout-static.html">Danh sách</a>
-                                    <a class="nav-link" href="layout-sidenav-light.html">Chưa duyệt</a>
+                                    <a class="nav-link" href="/me/listOrder">Tất cả</a>
+                                    <a class="nav-link" href="/me/listOrder/pending">Chưa duyệt
+                                        <div class="bublle-notifycation-number">
+                                                
+                                        </div>
+                                    </a>
+                                    <a class="nav-link" href="/me/listOrder/active">Đang xử lý</a>
+                                    
                               
                                 </nav>
                             </div>
@@ -121,5 +144,31 @@
       
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script src="/js/app.js"></script>
+
+        <script>
+            document.addEventListener('DOMContentLoaded',function(){
+                var numberOrder = getOrder();
+                numberOrder.then(data=>{
+                        var bubble = $('.bublle-notifycation-number');
+                        if(data!=0){
+
+                        bubble.text(data);
+                        }
+                         
+                })
+               
+                 async function getOrder() {
+                try {
+                    const response = await axios.get('/me/countOrderPending');
+                 
+                    return response.data;
+
+                } catch (error) {
+                    console.error(error);
+                }
+            }
+            })
+           
+        </script>
     </body>
 </html>
