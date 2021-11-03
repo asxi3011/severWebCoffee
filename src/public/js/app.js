@@ -76,18 +76,20 @@ function renderList(number,listItem,id){
  </div>
  `
   }
-  function renderLineWithIcon(index,name,icon){
+  function renderCategroy(index,name,image){
     return `        <div class="mb-3 number-element-${index}">
     <div class="d-flex gap-3 align-items-end">
-            <div class="w-50">
-            <label  class="form-label">Icon category</label>
-                <input name="${icon}" type="text" class="form-control" required>
-            </div>
-          
+
             <div class="w-50">
             <label  class="form-label">Tên category</label>
-            <input name="${name}" type="text" class="form-control" required>
+            <input name="${name}[]" type="text" class="form-control" required>
             </div>
+            <div class="w-50">
+            <label  class="form-label">Hình category</label>
+                <input name="${image}" type="file" accept="image/*" class="form-control" required>
+            </div>
+          
+            
             <div  class="btn-remove-Categroy-line-${index} btn btn-danger rounded-circle fs-normal">X</div>
     </div>
 </div>`
@@ -96,13 +98,13 @@ function renderList(number,listItem,id){
     return `    
     <div class="d-flex gap-3 my-3 align-items-end  number-element-${index}">
             <div class="w-50">
-            <label  class="form-label">Tiêu đề</label>
-                <input name="${nameTitle}[]" type="text" class="form-control" required>
+            <label  class="form-label">Size</label>
+                <input name="${nameTitle}" type="text" class="form-control" required>
             </div>
           
             <div class="w-50">
-            <label  class="form-label">Chi tiết</label>
-            <input name="${nameDetail}[]" type="text" class="form-control" required>
+            <label  class="form-label">Cộng thêm</label>
+            <input name="${nameDetail}" type="text" class="form-control" required>
             </div>
             <div  class="btn-remove-specification-line-${index} btn btn-danger rounded-circle fs-normal">X</div>
     </div>
@@ -131,15 +133,16 @@ function renderList(number,listItem,id){
       <div  class="btn-remove-color-${index} btn btn-danger rounded-circle fs-normal">X</div>
     </div>`
   }
-  function renderTableListProduct(number,nameProduct,img,price,status,color,id) {
+  function renderTableListProduct(number,nameProduct,img,price,status,id) {
     return `
     <tr class="row-table-product table-success">
       <td class="table-success">${number}</td>
       <td class="table-success">${nameProduct}</td>
       <td class="image-table-product"><img src="http://localhost:3000/uploads/${img}" alt=""></td>
       <td class="table-success">${price}</td>
+     
       <td class="table-success">${status}</td>
-      <td class="table-success">${color}</td>
+      
       <td><input type="checkbox" value="${id}" name="chkName[]" class="form-check-input"></td>
         <td>
         <div  class="d-flex justify-content-evenly align-items-center">
@@ -159,8 +162,8 @@ function renderList(number,listItem,id){
     <th class="table-secondary">Tên sản phẩm</th>
     <th class="table-success">Hình đại diện</th>
     <th class="table-danger">Giá Tiêu Chuẩn</th>
-    <th class="table-warning">Trạng thái</th>
-    <th class="table-info">Màu sắc</th>
+    
+    <th class="table-info">Trạng thái</th>
         <th></th>
         <th>Chức năng</th>
     </tr>

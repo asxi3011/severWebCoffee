@@ -3,7 +3,7 @@
    <div class="pd-bd-admin box-shadow-1 text-white bg-child-admin">
 
 <div>
-    <h3>chọn Category</h3>
+    <h3>Danh sách sản phẩm</h3>
     <div class="d-flex my-2 align-items-center justify-content-between">
       <a class="a-none btn btn-dark-custom" id="btn_Trash_Product">
           <i class="fas fa-trash"></i> Thùng rác 
@@ -24,20 +24,13 @@
         <option value="{{this._id}}">{{this.nameCategory}}</option>
         {{/each}}
     </select>
-    <div class="mb-3">
-              <h3>Chọn item category</h3>
-       <select name="ItemCategory" class="form-control" id="slc_choose_Itemcategory" required disabled>
-       
-    </select>
-    </div>
-
     
 </div>
 <div>
     
 </div>
 <form name="frmRemoveManyProduct" method="POST">
-<div id="appendTable">
+<div id="appendTable" class="my-3">
 
 </div>
 </form>
@@ -82,7 +75,33 @@
     </div>
   </div>
 </div>
+<!-- Button trigger modal -->
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalCancel" hidden>
+  
+</button>
 
+<!-- Modal -->
+<div class="modal fade" id="modalCancel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content d-flex" style="background-color: #dbdbbd;">
+      
+      <div class="p-3">
+
+     
+      <div class="m-auto text-white fs-3 text-center">
+          <img class="img-50" src="https://img.freepik.com/free-vector/young-angry-man-mad-expression-vector-illustration_76775-255.jpg?size=338&ext=jpg" alt="">
+      </div>
+      <div class="text-center fw-bold fs-2 my-3">
+          Vui lòng chọn category
+      </div>
+      <div class="text-center my-3">
+          <button class="btn btn-warning fw-bold" data-bs-dismiss="modal"> Đồng ý</button>
+      </div>
+       </div>
+    </div>
+  </div>
+</div>
 
 <form method="GET" name="renderEDIT"></form>
 <script>
@@ -98,20 +117,26 @@
       var appendTable =$('#appendTable');
       var countElemet = 0;
       var countMauElement =0;
+      var checkboxName = "chkName[]";
+      var CategoryItemcheckbox = $('input[name="chkName[]"]');
       var btnSubmit = $('#btnSubmit');
       var frmRemoveProduct = document.forms['frmRemoveProduct'];
       var CategoryKey = 'SelectCategoryProduct'
-      var ItemSelectKey = 'SelectItemCategoryProduct'
       var categorySelected = sessionStorage.getItem(CategoryKey);
-      var ItemCategorySelected = sessionStorage.getItem(ItemSelectKey);
+      var chkCheckAll = $('#chkCheckAll');
       var btn_Remove_Many = $('#btn_Remove_Many');
      var renderEDIT = document.forms['renderEDIT'];
-      elemt_select_category.val(categorySelected);
      
+      elemt_select_category.val(categorySelected);
       loadDuLieu();
 
       elemt_select_category.change(function(){
-        loadDuLieu();
+        if(elemt_select_category.val()==""){
+          $('#modalCancel').modal("show");
+          var categorySelected = sessionStorage.getItem(CategoryKey);
+           elemt_select_category.val(categorySelected);
+        }
+          loadDuLieu();
       })
       
       var ModalDelete = document.getElementById('ModalDelete')
@@ -143,40 +168,41 @@
 
         
       })
-
+   
     function loadDuLieu(){
     if(elemt_select_category.val() != "")
           {
-            
               sessionStorage.setItem(CategoryKey,elemt_select_category.val());
               var id =elemt_select_category.val();
-               
-              const item = getListCategory(id);
+               console.log(id);
+             const item = getListProduct(id);
+               btn_Trash_Product.on("click",function(){
+                btn_Trash_Product.attr("href",`binProduct/${id}`)
+              })
               item.then(response=>{  
-                  if(response.data.Item.length>0){
+            if(response.data.dataProduct.length>0){
                          
-                    var Item = response.data.Item;
-                    var htmlSlcItemCategory = renderOptionSelect(Item);
-                    slc_select_Itemcategory.html(htmlSlcItemCategory);
-                    
-                    slc_select_Itemcategory.removeAttr('disabled','disabled');
-                    notifycation_validation_slc_Category.html();
-                                 slc_select_Itemcategory.val(ItemCategorySelected);
-                               changeItemCategory();
-                              
-                        slc_select_Itemcategory.change(function(){
-                         
-                          changeItemCategory();
-                             
-                   })
+                    var product = response.data.dataProduct;
                    
-                  }
-                  else{
-                      //show modal vui lòng nhập category;(làm FE SAU)
-                      alert('Vui lòng nhập thêm category');
-                  }
+                    
+                    var htmlRowTable = [];
+              product.forEach((element,index)=>{
                 
-          })
+                
+                htmlRowTable.push(renderTableListProduct(index+1,element.nameProduct,element.imageRepresent,element.priceStandard,element.status,element._id))
+              })
+              if(htmlRowTable != ""){
+                var htmlFullTable = renderTableProduct(htmlRowTable.join(" "));
+                appendTable.html(htmlFullTable);
+                  checkboxValidation(chkCheckAll,checkboxName,CategoryItemcheckbox,btn_Remove_Many);
+                }
+               
+            }
+             else{
+                      
+                      appendTable.html(empty());
+                }
+          })  
           }
     else{
        notifycation_validation_slc_Category.html(`<div class="text-danger">Vui lòng chọn category</div>`);
@@ -186,48 +212,6 @@
     }
       
     }
-    function changeItemCategory(){  
-        
-        var idItemCategory = slc_select_Itemcategory.val();
-        
-        if (idItemCategory != ""){
-             
-                sessionStorage.setItem(ItemSelectKey,slc_select_Itemcategory.val());
-             const product = getListProduct(idItemCategory);
-        product.then(reponsedata=>{
-            var product = reponsedata.data.dataProduct;
-            var htmlRowTable = [];
-              product.forEach((element,index)=>{
-                  var arrayColor = element.listColorDetails;
-                  var nameColor = arrayColor.map(element=>element.name);
-                
-                htmlRowTable.push(renderTableListProduct(index+1,element.nameProduct,element.imageRepresent,element.priceStandard,element.status,nameColor,element._id))
-              })
-              if(htmlRowTable != ""){
-                var htmlFullTable = renderTableProduct(htmlRowTable.join(" "));
-                appendTable.html(htmlFullTable);
-              btn_Trash_Product.attr('href',`binProduct/${idItemCategory}`);
-                              var chkCheckAll = $('#chkCheckAll');
-                              var checkboxName = 'chkName[]';
-                              var Itemcheckbox = $('input[name="chkName[]"]');
-                              checkboxValidation(chkCheckAll,checkboxName,Itemcheckbox,btn_Remove_Many);
-                               var btn_edit = $(".btn-edit-Item");
-                               btn_edit.on("click",function(e){
-                                  var idProduct = e.target.value;
-                                  renderEDIT.action = `editProduct/${idProduct}`
-                                  renderEDIT.submit();
-                               })
-              }
-              else{
-                  appendTable.html(empty);
-                      btn_Trash_Product.attr('href',`binProduct/${idItemCategory}`);
-              }
-        })
-        }     
-        else{
-          appendTable.html('<div class="text-danger">Vui lòng chọn item category</div')
-        }
-     }
     
    async function getListCategory(id){
       try{

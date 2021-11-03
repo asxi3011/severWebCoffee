@@ -1,10 +1,14 @@
 
 const Category = require('../model/category')
-const ItemCategory = require('../model/itemCategory')
 const Product = require('../model/product');
-
+const Order = require('../model/order');
+const Topping = require('../model/topping');
+const mongoose = require('mongoose');
+const ObjectId = mongoose.Types.ObjectId;
 const multer  = require('multer');
-const { json } = require('express');
+const productCart = require('../model/productCart');
+
+
 const storeage = multer.diskStorage({
     destination:'src/public/uploads',
     filename: function (req,file,cb) {
@@ -16,7 +20,9 @@ const storeage = multer.diskStorage({
 var upload = multer({
     storage:storeage
 })
-const cpUpload = upload.fields([{ name: 'imageRepresent', maxCount: 1 }, { name: 'listImageDetails', maxCount: 8 }])
+const uploadProduct = upload.single('imageProduct');
+const uploadCategory = upload.array('imageCategory');
+const uploadCategorySingle = upload.single('imageCategory');
 class meControllers{
     // Category > Item Category > Product
     
@@ -97,71 +103,25 @@ class meControllers{
             res.render('PageCategorys/home',{layout:'admin',data:data,numTrash:numTrash});
         })
     }
-    storeCategory(req,res,next){    
+    storeCategory(req,res,next){  
+      uploadCategory(req,res,function(err) {
+          
+          var arrayImage = req.files;
+          var arrayNameCategory = req.body.nameCategory;
+          var arrayCateogry = [];
+          arrayNameCategory.forEach((element,index)=>{
+                var category = new Category({
+                    nameCategory:normalization(element),
+                    imageCategory:arrayImage[index].filename,
+                })
+                arrayCateogry.push(category);
+          })
+          Category.insertMany(arrayCateogry);
+          res.redirect('back');
+        
+      })
+     
        
-        var name = req.body.nameCategory;
-        var icon = req.body.iconCategory;
-        Category.find({nameCategory:name},function(err,data){
-            if(data.length==0){
-                if(Array.isArray(name))
-                {
-                    try{
-                        
-                        var ArrayCategory = [];
-                        name.forEach((element,index) => {
-                            var slug = ChangeToSlug(element)
-                            var nameNomarlize = normalization(element);
-                           
-                            var newCategory = new Category({
-                            nameCategory:nameNomarlize,
-                            iconCategory:icon[index],
-                            slug:slug,
-                            })
-                          
-                            
-                               
-                            ArrayCategory.push(newCategory);
-                            
-                          
-                              
-                        });
-                        Category.insertMany(ArrayCategory,function(err){
-                            if(err){
-                                res.json('save failed')
-                            }else{
-                                res.redirect('back');
-                            }
-                        });
-                        
-                    }
-                    catch{
-                        res.json('Save fail. Try again !')
-                    }
-                }
-                else
-                {
-                    var slug = ChangeToSlug(name)
-                    var nameNomarlize = normalization(name);
-                    var newCategory = new Category({
-                        nameCategory: nameNomarlize,
-                        iconCategory:icon,
-                        slug:slug,
-                    })
-                    newCategory.save(function(err){
-                        if(err){
-                            res.json('save fail : ' +err)
-                        }else{
-                            res.redirect('back')
-                        }
-                    });
-                } 
-            }
-            else{
-                res.json({dataErr:data,kq:0});
-            }
-           
-        })
-         
            
     }
     editCategory(req,res,next){
@@ -176,17 +136,28 @@ class meControllers{
        
     }
     updateCategory(req,res,next){
-        var name = req.body.nameCategory;
-        var icon = req.body.iconCategory;
-        var nameNomarlize = normalization(name);
-       
-        Category.findByIdAndUpdate({_id:req.body.idCategory},{$set:{nameCategory:nameNomarlize,iconCategory:icon}})
-        .lean()
-        .then(data=>{
-            res.redirect('./category');
+        //var name = req.body.nameCategory;
+        //var icon = req.body.iconCategory;
+        //var nameNomarlize = normalization(name);
+        uploadCategorySingle(req,res,function(err){
+            var idCategory = req.body.idCategory;
+            var nameCategory = req.body.nameCategory;
+            if(req.file){
+                Category.findByIdAndUpdate({_id:idCategory},{$set:{nameCategory:normalization(nameCategory),imageCategory:req.file.filename}})
+                .lean()
+                .then(data=>{
+                    res.redirect('./category');
+                })
+            }
+            else{
+                Category.findByIdAndUpdate({_id:idCategory},{$set:{nameCategory:normalization(nameCategory)}})
+                .lean()
+                .then(data=>{
+                    res.redirect('./category');
+                })
+            }
         })
-        
-     
+    
     }
     removeCategory(req,res,next){
         Category.delete({_id:req.params.id})
@@ -435,17 +406,16 @@ class meControllers{
    
     //Product 
     Product(req,res,next){
-        Category.find()
-        .lean()
-        .then(data=>{
-
-            res.render('PageProducts/add',{layout:'admin',dataCategory:data});
-        })
+        Promise.all([Category.find().lean(),Topping.find().lean()])
       
+        .then(([data,dataTopping])=>{
+            
+            res.render('PageProducts/add',{layout:'admin',dataCategory:data,dataTopping:dataTopping});
+        })
     }
     getProduct(req,res,next){
-       var idItemCategory=req.params.id
-        ItemCategory.findOne({_id:idItemCategory})
+       var idCategory=req.params.id
+        Category.findOne({_id:idCategory})
         .lean()
         .then(data=>{
             var listIdProduct = data.listProduct;
@@ -454,8 +424,6 @@ class meControllers{
             .then(dataProduct=>{
                 res.json({dataProduct:dataProduct});
             });
-        
-          
         })
         
     }
@@ -469,67 +437,44 @@ class meControllers{
     }
     storeProduct(req,res,next){
      
-        cpUpload(req,res,function(err) {
-            
-            var ArrayFileImageRepresent = req.files['imageRepresent'];
-            var ArrayFileImageColor = req.files['listImageDetails'];
-            var ArrayNameColor = req.body.new_name_color;
-            var ArrayPrice = req.body.new_price_color;
-            var ArrayStatusColor = req.body.new_status_color;
-            var idCategory = req.body.Category;
-            var idItemCategory = req.body.ItemCategory;
-            var ArraytitleSpecification =req.body.titleSpecification;
-            var ArraydetailSpecification =req.body.detailSpecification;
-            var ArrayColorDetails = ArrayFileImageColor.map((element,index)=>{
-               
-                    var covertPrice = Number(ArrayPrice[index]);
-                    if(covertPrice === NaN){
-                        res.json('lỗi nhập chữ vào ô giá')
-                    }
-                    else{
-                     
-                        return {name:ArrayNameColor[index],price:covertPrice,status:ArrayStatusColor[index],image:element.filename}
-                    }
-               
+        uploadProduct(req,res,function(err){
+           
               
-            })
-            var listSpecifications = ArraytitleSpecification.map((element,index)=>{
-                return {title:element,details:ArraydetailSpecification[index]};
-            })
-             var nameProduct=normalization(req.body.nameProduct);
+            var idCategory =req.body.Category;
+            var nameProduct =req.body.nameProduct;
+            var PriceRoot =req.body.PriceRoot;
+            var productDescription =req.body.productDescription;
+            var listSize = req.body.listSize;
+            var listPriceExtra =req.body.listPriceExtra;
+            var extraTopping = req.body.extraTopping;
             var slug = ChangeToSlug(nameProduct);
-            const newProduct = new Product({
-                nameProduct: nameProduct,
-                priceStandard:req.body.PriceRoot,
-                listColorDetails:ArrayColorDetails,
-                imageRepresent:ArrayFileImageRepresent[0].filename,
-                listSpecifications:listSpecifications,
-                status:req.body.statusProduct,
-                slug: slug,
+            var arraySize = {
+                nameSize:listSize,
+                extraSize:listPriceExtra,
+            };
+           
+            var newProduct = new Product({
+                nameProduct,
+                priceStandard:PriceRoot,
+                productDescription,
+                imageRepresent:req.file.filename,
+                Size:arraySize,
+                slug,
+                listTopping:extraTopping,
             })
-            
-            newProduct.save(function(err,data) {
+            newProduct.save(function(err){
                 if(err){
-                    res.json(err)
+                    res.json(err);
                 }else{
-                   
-                    ItemCategory.findOneAndUpdate({_id:idItemCategory},{$addToSet:{listProduct:data._id}},function(err) {
-                        if(err){
-                            res.json(err);
-                        }else{
-                            res.redirect('back');
-                        }
+                    Category.findByIdAndUpdate({_id:idCategory},{$addToSet:{listProduct:newProduct._id}})
+                    .lean()
+                    .then(data=>{
+                        res.redirect('back');
                     })
-                    
                 }
-            })
+            });
             
-       
-          
         })
-        
-        
-        
         
     }
     removeProduct(req,res,next){
@@ -622,7 +567,7 @@ class meControllers{
     //Bin Product
     binProduct(req,res,next){
 
-        ItemCategory.findOne({_id:req.params.idItemCategory})
+        Category.findOne({_id:req.params.idCategory})
         .lean()
         .then(data=>{
                 var idProduct = data.listProduct;
@@ -635,9 +580,9 @@ class meControllers{
                         return element;
                     });
                   
-                    res.render('PageProducts/bin',{layout:'admin',data:Item,idItemCategory:req.params.idItemCategory});
-                })
-                
+                res.render('PageProducts/bin',{layout:'admin',data:Item,idItemCategory:req.params.idItemCategory});
+               
+                })  
             })
            
         .catch(next)
@@ -729,13 +674,139 @@ class meControllers{
             res.render('Pagenotfound');
         }
     }
-   
+    
+    //Đơn hàng
+    //Danh sach 
+    listOrder(req,res,next){
+    
+        Order.find({})
+        .lean()
+        .sort({createdAt:-1})
+        .then(data=>{
+            
+            var newData = data;
+            newData = newData.map(element=>{
+                element.dateConvert = element.createdAt.toLocaleString("en-US",{dateStyle:"medium"});
+                return element;
+            })
+       
+           res.render('Order/listOrder',{layout:'admin',data:newData})
+        })
+    }
+
+    listOrderPending(req,res,next){
+        var status = req.params.status;
+        Order.find({statusOrder:status})
+        .lean()
+        .sort({createdAt:-1})
+        .then(data=>{
+            
+            var newData = data;
+            newData = newData.map(element=>{
+                element.dateConvert = element.createdAt.toLocaleString("en-US");
+                return element;
+            })
+           res.render('Order/listOrder',{layout:'admin',data:newData})
+        })
+    }
+
+    activeDonHang(req,res,next){
+        var id = req.body.id;
+        var status =req.body.status;
+        Order.findByIdAndUpdate({_id:id},{$set:{statusOrder:status}})
+        .lean()
+        .then(data=>{
+            res.json('success');
+        })
+    }
+    
+    detailsOrder(req,res,next){
+            var id = req.params.id;
+
+            
+            Order.findById({_id:id}).lean()
+            .then(order=>{
+                var listProductCart = order.listProductCart;
+                 
+                productCart.aggregate([
+                    {
+                        $lookup:{
+                            from:"products",
+                            localField:"idProduct",
+                            foreignField:"_id",
+                            as:"cartProduct"
+                        }
+                       
+                    }, {
+                            $match:{
+                            _id:{$in:listProductCart}
+                        }  
+                    },{
+                        $project:{
+                            _id:0,
+                        }
+                    },{
+                        $unwind:"$cartProduct" // giúp trả về object
+                        
+                    }
+                   ],function(err,cartProduct){ // data này là mảng chứ 
+                      
+                        //res.json(cartProduct);
+                       res.render("Order/detailsOrder",{layout:"admin",data:order,cartProduct:cartProduct})
+                   })
+
+            })
+            
+       
+    }
+    
+    countOrderPending(req,res,next){
+        var status = 'pending';
+        Order.find({statusOrder:status})
+        .lean()
+        .then(data=>{
+            
+           res.json(data.length);
+        })
+    }
+    //dashboard
     dashboard(req,res,next){
-      
-            res.render('dashboard',{layout:'admin'});
+     
+        var user = res.locals.user;
+   
+
+        res.render('dashboard',{layout:'admin',user:user});
      
     }
+    addTopping(req,res,next){
+        res.render('PageTopping/add',{layout:'admin'});
+    }
+    listTopping(req,res,next){
+        Topping.find()
+        .lean()
+        .then(data=>{
+            res.render('PageTopping/list',{layout:'admin',data:data});
+        })
+    }
+    storeTopping(req,res,next){
+        
+        const newTopping = new Topping({
+            name:req.body.nameTopping,
+            priceExtra:req.body.PriceTopping,
+            unit:req.body.unitTopping,
+        })
+        newTopping.save(function(err){
+            if(err)
+                res.json(err);
+            else{
+                res.redirect('back');
+            }
+        })
+    }
 }
+
+
+
 function ChangeToSlug(input)
 {
     var slug;

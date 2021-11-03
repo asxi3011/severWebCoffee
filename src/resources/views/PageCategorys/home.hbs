@@ -24,15 +24,15 @@
       </div>
     </div>
     
-  <form method="POST" name="removeManyCategory" action="removeManyCategory?_method=DELETE">
+  <form method="POST" name="removeManyCategory" action="removeManyCategory?_method=DELETE" >
   <div id='appendListCategory'>
   
     {{#if data}}
-        <table class="table table-success table-striped my-3 align-middle text-center ">
+        <table class="table table-success table-text-form table-striped my-3 align-middle text-center ">
            <tr>
               <th class="">STT</th>
               <th class="">Tên Category</th>
-              <th class="">icon</th>
+              <th class="">Hình ảnh</th>
               <th class=""></th>
               <th class="">Thao tác</th> 
             </tr>
@@ -41,11 +41,11 @@
             <tr>
               <td class="">{{inc @index}}</td>
               <td class="">{{nameCategory}}</td>
-              <td class="">{{this.iconCategory}}</td>
+              <td class=""><img src="/uploads/{{this.imageCategory}}" alt=""></td>
               <td class=""> <input class="form-check-input" type="checkbox" value="{{this._id}}" name="select_Category[]"></td>
               <td class="">
                     <div class="btn btn-dark-custom my-2" data-bs-toggle="modal" data-bs-target="#ModalDelete" data-id="{{this._id}}">Xoá</div>
-                 <button class="btn btn-blue-custom my-2 btn_edit_category" type="button" value="{{this._id}}">Sửa</button>
+                    <button class="btn btn-blue-custom my-2 btn_edit_category" type="button" value="{{this._id}}">Sửa</button>
               </td> 
             </tr>
 
@@ -57,9 +57,9 @@
     {{/if}}
   </div>
   </form>
-  <form method="POST" action="storeCategory">
+  <form method="POST" action="storeCategory" enctype="multipart/form-data">
   <div id="appendLineAddCategory">
-  
+      
   </div>
   
   <div class="btn btn-success mb-3 w-100 fw-bold fs-4" id="btn_ThemLine_Category">
@@ -140,15 +140,16 @@
       //Bien cuc bo
       var countElemet = 0;
       var name ='nameCategory';
-      var icon ='iconCategory';
+      var image ='imageCategory';
 
     
       btnSubmit.on('click',function(e){
+        /*
         e.preventDefault();
         var array = [];
         var arrayIcon = [];
-        var inputName = document.querySelectorAll('div#appendLineAddCategory input[name="nameCategory"]');
-         var inputicon = document.querySelectorAll('div#appendLineAddCategory input[name="iconCategory"]');
+        var inputName = document.querySelectorAll(`div#appendLineAddCategory input[name="${name}"]`);
+         var inputicon = document.querySelectorAll(`div#appendLineAddCategory input[name="${image}"]`);
         for (let i = 0; i < inputName.length; i++) {
           array.push(inputName[i].value);
           arrayIcon.push(inputicon[i].value)
@@ -156,7 +157,7 @@
 
         axios.post('storeCategory', {
           nameCategory:array,
-          iconCategory:arrayIcon,
+          imageCategory:arrayIcon,
         })
         .then(function (response) {
           var kq = response.data;
@@ -171,18 +172,18 @@
              })
             alert(`Category Name : ${arrayNameTrung} đã có trong hệ thống`)
           }else{
-              location.reload();
+              //location.reload();
           }
           
         })
         .catch(function (error) {
           console.log(error);
         }); 
-        
+        */
       })
         btnThemLine.on('click',function(){
           countElemet++;
-          element_line_category.append(renderLineWithIcon(countElemet,name,icon))
+          element_line_category.append(renderCategroy(countElemet,name,image))
           var btn_of_line = $(`.btn-remove-Categroy-line-${countElemet}`); //btn đỏ của từng dòng
           var parent_btn_of_line = $(`.number-element-${countElemet}`);  //div cha của btn đỏ
           var elementChildNodeAppendLine =element_line_category.children().length; //đếm length các phẩn tử con của id "appendLineAddCategory"
