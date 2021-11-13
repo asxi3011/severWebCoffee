@@ -138,7 +138,7 @@ function renderList(number,listItem,id){
     <tr class="row-table-product table-success">
       <td class="table-success">${number}</td>
       <td class="table-success">${nameProduct}</td>
-      <td class="image-table-product"><img src="http://localhost:3000/uploads/${img}" alt=""></td>
+      <td class="image-table-product"><img src="/uploads/${img}" alt=""></td>
       <td class="table-success">${price}</td>
      
       <td class="table-success">${status}</td>

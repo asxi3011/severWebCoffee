@@ -4,11 +4,11 @@ const Product = require('../model/product');
 
 class homeControllers{
     index(req,res){
-    res.render('home')
+    res.render('clientPage/home')
     }
     products(req,res){
       
-        res.render('products')
+        res.render('clientPage/products')
     }
     storeOrder(req,res){
         var idDonHang = makeid(12);
@@ -55,7 +55,7 @@ class homeControllers{
        
     }
     cart(req,res){
-        res.render('cart')
+        res.render('clientPage/cart')
     }
     storeCart(req,res,next){
         var idProduct = req.body.idProduct;

@@ -38,7 +38,7 @@ class meControllers{
                 return element;
          });
           
-            res.render('PageCategorys/bin',{layout:'admin',data:newData})
+            res.render('adminPage/PageCategorys/bin',{layout:'admin',data:newData})
         })
         .catch((err)=>{
             res.send(err);
@@ -100,7 +100,7 @@ class meControllers{
     Category(req,res,next){  
         Promise.all([Category.find().lean(),Category.countDocumentsDeleted()])
         .then(([data,numTrash])=>{
-            res.render('PageCategorys/home',{layout:'admin',data:data,numTrash:numTrash});
+            res.render('adminPage/PageCategorys/home',{layout:'admin',data:data,numTrash:numTrash});
         })
     }
     storeCategory(req,res,next){  
@@ -114,10 +114,16 @@ class meControllers{
                     nameCategory:normalization(element),
                     imageCategory:arrayImage[index].filename,
                 })
-                arrayCateogry.push(category);
+                arrayCateogry.push(category);   
           })
-          Category.insertMany(arrayCateogry);
-          res.redirect('back');
+          Category.insertMany(arrayCateogry,function(err){
+              if(err){
+
+              }else{
+                res.redirect('back');
+              }
+          });
+        
         
       })
      
@@ -130,7 +136,7 @@ class meControllers{
         Category.findById({_id:id})
         .lean()
         .then(data=>{
-            res.render('PageCategorys/edit',{layout:'admin',data:data});
+            res.render('adminPage/PageCategorys/edit',{layout:'admin',data:data});
         })
        
        
@@ -194,7 +200,7 @@ class meControllers{
                         element.dateDeleted = element.deletedAt.toLocaleString("en-US");
                         return{name:element.nameItemCategory,id:element._id,timeDeleted:element.dateDeleted}});
         
-                    res.render('PageItemCategorys/bin',{layout:'admin',data:Item,slugCategory:data.slug});
+                    res.render('adminPage/PageItemCategorys/bin',{layout:'admin',data:Item,slugCategory:data.slug});
                 })
               
             })
@@ -297,7 +303,7 @@ class meControllers{
         .lean()
         .then(data=>{
             //res.json(data)
-            res.render('PageItemCategorys/home',{layout:'admin',data:data})
+            res.render('adminPage/PageItemCategorys/home',{layout:'admin',data:data})
         })
    
     }
@@ -385,7 +391,7 @@ class meControllers{
         ItemCategory.findById({_id:id})
         .lean()
         .then(data=>{
-            res.render('PageItemCategorys/edit',{layout:'admin',data:data});
+            res.render('adminPage/PageItemCategorys/edit',{layout:'admin',data:data});
         })
        
     }
@@ -410,7 +416,7 @@ class meControllers{
       
         .then(([data,dataTopping])=>{
             
-            res.render('PageProducts/add',{layout:'admin',dataCategory:data,dataTopping:dataTopping});
+            res.render('adminPage/PageProducts/add',{layout:'admin',dataCategory:data,dataTopping:dataTopping});
         })
     }
     getProduct(req,res,next){
@@ -432,7 +438,7 @@ class meControllers{
         .lean()
         .then(data=>{
 
-            res.render('PageProducts/home',{layout:'admin',dataCategory:data});
+            res.render('adminPage/PageProducts/home',{layout:'admin',dataCategory:data});
         })
     }
     storeProduct(req,res,next){
@@ -561,7 +567,7 @@ class meControllers{
         .then(data=>{
             var typeColor =data.listColorDetails;
             var listSpecifications = data.listSpecifications;
-            res.render('PageProducts/edit',{layout:'admin',product:data,typeColor:typeColor,listSpecifications:listSpecifications})
+            res.render('adminPage/PageProducts/edit',{layout:'admin',product:data,typeColor:typeColor,listSpecifications:listSpecifications})
         })
     }
     //Bin Product
@@ -580,7 +586,7 @@ class meControllers{
                         return element;
                     });
                   
-                res.render('PageProducts/bin',{layout:'admin',data:Item,idItemCategory:req.params.idItemCategory});
+                res.render('adminPage/PageProducts/bin',{layout:'admin',data:Item,idItemCategory:req.params.idItemCategory});
                
                 })  
             })
@@ -690,7 +696,7 @@ class meControllers{
                 return element;
             })
        
-           res.render('Order/listOrder',{layout:'admin',data:newData})
+           res.render('adminPage/Order/listOrder',{layout:'admin',data:newData})
         })
     }
 
@@ -706,7 +712,7 @@ class meControllers{
                 element.dateConvert = element.createdAt.toLocaleString("en-US");
                 return element;
             })
-           res.render('Order/listOrder',{layout:'admin',data:newData})
+           res.render('adminPage/Order/listOrder',{layout:'admin',data:newData})
         })
     }
 
@@ -752,7 +758,7 @@ class meControllers{
                    ],function(err,cartProduct){ // data này là mảng chứ 
                       
                         //res.json(cartProduct);
-                       res.render("Order/detailsOrder",{layout:"admin",data:order,cartProduct:cartProduct})
+                       res.render("adminPage/Order/detailsOrder",{layout:"admin",data:order,cartProduct:cartProduct})
                    })
 
             })
@@ -779,13 +785,13 @@ class meControllers{
      
     }
     addTopping(req,res,next){
-        res.render('PageTopping/add',{layout:'admin'});
+        res.render('adminPage/PageTopping/add',{layout:'admin'});
     }
     listTopping(req,res,next){
         Topping.find()
         .lean()
         .then(data=>{
-            res.render('PageTopping/list',{layout:'admin',data:data});
+            res.render('adminPage/PageTopping/list',{layout:'admin',data:data});
         })
     }
     storeTopping(req,res,next){
