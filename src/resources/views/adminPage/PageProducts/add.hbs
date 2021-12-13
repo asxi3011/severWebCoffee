@@ -106,9 +106,7 @@
       var countElemet = 0;
       var countMauElement =0;
       var btnSubmit = $('#btnSubmit');
-      elemt_select_category.change(function(){
-        loadDuLieu();
-      })
+  
     
     btnThemLine.on('click',function(){
            var elementChildNodeAppendLine =appenHTMLSpecification_products.children().length;
@@ -131,9 +129,7 @@
               var elementChildNodeAppendLine =appenHTMLSpecification_products.children().length;
              
               toggleDisabledWithLength(elementChildNodeAppendLine,btnSubmit);
-             
-              
-              
+
           })
            }
         
@@ -150,38 +146,9 @@
   
   
   })
-    function loadDuLieu(){
-    if(elemt_select_category.val() != "")
-          {
-               
-              var id =elemt_select_category.val();
-              const item = getListCategory(id);
-              item.then(response=>{  
-               var Item = response.data.Item;
-              var htmlSlcItemCategory = renderOptionSelect(Item);
-              slc_select_Itemcategory.html(htmlSlcItemCategory);
-               slc_select_Itemcategory.removeAttr('disabled','disabled');
-               notifycation_validation_slc_Category.html(``);
-          })
-          }
-    else{
-       notifycation_validation_slc_Category.html(`<div class="text-danger">Vui lòng chọn category</div>`);
-       slc_select_Itemcategory.html("");
-       slc_select_Itemcategory.attr('disabled','disabled');
+   
 
-    }
-      
-  }
-
-   async function getListCategory(id){
-      try{
-        const reponse = await axios.get(`getItemCategory/${id}`)
-        return reponse
-      }  
-      catch (error){
-        console.log(error);
-      }
-    }
+  
   })
  
 </script>

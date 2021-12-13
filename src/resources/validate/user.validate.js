@@ -10,7 +10,7 @@ module.exports.postCreate =function (req,res,next) {
      .lean()
      .then(data=>{
          if(!data){
-            res.redirect('/manager/login');
+            res.redirect('clientPage//manager/login');
             return;
          }
         res.locals.token = data;

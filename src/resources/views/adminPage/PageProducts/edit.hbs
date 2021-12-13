@@ -11,8 +11,7 @@
    <div class="pd-bd-admin box-shadow-1 text-white bg-child-admin">
 
     <h1>Thêm sản phẩm</h1>
-<form method="POST" action="/me/updateProduct?_method=PUT" enctype="multipart/form-data">
-{{!--   
+<form method="POST" action="storeProduct" enctype="multipart/form-data">
   <div class="mb-3">
       <h3>Chọn category</h3>
       <select name="Category" class="form-control" id="slc_choose_category" required>
@@ -21,142 +20,81 @@
         <option value="{{this._id}}">{{this.nameCategory}}</option>
         {{/each}}
       </select>
-      <div id="notifycation_validation_slc_Category">
-        
-      </div>
+    
   </div>
-    <div class="mb-3">
-              <h3>Chọn item category</h3>
-       <select name="ItemCategory" class="form-control" id="slc_choose_Itemcategory" required disabled>
-       
-    </select>
-    </div> --}}
-
-    {{#with product}}
+  
   <div class="mb-3">
     <label  class="form-label">Tên sản phẩm</label>
-     <input name="nameProduct" type="text" class="form-control" value="{{nameProduct}}" >
+     <input name="nameProduct" type="text" class="form-control" placeholder="VD: Cà phê sữa" >
   </div>
   <div class="mb-3">
-    <label  class="form-label">Giá niêm yết</label>
-    <input name="PriceRoot" type="text" class="form-control" value="{{priceStandard}}"  >
+    <label  class="form-label">Giá</label>
+    <input name="PriceRoot" type="text" class="form-control" placeholder="VD: 23000 (đơn vị là VND)"  >
   </div>
   
     <div class="mb-3">
-    <label  class="form-label">Hình đại diện sản phẩm</label>
+    <label  class="form-label">Hình sản phẩm</label>
     <div>
-      <div>
-          <img class="img-preview-edit" src="http://localhost:3000/uploads/{{imageRepresent}}" alt="">
-          <label for="inputfile" id="newfileInput">{{imageRepresent}}</label>
-      </div>
-        <input type="file" id="inputfile" name="imageRepresent" style="display: none;">
-      
-      <label for="inputfile" class="btn btn-dark-custom my-2">Click vào đây để đổi ảnh</label>
-    </div>
-    </div>
-     {{/with}}
+    
     <div class="mb-3">
-    <label  class="form-label">Phiên bản màu: </label>
-    {{#each typeColor}}
-    <div class="color-file mb-3 d-flex align-items-center gap-3">  
-      <div>
-        <input name="name_color" type="text" value="{{this.name}}" required>
-      </div>
-      <div>
-         <input name="price_color" type="text" value= "{{this.price}}" required>
-      </div>
-      <div>
-        <select name="status_Color" class="form-control" id="slc_choose_status_color">
-         <option value="active">Có sẵn</option>
-         <option value="soldout">Hết hàng</option>
-       </select>
-      </div>
-      <div class="d-flex align-items-center gap-2">
-       
-         <div>
-          <img class="img-preview-edit-color" src="http://localhost:3000/uploads/{{image}}" alt="">
-          
-      </div>
-        <input type="file" id="img_details-{{@index}}" accept="image/*" class="input-choose-file d-none" name="listImageDetails"
-        onchange="return document.getElementById('lbl-text-file-details-{{@index}}').innerHTML = this.value;">
-        <span class="d-flex flex-column justify-content-between">
-        
-    
-        </span>
-      </div>
-         <div  class=" btn btn-danger rounded-circle fs-normal" onclick="return this.parentNode.remove();">X</div>
+    <input class="form-control" name="imageProduct" type="file" required>
+</div>
     </div>
-    {{/each}}
-    <div id="appendInputColor">
+    </div>
+    
+  <div class="mb-3">
+    Mô tả:
+  
+  <textarea class="form-control" name="productDescription"></textarea>
 
-    </div>
-    
-      <span class="btn btn-blue-custom mb-3" id="btn_ThemMau">
-                  Thêm màu
-     </span>
-   
-    </div>
- 
- 
-  <div class="mb-3">
-             {{#with product}}
-          <div class="my-3">Trạng thái</div> <!--1.Hoạt động , Hết hàng , sắp  về-->
-       <select name="statusProduct" class="form-control" id="slc_choose_status" value="{{status}}" >
-         
-        <option value="active">Có sẵn</option>
-          <option value="soldout">Hết hàng</option>
-            <option value="soon">Sắp về</option>
-    </select>
-          {{/with}}
-    </div>
-  <div class="mb-3">
-    <label  class="form-label">Mô tả</label>
-    <input type="text" class="form-control" name="product_Description">
   </div>
-  <div class="my-3 rounded">
-
+  <div class="mb-3">
+    <label  class="form-label">Size</label>
     <div class="row">
        <div class="col-12 test-left">
-
                  <div class="specifications-products">   
-                     <div class="title-specifications-products fw-bold text-dark rounded">
-                         THÔNG SỐ KỸ THUẬT
+                   
+                     <div class="content-specifications-products pd-bd" id="appenHTMLSpecification_products">
+                          
+                      
                      </div>
-                    
-                     <div class="content-specifications-products pd-bd " id="appenHTMLSpecification_products">
-                        {{#each listSpecifications}}
-                           <div class="d-flex gap-3 my-3 align-items-end  number-element-${index}">
-                                  <div class="w-50">
-                                  <label  class="form-label">Tiêu đề</label>
-                                      <input value="{{this.title}}" type="text" name="titleSpecification" class="form-control" >
-                                  </div>
-                                
-                                  <div class="w-50">
-                                  <label  class="form-label">Chi tiết</label>
-                                  <input value="{{this.details}}" name="detailSpecification" type="text" class="form-control" >
-                                  </div>
-                                  <div  class="btn-remove-specification-line-${index} btn btn-danger rounded-circle fs-normal" onclick="return this.parentNode.remove();">X</div>
-                          </div>
-                         {{/each}}
-                         
-                     </div>
-                      <div class="btn btn-success mb-3 w-100 fw-bold fs-4" id="btn_ThemLine_Specification">
-                           +
-                      </div>
                       
                 </div>
-               
+                <div class="btn btn-success mb-3 w-100 fw-bold fs-4" id="btn_ThemLine_Specification">
+                  +
+              </div>
             </div>
     </div>
    
   </div>
 
-  <button type="submit" class="btn btn-primary" id="btnSubmit" >Submit</button>
+  <div class="mb-3">
+       <label  class="form-label">Chọn topping</label>
+       <div class="row">
+        <div class="col-6">
+          <div class="row">
+       {{#each dataTopping}}
+       
+         <div class="col-6 my-2">
+            <div class="d-flex gap-2 align-items-baseline">
+          <input name="extraTopping[]" type="checkbox" value="{{this._id}}" class="form-check-input"> {{this.name}}
+        </div>
+
+         </div>
+        
+      
+       
+       {{/each}}
+       </div>
+        </div>
+       </div>
+  </div>
+ 
+  <button type="submit" class="btn btn-primary" id="btnSubmit" disabled>Submit</button>
 </form>
 </div>
   </div>
 <script>
-  
   document.addEventListener('DOMContentLoaded',function(){
       var elemt_select_category = $('#slc_choose_category');
       var slc_select_Itemcategory = $('#slc_choose_Itemcategory');
@@ -168,25 +106,19 @@
       var countElemet = 0;
       var countMauElement =0;
       var btnSubmit = $('#btnSubmit');
-      var input_choose_file = $(".input-choose-file");
-      input_choose_file.change(function(e){
-        console.log(e.target);
-      })
-
-      
       elemt_select_category.change(function(){
         loadDuLieu();
       })
-          var file = document.getElementById('inputfile').onchange = function () {
-        var newfileInput = $('#newfileInput');
-        newfileInput.text(this.value);
-      };
+    
     btnThemLine.on('click',function(){
-
-          countElemet++;
-          console.log(123);
-          var title = 'titleSpecification';
-          var detail = 'detailSpecification'
+           var elementChildNodeAppendLine =appenHTMLSpecification_products.children().length;
+           if(elementChildNodeAppendLine>=3){
+             alert("Chỉ được thêm 3 size")
+           }else{
+               countElemet++;
+        
+          var title = 'listSize[]';
+          var detail = 'listPriceExtra[]'
           appenHTMLSpecification_products.append(renderItemSpecifications(countElemet,title,detail));
           
           var btn_of_line = $(`.btn-remove-specification-line-${countElemet}`); //btn đỏ của từng dòng
@@ -197,9 +129,14 @@
               parent_btn_of_line.remove();
               //Vô hiệu hoá btn Lưu khi ấn nút xoá line đỏ
               var elementChildNodeAppendLine =appenHTMLSpecification_products.children().length;
+             
               toggleDisabledWithLength(elementChildNodeAppendLine,btnSubmit);
+             
+              
               
           })
+           }
+        
           
         })
   btn_ThemMau.on('click',function(){
@@ -235,8 +172,7 @@
     }
       
   }
-  
-  
+
    async function getListCategory(id){
       try{
         const reponse = await axios.get(`getItemCategory/${id}`)
@@ -248,8 +184,4 @@
     }
   })
  
-
- function doichu(){
-
- }
 </script>

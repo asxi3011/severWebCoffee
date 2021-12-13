@@ -6,6 +6,7 @@ const category = new Schema({
     nameCategory:{type:String},
     imageCategory:{type:String},
     listProduct:{type:Array},
+    slug:{type:String}
 },{
     timestamps:true,
 })

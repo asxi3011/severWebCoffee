@@ -24,10 +24,10 @@
       </div>
     </div>
 
-    <input type="text" name="idItemCategory"  value="{{idItemCategory}}" hidden>
+    <input id="getIDCategory" type="text" name="idCategory"  value="{{idCategory}}" hidden>
    
   <div id='appendListCategory'>
-    <div id="getIDItemCategory" hidden>{{idItemCategory}}</div>
+    
     {{#if data}}
     
      
@@ -47,7 +47,7 @@
            <tr class="row-table-product table-success">
             <td class="table-success">{{inc @index}}</td>
             <td class="table-success">{{nameProduct}}</td>
-            <td class="image-table-product"><img src="http://localhost:3000/uploads/{{imageRepresent}}" alt=""></td>
+            <td class="image-table-product"><img src="http://localhost:3030/uploads/{{imageRepresent}}" alt=""></td>
             <td class="table-success">{{priceStandard}}</td>
             <td class="table-success">{{status}}</td>
             <td><input type="checkbox" value="{{this._id}}" name="chkName[]" class="form-check-input"></td>
@@ -115,8 +115,9 @@
             // Extract info from data-bs-* attributes
               var delCategory=document.querySelector('.del-category');
               delCategory.onclick =function(){
-                var idItemCategory = $('#getIDItemCategory').text();
-                formRemoveItemCategory.action = `/me/${idItemCategory}/bin/deleteOutBinProduct/${idProduct}?_method=DELETE`;
+                var idCategory = $('#getIDCategory').val();
+                
+                formRemoveItemCategory.action = `/me/${idCategory}/bin/deleteOutBinProduct/${idProduct}?_method=DELETE`;
                formRemoveItemCategory.submit();
               }
             })

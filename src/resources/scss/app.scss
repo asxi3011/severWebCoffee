@@ -4,7 +4,7 @@
 @import'products';
 @import'cart';
 @import'managerLogin';
-@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;700&display=swap');
 body{
     font-family: 'Roboto', sans-serif;
 }
@@ -17,6 +17,10 @@ body{
 .pd-w-100{
     padding-left: 150px;
     padding-right: 150px;
+}
+.pd-w-200{
+    padding-left: 220px;
+    padding-right: 220px;
 }
 .pd-bd{
     padding: 16px 20px;
@@ -267,4 +271,59 @@ body{
 }
 .background-primary{
     background-color: #fb8f19;
+}
+
+.btn-circle-primary{
+    width: 32px;
+    height: 32px;
+    clip-path: circle();
+    padding: 4px;
+    text-align: center;
+    background-color: $color-primary;
+}
+.btn-circle-primary:hover{
+    cursor: pointer;
+    background-color: $color-primary-hover;
+}
+
+.btn-color-primary{
+    padding: 12px;
+    border-radius: 32px;
+    text-align: center;
+    color: white;
+    background-color: $color-primary;
+}
+.btn-color-primary:hover{
+    color: white;
+    background-color: $color-primary-hover;
+}
+
+.btn-circle-disable{
+    background-color: $color-disable !important;
+    cursor: unset !important;
+}
+.bg-border{
+    background-color: $color-disable;
+    padding: 16px;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+}
+.btn-no-background{
+    border: 1px solid black;
+    padding: 4px 8px;
+    border-radius: 32px;
+}
+.bd-bottom{
+    border-bottom: 1px solid $color-disable;
+}
+
+.img-min{
+    width: 40px;
+    height: 40px;
+}
+
+.btn-circle-transperant{
+    border: 1px solid rgb(172, 172, 172);
+    padding: 2px ;
+    border-radius: 32px;
 }

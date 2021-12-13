@@ -11,8 +11,6 @@ var validate =require('../resources/validate/user.validate');
 // DELETE : Dùng để xoá dữ liệu
 
 
-
-
 //Bin Category
 router.get('/Category/bin',me.binCategory);
 router.put('/Category/bin/restoreCategory/:id',me.restoreCategory);
@@ -55,7 +53,7 @@ router.delete('/removeManyProduct',me.removeManyProduct);
 //Bin Product
 router.get('/binProduct/:idCategory',me.binProduct);
 router.put('/bin/restoreProduct/:id',me.restoreProduct);
-router.delete('/:idItemCategory/bin/deleteOutBinProduct/:id',me.deleteOutBinProduct);
+router.delete('/:idCategory/bin/deleteOutBinProduct/:id',me.deleteOutBinProduct);
 router.post('/:slugItemCategory/bin/optionServiceBinProduct',me.optionServiceBinProduct);
 
 //admin

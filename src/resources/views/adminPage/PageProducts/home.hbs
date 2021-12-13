@@ -6,8 +6,8 @@
     <h3>Danh sách sản phẩm</h3>
     <div class="d-flex my-2 align-items-center justify-content-between">
       <a class="a-none btn btn-dark-custom" id="btn_Trash_Product">
-          <i class="fas fa-trash"></i> Thùng rác 
-         
+          <i class="fas fa-trash"></i> Thùng rác <span id="number_deleted"></span>
+        
       </a>
       <div class="d-flex gap-3"> 
       <span class="d-flex align-items-center gap-2">
@@ -118,14 +118,15 @@
       var countElemet = 0;
       var countMauElement =0;
       var checkboxName = "chkName[]";
-      var CategoryItemcheckbox = $('input[name="chkName[]"]');
+   
       var btnSubmit = $('#btnSubmit');
       var frmRemoveProduct = document.forms['frmRemoveProduct'];
       var CategoryKey = 'SelectCategoryProduct'
       var categorySelected = sessionStorage.getItem(CategoryKey);
       var chkCheckAll = $('#chkCheckAll');
       var btn_Remove_Many = $('#btn_Remove_Many');
-     var renderEDIT = document.forms['renderEDIT'];
+      var renderEDIT = document.forms['renderEDIT'];
+      var number_deleted = $("#number_deleted");
      
       elemt_select_category.val(categorySelected);
       loadDuLieu();
@@ -153,6 +154,7 @@
           }
       
       })
+      
 
         var ModalDeleteMany = document.getElementById('ModalDeleteMany')
       //Show Modal DeleteMany
@@ -179,12 +181,13 @@
                btn_Trash_Product.on("click",function(){
                 btn_Trash_Product.attr("href",`binProduct/${id}`)
               })
+             
               item.then(response=>{  
-            if(response.data.dataProduct.length>0){
-                         
+              console.log(response);
+              number_deleted.html(`(${response.data.dataCount})`)
+            
+            if(response.data.dataProduct.length>0){                  
                     var product = response.data.dataProduct;
-                   
-                    
                     var htmlRowTable = [];
               product.forEach((element,index)=>{
                 
@@ -194,14 +197,24 @@
               if(htmlRowTable != ""){
                 var htmlFullTable = renderTableProduct(htmlRowTable.join(" "));
                 appendTable.html(htmlFullTable);
+                   var CategoryItemcheckbox = $(`input[name="${checkboxName}"]`);
                   checkboxValidation(chkCheckAll,checkboxName,CategoryItemcheckbox,btn_Remove_Many);
-                }
+                
+                    var btn_edit_Item =$('.btn-edit-Item');
+                    btn_edit_Item.on('click',function(e){
+                      idItemCategory = e.target.value;
+                      renderEDIT.action = `editProduct/${idItemCategory}`;
+                      renderEDIT.submit();
+                    })
+                  }
+                
                
             }
              else{
                       
                       appendTable.html(empty());
                 }
+          
           })  
           }
     else{
@@ -213,15 +226,7 @@
       
     }
     
-   async function getListCategory(id){
-      try{
-        const reponse = await axios.get(`getItemCategory/${id}`)
-        return reponse
-      }  
-      catch (error){
-        console.log(error);
-      }
-    }
+  
      async function getListProduct(id){
       try{
         const reponse = await axios.get(`getProduct/${id}`)
