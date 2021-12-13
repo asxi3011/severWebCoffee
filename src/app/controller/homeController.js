@@ -1,15 +1,86 @@
 const Order = require('../model/order')
 const ProductCart = require('../model/productCart');
 const Product = require('../model/product');
-
+const Category = require('../model/category');
 class homeControllers{
     index(req,res){
-    res.render('clientPage/home')
+        Category.find().lean()
+        .then(data=>{
+            res.render('clientPage/home',{dataCategory:data});
+        })
+    }
+    detailProduct(req,res){
+        var slug = req.params.slug;
+     
+        Product.aggregate([{
+            $lookup:{
+                from:"toppings",
+                localField:"listTopping",
+                foreignField:"_id",
+                as:"toppings",
+
+            }
+        },{
+            $match:{
+                slug:slug,
+            }
+        }],function(err,data){
+                
+            if(data.length===1){
+                var dulieu = data[0];
+                var sizeName = dulieu.Size.nameSize;
+                var sizeValue = dulieu.Size.extraSize;
+                var newsize = sizeName.map((size,index)=>{
+                    return {name:size,value:sizeValue[index]};
+                })
+                var listTopping = dulieu.toppings;
+                   
+                res.render('clientPage/detailProduct',{product:dulieu,size:newsize,toppings:listTopping})
+             
+                
+            }
+            else{
+                res.render("partials/Somethingwrong");
+            }
+            
+        
+           
+        })
+          
+        
+        
     }
     products(req,res){
-      
-        res.render('clientPage/products')
+     
+       var chuoi = req.params.slug;
+        
+        Category.aggregate([{
+            $lookup:{
+                from:"products",
+                localField:"listProduct",
+                foreignField:"_id",
+                as:"listProduct",
+            }
+            
+        },{$match:{
+            slug:chuoi,
+        }}],function(err,data){
+            if(data.length===1){
+                var dulieu = data[0];
+               
+                    Category.find().lean()
+                    .then(dataDay=>{
+                        res.render('clientPage/products',{dataCategory:dataDay,dataProducts:dulieu.listProduct});
+                    })
+                
+            }
+         else{
+                res.render("partials/Somethingwrong");
+            }
+        })
+
     }
+    
     storeOrder(req,res){
         var idDonHang = makeid(12);
         Order.find({idOrder:idDonHang})

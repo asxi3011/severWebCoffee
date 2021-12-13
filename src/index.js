@@ -32,7 +32,16 @@ app.engine('.hbs', exphbs(
         else{
           return "d-none";
         }
+    },
+    formatNum: function(x){
+      var formatter = new Intl.NumberFormat('de-DE', {
+        style: 'currency',
+        currency: 'VND',
+      
+      });
+      return formatter.format(parseInt(x));
     }
+   
 }}
   
 ));

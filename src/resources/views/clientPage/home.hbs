@@ -37,68 +37,21 @@
                     </span>
                     Sản phẩm từ Nhà
                 </div>
-                <div class="d-flex flex-wrap justify-content-center list-category pd-t-50">
-                   
-                     <a href="" class="item-category a-none">
+                <div class="d-flex flex-wrap justify-content-center list-category pd-t-50 divTest">
+                    {{#each dataCategory}}
+                     <a href="{{this.slug}}" class="item-category a-none test12">
                          <div class="">
-                             
-                                <div class="image-cateogry rounded-circle category-active m-auto">
-                                <img class="h-100" src="https://minio.thecoffeehouse.com/image/tch-web-order/category-thumbnails/cg_coffee_web.png" alt="">
+                                <div class="image-cateogry rounded-circle m-auto">
+                                <img class="h-100" src="http://localhost:3030/uploads/{{this.imageCategory}}" alt="">
                                 </div>
-                                <div class="fs-min text-center text-disable text-coffe text-coffe-active my-2">
-                                Cà phê
+                                <div class="fs-6 text-center text-disable text-coffe my-2">
+                                {{this.nameCategory}}
                                 </div>
-                              
+
                          </div>
                     </a>
-
-                     <a href="" class="item-category a-none">
-                         <div>
-                            <div class="image-cateogry rounded-circle m-auto">
-                            <img class="h-100" src="https://minio.thecoffeehouse.com/image/tch-web-order/category-thumbnails/cg_tea_milk_tea_web.png" alt="">
-                            </div>
-                            <div class="fs-min text-center text-disable text-coffe my-2">
-                               Trà 
-                            </div>
-                         </div>
-                    </a>
-
-                     <a href="" class="item-category a-none">
-                         <div>
-                            <div class="image-cateogry rounded-circle m-auto">
-                            <img class="h-100" src="https://minio.thecoffeehouse.com/image/tch-web-order/category-thumbnails/cg_coffee_web.png" alt="">
-                            </div>
-                            <div class="fs-min text-center text-disable text-coffe my-2">
-                               Đá xay
-                            </div>
-                         </div>
-                    </a>
-
-                     <a href="" class="item-category a-none">
-                         <div >
-                            <div class="image-cateogry rounded-circle m-auto">
-                            <img class="h-100" src="https://minio.thecoffeehouse.com/image/tch-web-order/category-thumbnails/cg_tea_milk_tea_web.png" alt="">
-                            
-                            </div>
-                            <div class="fs-min text-center text-disable text-coffe my-2">
-                               thưởng thức tại nhà
-                            </div>
-                         </div>
-                    </a>
-
-                    
-
-                     <a href="" class="item-category a-none">
-                         <div >
-                            <div class="image-cateogry rounded-circle m-auto">
-                            <img class="h-100" src="https://minio.thecoffeehouse.com/image/tch-web-order/category-thumbnails/cg_tea_milk_tea_web.png" alt="">
-                            
-                            </div>
-                            <div class="fs-min text-center text-disable text-coffe my-2">
-                               thưởng thức tại nhà
-                            </div>
-                         </div>
-                    </a>
+                    {{/each}}
+        
                    
                    
                    
@@ -623,3 +576,8 @@
     </div>
   
 </div>
+
+<script>
+  
+
+</script>

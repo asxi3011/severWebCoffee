@@ -113,6 +113,7 @@ class meControllers{
                 var category = new Category({
                     nameCategory:normalization(element),
                     imageCategory:arrayImage[index].filename,
+                    slug: ChangeToSlug(element),
                 })
                 arrayCateogry.push(category);   
           })
@@ -423,15 +424,21 @@ class meControllers{
        var idCategory=req.params.id
         Category.findOne({_id:idCategory})
         .lean()
-        .then(data=>{
-            var listIdProduct = data.listProduct;
-            Product.find({_id:{$in:listIdProduct}})
+        .then(reponse=>{
+            var listIdProduct = reponse.listProduct;
+            Product.findWithDeleted({_id:{$in:listIdProduct}})
             .lean()
-            .then(dataProduct=>{
-                res.json({dataProduct:dataProduct});
-            });
+            .then(data=>{
+                var arrayDeleted =  data.filter(element=>element.deleted == true);
+                var arrayNotDeleted =  data.filter(element=>element.deleted == false);
+              
+              
+                 res.json({dataProduct:arrayNotDeleted,dataCount:arrayDeleted.length});
+            })
         })
-        
+        .catch(err=>{
+            res.status(404).json({Msg:"Không có dữ liệu"});
+        })
     }
     listProduct(req,res,next){
         Category.find()
@@ -458,15 +465,17 @@ class meControllers{
                 nameSize:listSize,
                 extraSize:listPriceExtra,
             };
+        
            
+            var convertExtraTopping = extraTopping.map(topping=>ObjectId(topping));
             var newProduct = new Product({
                 nameProduct,
                 priceStandard:PriceRoot,
-                productDescription,
+                descriptionProduct:productDescription,
                 imageRepresent:req.file.filename,
                 Size:arraySize,
                 slug,
-                listTopping:extraTopping,
+                listTopping:convertExtraTopping,
             })
             newProduct.save(function(err){
                 if(err){
@@ -479,7 +488,7 @@ class meControllers{
                     })
                 }
             });
-            
+        
         })
         
     }
@@ -586,7 +595,7 @@ class meControllers{
                         return element;
                     });
                   
-                res.render('adminPage/PageProducts/bin',{layout:'admin',data:Item,idItemCategory:req.params.idItemCategory});
+                res.render('adminPage/PageProducts/bin',{layout:'admin',data:Item,idCategory:req.params.idCategory});
                
                 })  
             })
@@ -606,31 +615,30 @@ class meControllers{
         
     }
     deleteOutBinProduct(req,res,next){
-        var idItemCategory = req.params.idItemCategory;
+        var idCategory =req.params.idCategory;
         var idProduct = req.params.id;
-       
+    
+        
         Product.findByIdAndDelete({_id:idProduct})
         .then(data=>{
-                ItemCategory.findOne({_id:idItemCategory})
-               .lean()
-              .then(reponse=>{
-                    var listProduct= reponse.listProduct;
-                
-                    //trả về mảng mới kh chưa mấy p tử đã xoá
-                    var newlist = listProduct.filter(element=> !idProduct.includes(element.toString()));
-                   
-                    ItemCategory.updateOne({_id:idItemCategory},{$set:{listProduct:newlist}},function(err){
-                        if(err){
-                            res.json(err);
-                        }
-                        else{
-                            res.redirect('back');
-                        }
-                    })
+                Category.findOne({_id:idCategory})
+                .lean()
+                .then(reponse=>{
                     
-                     
+                        var list = reponse.listProduct;
+                        var idCategory = reponse._id;
+                        var newlist = list.filter(element=> element != req.params.id)
+                        Category.updateOne({_id:idCategory},{$set:{listProduct:newlist}},function(err){
+                            if(err){
+                                res.json(err);
+                            }
+                            else{
+                                res.redirect('back');
+                            }
+                        })
+                   
+                  
                 })
-               
         })
         .catch(next);
         
@@ -638,19 +646,20 @@ class meControllers{
     optionServiceBinProduct(req,res,next){
         var caseAction = req.body.slc_action_bin;
         var groupId = req.body.chkName;
-        var idItemCategory =req.body.idItemCategory;
+        var idCategory =req.body.idCategory;
+      
+        
         if(caseAction ==='delete'){
             Product.deleteMany({_id:{$in:groupId}})
             .then(data=>{
-                  
-                    ItemCategory.findOne({_id:idItemCategory})
+                    Category.findOne({_id:idCategory})
                    .lean()
                   .then(reponse=>{
                         var listProduct= reponse.listProduct;
                     
                         //trả về mảng mới kh chưa mấy p tử đã xoá
                         var newlist = listProduct.filter(element=> !groupId.includes(element.toString()));
-                        ItemCategory.updateOne({_id:idItemCategory},{$set:{listProduct:newlist}},function(err){
+                        Category.updateOne({_id:idCategory},{$set:{listProduct:newlist}},function(err){
                             if(err){
                                 res.json(err);
                             }
@@ -679,6 +688,8 @@ class meControllers{
         else{
             res.render('Pagenotfound');
         }
+
+        
     }
     
     //Đơn hàng

@@ -8,7 +8,7 @@ const privateKey = 'doAnChuyenNganh123';
 class managerControllers{
    
     login(req,res){
-        res.render('managerLogin')
+        res.render('clientPage/managerLogin')
     }
     authenticationAccount(req,res){
         const myPlaintextPassword = req.body.password;

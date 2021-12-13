@@ -1,0 +1,198 @@
+<div class="pd-header">
+    <div class="container">
+        <div class="pd-w-200">
+            <div class="bd-product my-5">
+                <div class="row">
+                    {{#with product}}
+                    <div class="col-6">
+                         <div class="details-image-info-product">
+                            <img src="http://localhost:3030/uploads/{{this.imageRepresent}}" alt="">
+                        </div>
+                        <div class="d-flex gap-3 justify-content-center">
+                            <div class="list-image-details-info-product mt-2 ">
+                            <div>
+                                <img src="http://localhost:3030/uploads/{{this.imageRepresent}}" alt="">
+                            </div>
+                             
+                            </div>
+                           
+                           
+                        </div>
+                        <p class="mt-4">
+                            {{descriptionProduct}}
+                        </p>
+                        
+                    </div>
+                    <div class="col-6">
+                        <h2 class="fw-bold">{{nameProduct}}</h2>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                            <span id="details-price-product" class="details-price-prodcut">
+                            {{priceStandard}} 
+                            </span>
+                        
+                            </div>
+                            <div class="quanity-product">
+                                <button id="btn_down" class="btn btn-circle-primary btn-circle-disable mx-2"><i class="fas fa-minus text-white"></i></button>
+                                <span class="mx-2" id="lbl_quanity">1</span>
+                                <button id="btn_up" class="mx-2 btn btn-circle-primary"><i class="fas fa-plus text-white"></i></button>
+                            </div> 
+                        </div>
+                       {{/with}}
+                        <div>
+                            <div class="input-group mt-4">
+                                <div class="input-group-prepend">
+                                <div class="input-group-text"><i class="fas fa-sticky-note fs-4 text-secondary"></i></div>
+                                </div>
+                                <input type="text" class="form-control" id="inlineFormInputGroup" placeholder="Ghi chú cho món tại đây">
+                            </div>
+                        </div>
+                        <div class="mt-4 bd-size">
+                            <div class="bg-border ">Chọn size (BẮT BUỘC)</div>
+                            <div class=""> 
+                                <div class="d-flex justify-content-evenly p-2">
+                                    {{#each size}}
+                                        <div class="d-flex align-items-center gap-3">
+                                        <input class="form-check-input rad-primary" type="radio" name="radSize" id="{{this.name}}" value="{{this.value}}">
+                                        <div>
+                                            <label class="d-block" for="{{this.name}}">{{this.name}}</label>
+                                            <label class="d-block price-size" for="{{this.name}}">+{{this.value}} đ</label>
+                                        </div>
+                                        </div>
+                                    {{/each}}
+                               
+                                </div>
+                            </div>
+                        </div>
+                            {{#if toppings}}
+                            <div class="mt-4 bd-size">
+                            <div class="bg-border ">Chọn Topping (Tùy chọn)</div>
+                            <div class=""> 
+                                <div class="d-flex flex-column p-2 topping-parent">
+                                        {{#each toppings}}
+                                        <div class="d-flex align-items-center justify-content-between gap-3">
+                                            <div class="d-flex flex-column ">
+                                                <div>{{this.name}}</div>
+                                                <div class="fw-bold fs-normal price-extra">+{{this.priceExtra}}</div>
+                                            </div>
+                                            <div class="d-flex align-items-center">
+                                                <button  class="btn  mx-1 d-none btn_down_topping"><i class="far fa-minus-square fs-5 color-primary"></i></button>
+                                                <div class="fs-6 lbl_topping quanity-extra">0</div>
+                                                <button class="mx-1 btn btn_up_topping"><i class="far fa-plus-square fs-5 color-primary"></i></i></button>
+                                            </div>
+                                        </div>
+                                        
+                                        {{/each}}
+                                </div>
+                            </div>
+                            </div>
+                            {{/if}}
+                         {{#with product}}
+                        <div class="btn btn-color-primary w-100 mt-4">
+                            <span id="price_Total">
+                                  {{formatNum @priceStandard}} 
+                            </span> - Thêm vào giỏ hàng
+                        </div>
+                        {{/with}}
+                    </div>
+                    
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded",function(){
+        var lblquanity = $('#lbl_quanity');
+        var btnUp = $('#btn_up');
+        var btnDown = $('#btn_down');
+        var details_price_product = $('#details-price-product');
+        var price_Total = $("#price_Total");
+        var radioSize = $('input:radio[name=radSize]');
+        var btn_down_topping = $('.btn_down_topping');
+        var btn_up_topping = $('.btn_up_topping');
+        var lbl_quanity_topping = $('#lbl_quanity_topping');
+        var topping_parrent =$('.topping-parent');
+        var price_size = $('.price-size');
+        var price_extra = $('.price-extra');
+        var price_product = $('#details-price-product');
+        
+     
+  
+        if(radioSize.is(':checked') === false) {
+            radioSize.filter('[value=0]').prop('checked', true);
+        }
+        radioSize.change(function(){
+            tinhTien();
+        })
+        btnUp.on("click",function(e){
+            var current = lblquanity.text();
+           
+            lblquanity.text(parseInt(current)+1+"");
+             if(parseInt(lblquanity.text())>1){
+                btnDown.removeClass("btn-circle-disable");
+            }
+                tinhTien();
+        })
+        btn_up_topping.on("click",function(e){
+            var current = lbl_quanity_topping.text();
+            
+        });
+        [...document.getElementsByClassName("btn_up_topping")].forEach(button => button.addEventListener('click',onClickUpTopping));
+        [...document.getElementsByClassName("btn_down_topping")].forEach(button => button.addEventListener('click',onClickDownTopping));
+         btnDown.on("click",function(e){
+            var current = lblquanity.text();
+            if(!btnDown.hasClass("btn-circle-disable")){
+                lblquanity.text(parseInt(current)-1+"");
+                    if(parseInt(lblquanity.text())<=1){
+                    btnDown.addClass("btn-circle-disable");
+                }
+            }
+            tinhTien();
+        })
+     
+
+        function onClickUpTopping(){
+            var parent = this.parentElement;
+            var child = parent.querySelector('.lbl_topping');
+             var current = parseInt(child.innerText);
+             if(current >= 0 && current < 2){
+              var btn_down_topping = parent.querySelector('.btn_down_topping'); 
+                child.innerText= current+1;
+              if(parseInt(child.innerText)>0){
+                 btn_down_topping.classList.remove("d-none");
+             }
+             }
+        }
+        function onClickDownTopping(){
+            var parent = this.parentElement;
+            var child = parent.querySelector('.lbl_topping');
+            var btn_down_topping =parent.querySelector('.btn_down_topping'); 
+             var current = child.innerText;
+             child.innerText= parseInt(current)-1;
+             if(parseInt(child.innerText)<=0){
+                 btn_down_topping.classList.add("d-none");
+             }
+        }
+         function tinhTienTopping(){
+            var soluong = $('.lbl_topping');
+            var tien = $('.price-extra');
+         
+      
+           
+        }
+        function tinhTien(){
+            var currentQuanity = parseInt(lblquanity.text());
+            var price = parseInt(details_price_product.text());
+            var priceExtra = parseInt($('input[type=radio]:checked').val());
+            var priceTopping = $('')
+            var total = currentQuanity*(price+priceExtra);
+            
+            tinhTienTopping();
+            price_Total.text(formatter.format(total));
+        }
+        
+    })
+
+
+</script>

@@ -199,3 +199,9 @@ function renderList(number,listItem,id){
       })
       
 }
+   
+var formatter = new Intl.NumberFormat('de-DE', {
+  style: 'currency',
+  currency: 'VND',
+
+});
