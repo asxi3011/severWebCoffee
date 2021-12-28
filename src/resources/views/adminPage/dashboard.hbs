@@ -1,0 +1,143 @@
+<div class="container pd-admin">
+    <div class="pd-bd-admin box-shadow-1 text-dark bg-child-admin">
+        <h1 class="mt-4">Trang chủ</h1>
+        <ol class="breadcrumb mb-4">
+            <li class="breadcrumb-item active">Tổng quan</li>
+        </ol>
+        <div class="row">
+            <div class="col-xl-3 col-md-6">
+                <div class="card bg-primary text-white mb-4">
+                    <div class="card-body">Tống số sản phẩm
+                        {{#with product}}
+                        <div class="fw-light mt-2 fs-normal">{{this}} sản phẩm</div>
+                        {{/with}}
+                    </div>
+                    <div class="card-footer d-flex align-items-center justify-content-between">
+                        <a class="small text-white stretched-link" href="/me/listProduct">Xem chi tiết</a>
+                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="card bg-warning text-white mb-4">
+                    <div class="card-body">Đơn hàng hoàn thành hôm nay
+                        {{#with orderDone}}
+                        <div class="fw-light mt-2 fs-normal">{{this}} đơn hàng</div>
+                        {{/with}}
+                    </div>
+                    <div class="card-footer d-flex align-items-center justify-content-between">
+                        <a class="small text-white stretched-link" href="/me/listOrder/done?q=today">Xem chi tiết</a>
+                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="card bg-success text-white mb-4">
+                    <div class="card-body">Tổng danh mục
+                        {{#with category}}
+                        <div class="fw-light mt-2 fs-normal">{{this}} danh mục</div>
+                        {{/with}}
+                    </div>
+                    <div class="card-footer d-flex align-items-center justify-content-between">
+                        <a class="small text-white stretched-link" href="/me/category">Xem chi tiết</a>
+                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="card bg-danger text-white mb-4">
+                    <div class="card-body">Đơn đã hủy hôm nay
+                        {{#with orderCancel}}
+                        <div class="fw-light mt-2 fs-normal">{{this}} đơn hàng</div>
+                        {{/with}}
+                    </div>
+                    <div class="card-footer d-flex align-items-center justify-content-between">
+                        <a class="small text-white stretched-link" href="/me/listOrder/cancel?q=today">View Details</a>
+                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="test" style="width:500px; height:500px;">
+            <div style="color:#6c757d">Sản phẩm bán ra hôm nay</div>
+
+            <canvas id="myChart" width="200" height="200"></canvas>
+
+        </div>
+
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const ctx = document.getElementById('myChart').getContext('2d');
+        var dataNameChart;
+        var dataValueChart;
+        var chartToDay = getDataChart();
+        chartToDay.then(reponse => {
+            var data = reponse.data;
+            if (data != null) {
+                dataNameChart = data.map(x => { return x.name });
+                dataValueChart = data.map(x => { return x.quantity });
+                console.log(data);
+            } else {
+                dataNameChart = "Chưa có dữ liệu";
+                dataValueChart = 0;
+            }
+            const plugin = {
+                id: 'custom_canvas_background_color',
+                beforeDraw: (chart) => {
+                    const ctx = chart.canvas.getContext('2d');
+                    ctx.save();
+                    ctx.globalCompositeOperation = 'destination-over';
+                    ctx.fillStyle = 'white';
+                    ctx.fillRect(0, 0, chart.width, chart.height);
+                    ctx.restore();
+                }
+            };
+            const myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: dataNameChart,
+                    datasets: [{
+                        label: 'Đã bán thành công',
+                        data: dataValueChart,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.6)',
+                            'rgba(255, 159, 64, 0.6)',
+                            'rgba(255, 205, 86, 0.6)',
+                            'rgba(75, 192, 192, 0.6)',
+                            'rgba(54, 162, 235, 0.6)',
+                            'rgba(153, 102, 255, 0.6)',
+                            'rgba(201, 203, 207, 0.6)'
+                        ],
+                        borderColor: [
+                            'rgb(255, 99, 132)',
+                            'rgb(255, 159, 64)',
+                            'rgb(255, 205, 86)',
+                            'rgb(75, 192, 192)',
+                            'rgb(54, 162, 235)',
+                            'rgb(153, 102, 255)',
+                            'rgb(201, 203, 207)'
+                        ],
+                        hoverOffset: 4
+                    }]
+                },
+                plugins: [plugin],
+
+            });
+        })
+        .catch(() => {
+            console.log("coloi");
+        });
+        async function getDataChart() {
+            try {
+                const response = await axios.post('/me/getChartToDay');
+                return response;
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    })
+
+</script>

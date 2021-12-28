@@ -2,35 +2,41 @@
     <div class=" bg-slider  container-fluid">
         <div class="pd-w-100">
             <div class="slider-home">
-                 <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
-          
-            <div class="carousel-inner">
-                <a href="" class="carousel-item active">
-                <img src="https://minio.thecoffeehouse.com/image/admin/BANNERWEB(3)_728110.jpg" class="d-block w-100" alt="...">
-                </a>
-                <a href="" class="carousel-item">
-                <img src="https://minio.thecoffeehouse.com/image/admin/bannerhomeWEB-Caphetainha_409405.jpg" class="d-block w-100" alt="...">
-                </a>
-                <a href="" class="carousel-item">
-                <img src="https://minio.thecoffeehouse.com/image/admin/WEB-bannehome-TUNGTANG_778598.jpg" class="d-block w-100" alt="...">
-                </a>
-            </div>
-            <div class="posittion-slider">
-                 <div class="carousel-indicators">
-                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+
+                    <div class="carousel-inner">
+                        <a href="" class="carousel-item active">
+                            <img src="https://minio.thecoffeehouse.com/image/admin/BANNERWEB(3)_728110.jpg"
+                                class="d-block w-100" alt="...">
+                        </a>
+                        <a href="" class="carousel-item">
+                            <img src="https://minio.thecoffeehouse.com/image/admin/bannerhomeWEB-Caphetainha_409405.jpg"
+                                class="d-block w-100" alt="...">
+                        </a>
+                        <a href="" class="carousel-item">
+                            <img src="https://minio.thecoffeehouse.com/image/admin/WEB-bannehome-TUNGTANG_778598.jpg"
+                                class="d-block w-100" alt="...">
+                        </a>
+                    </div>
+                    <div class="posittion-slider">
+                        <div class="carousel-indicators">
+                            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0"
+                                class="active" aria-current="true" aria-label="Slide 1"></button>
+                            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"
+                                aria-label="Slide 2"></button>
+                            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"
+                                aria-label="Slide 3"></button>
+                        </div>
+                    </div>
+
                 </div>
             </div>
-             
-            </div>
-            </div>
-           
+
         </div>
     </div>
     <div class="container-fluid">
         <div class="pd-w-100 section-Chapter">
-             <div class="preview-Menu">
+            <div class="preview-Menu">
                 <div class="text-center fs-3">
                     <span>
                         <i class="fas fa-trophy color-primary fs-4"></i>
@@ -38,362 +44,65 @@
                     Sản phẩm từ Nhà
                 </div>
                 <div class="d-flex flex-wrap justify-content-center list-category pd-t-50 divTest">
-                    {{#each dataCategory}}
-                     <a href="{{this.slug}}" class="item-category a-none test12">
-                         <div class="">
-                                <div class="image-cateogry rounded-circle m-auto">
-                                <img class="h-100" src="http://localhost:3030/uploads/{{this.imageCategory}}" alt="">
-                                </div>
-                                <div class="fs-6 text-center text-disable text-coffe my-2">
-                                {{this.nameCategory}}
-                                </div>
 
-                         </div>
+                    {{#each dataCategory}}
+                    <a href="{{this.slug}}" class="item-category a-none test12">
+                        <div class="">
+                            <div class="image-cateogry rounded-circle m-auto">
+                                <img class="h-100" src="http://localhost:3030/uploads/{{this.imageCategory}}" alt="">
+                            </div>
+                            <div class="fs-6 text-center text-disable text-coffe my-2">
+                                {{this.nameCategory}}
+                            </div>
+                        </div>
                     </a>
                     {{/each}}
-        
-                   
-                   
-                   
-                  
+
                 </div>
             </div>
             <div class="preview-Product mt-5">
-                 <div class="row my-3">
-                
-                <div class="col-lg-2 col-md-4 col-sm-12 my-2">
-                    <div class="border-product">
-                        <a href="" class="a-none text-dark">
-                             <div class="">    
-                            <div>
-                                <img class="img-product" src="https://minio.thecoffeehouse.com/image/admin/caphesuada-moi_847396.jpg" alt="">
-                            </div>
-                            <div class="preview-info-product">
-                                  <h4 class="name-product">
-                                        Cà Phê Sữa Đá
-                                    </h4>
-                                    <div class="d-flex justify-content-between align-items-center mt-4">
-                                        <div class="fs-min fw-normal">
-                                            32.000
-                                        </div>
-                                        <div class="fs-3">
-                                            <i class="fas fa-plus-circle color-primary"></i>
+                <div class="row my-3">
+                    {{#if dataProducts}}
+                    {{#each dataProducts}}
+                    <div class="col-lg-2 col-md-4 col-sm-12 my-2">
+                        <div class="border-product">
+                            <a href="product/{{this.slug}}" class="a-none text-dark">
+                                <div class="">
+                                    <div>
+                                        <img class="img-product"
+                                            src="http://localhost:3030/uploads/{{this.imageRepresent}}" alt="">
+                                    </div>
+                                    <div class="preview-info-product">
+                                        <h4 class="name-product fs-6 fw-bolder">
+                                            {{this.nameProduct}}
+                                        </h4>
+                                        <div class="d-flex justify-content-between align-items-center mt-4">
+                                            <div class="fs-6 price">
+                                                {{this.priceStandard}}
+                                            </div>
+                                            <div class="fs-3">
+                                                <i class="fas fa-plus-circle color-primary"></i>
+                                            </div>
                                         </div>
                                     </div>
-                            </div>
-                          
+
+                                </div>
+                            </a>
+
                         </div>
-                        </a>
-                       
                     </div>
-                </div>
-                
-                <div class="col-lg-2 col-md-4 col-sm-12 my-2">
-                    <div class="border-product">
-                        <a href="" class="a-none text-dark">
-                             <div class="">    
-                            <div>
-                                <img class="img-product" src="https://minio.thecoffeehouse.com/image/admin/caphesuada-moi_847396.jpg" alt="">
-                            </div>
-                            <div class="preview-info-product">
-                                  <h4 class="name-product">
-                                        Cà Phê Sữa Đá
-                                    </h4>
-                                    <div class="d-flex justify-content-between align-items-center mt-4">
-                                        <div class="fs-min fw-normal">
-                                            32.000
-                                        </div>
-                                        <div class="fs-3">
-                                            <i class="fas fa-plus-circle color-primary"></i>
-                                        </div>
-                                    </div>
-                            </div>
-                          
-                        </div>
-                        </a>
-                       
-                    </div>
+                    {{/each}}
+                    {{else}}
+                    {{>empty}}
+                    {{/if}}
+
                 </div>
 
-                <div class="col-lg-2 col-md-4 col-sm-12 my-2">
-                    <div class="border-product">
-                        <a href="" class="a-none text-dark">
-                             <div class="">    
-                            <div>
-                                <img class="img-product" src="https://minio.thecoffeehouse.com/image/admin/caphesuada-moi_847396.jpg" alt="">
-                            </div>
-                            <div class="preview-info-product">
-                                  <h4 class="name-product">
-                                        Cà Phê Sữa Đá
-                                    </h4>
-                                    <div class="d-flex justify-content-between align-items-center mt-4">
-                                        <div class="fs-min fw-normal">
-                                            32.000
-                                        </div>
-                                        <div class="fs-3">
-                                            <i class="fas fa-plus-circle color-primary"></i>
-                                        </div>
-                                    </div>
-                            </div>
-                          
-                        </div>
-                        </a>
-                       
-                    </div>
-                </div>
 
-                <div class="col-lg-2 col-md-4 col-sm-12 my-2">
-                    <div class="border-product">
-                        <a href="" class="a-none text-dark">
-                             <div class="">    
-                            <div>
-                                <img class="img-product" src="https://minio.thecoffeehouse.com/image/admin/caphesuada-moi_847396.jpg" alt="">
-                            </div>
-                            <div class="preview-info-product">
-                                  <h4 class="name-product">
-                                        Cà Phê Sữa Đá
-                                    </h4>
-                                    <div class="d-flex justify-content-between align-items-center mt-4">
-                                        <div class="fs-min fw-normal">
-                                            32.000
-                                        </div>
-                                        <div class="fs-3">
-                                            <i class="fas fa-plus-circle color-primary"></i>
-                                        </div>
-                                    </div>
-                            </div>
-                          
-                        </div>
-                        </a>
-                       
-                    </div>
-                </div>
-
-                <div class="col-lg-2 col-md-4 col-sm-12 my-2">
-                    <div class="border-product">
-                        <a href="" class="a-none text-dark">
-                             <div class="">    
-                            <div>
-                                <img class="img-product" src="https://minio.thecoffeehouse.com/image/admin/caphesuada-moi_847396.jpg" alt="">
-                            </div>
-                            <div class="preview-info-product">
-                                  <h4 class="name-product">
-                                        Cà Phê Sữa Đá
-                                    </h4>
-                                    <div class="d-flex justify-content-between align-items-center mt-4">
-                                        <div class="fs-min fw-normal">
-                                            32.000
-                                        </div>
-                                        <div class="fs-3">
-                                            <i class="fas fa-plus-circle color-primary"></i>
-                                        </div>
-                                    </div>
-                            </div>
-                          
-                        </div>
-                        </a>
-                       
-                    </div>
-                </div>
-
-                <div class="col-lg-2 col-md-4 col-sm-12 my-2">
-                    <div class="border-product">
-                        <a href="" class="a-none text-dark">
-                             <div class="">    
-                            <div>
-                                <img class="img-product" src="https://minio.thecoffeehouse.com/image/admin/caphesuada-moi_847396.jpg" alt="">
-                            </div>
-                            <div class="preview-info-product">
-                                  <h4 class="name-product">
-                                        Cà Phê Sữa Đá
-                                    </h4>
-                                    <div class="d-flex justify-content-between align-items-center mt-4">
-                                        <div class="fs-min fw-normal">
-                                            32.000
-                                        </div>
-                                        <div class="fs-3">
-                                            <i class="fas fa-plus-circle color-primary"></i>
-                                        </div>
-                                    </div>
-                            </div>
-                          
-                        </div>
-                        </a>
-                       
-                    </div>
-                </div>
-                
-             </div>
-
-                   <div class="row my-3">
-                
-                <div class="col-lg-2 col-md-4 col-sm-12">
-                    <div class="border-product">
-                        <a href="" class="a-none text-dark">
-                             <div class="">    
-                            <div>
-                                <img class="img-product" src="https://minio.thecoffeehouse.com/image/admin/caphesuada-moi_847396.jpg" alt="">
-                            </div>
-                            <div class="preview-info-product">
-                                  <h4 class="name-product">
-                                        Cà Phê Sữa Đá
-                                    </h4>
-                                    <div class="d-flex justify-content-between align-items-center mt-4">
-                                        <div class="fs-min fw-normal">
-                                            32.000
-                                        </div>
-                                        <div class="fs-3">
-                                            <i class="fas fa-plus-circle color-primary"></i>
-                                        </div>
-                                    </div>
-                            </div>
-                          
-                        </div>
-                        </a>
-                       
-                    </div>
-                </div>
-                
-                <div class="col-lg-2 col-md-4 col-sm-12">
-                    <div class="border-product">
-                        <a href="" class="a-none text-dark">
-                             <div class="">    
-                            <div>
-                                <img class="img-product" src="https://minio.thecoffeehouse.com/image/admin/caphesuada-moi_847396.jpg" alt="">
-                            </div>
-                            <div class="preview-info-product">
-                                  <h4 class="name-product">
-                                        Cà Phê Sữa Đá
-                                    </h4>
-                                    <div class="d-flex justify-content-between align-items-center mt-4">
-                                        <div class="fs-min fw-normal">
-                                            32.000
-                                        </div>
-                                        <div class="fs-3">
-                                            <i class="fas fa-plus-circle color-primary"></i>
-                                        </div>
-                                    </div>
-                            </div>
-                          
-                        </div>
-                        </a>
-                       
-                    </div>
-                </div>
-
-                <div class="col-lg-2 col-md-4 col-sm-12">
-                    <div class="border-product">
-                        <a href="" class="a-none text-dark">
-                             <div class="">    
-                            <div>
-                                <img class="img-product" src="https://minio.thecoffeehouse.com/image/admin/caphesuada-moi_847396.jpg" alt="">
-                            </div>
-                            <div class="preview-info-product">
-                                  <h4 class="name-product">
-                                        Cà Phê Sữa Đá
-                                    </h4>
-                                    <div class="d-flex justify-content-between align-items-center mt-4">
-                                        <div class="fs-min fw-normal">
-                                            32.000
-                                        </div>
-                                        <div class="fs-3">
-                                            <i class="fas fa-plus-circle color-primary"></i>
-                                        </div>
-                                    </div>
-                            </div>
-                          
-                        </div>
-                        </a>
-                       
-                    </div>
-                </div>
-
-                <div class="col-lg-2 col-md-4 col-sm-12">
-                    <div class="border-product">
-                        <a href="" class="a-none text-dark">
-                             <div class="">    
-                            <div>
-                                <img class="img-product" src="https://minio.thecoffeehouse.com/image/admin/caphesuada-moi_847396.jpg" alt="">
-                            </div>
-                            <div class="preview-info-product">
-                                  <h4 class="name-product">
-                                        Cà Phê Sữa Đá
-                                    </h4>
-                                    <div class="d-flex justify-content-between align-items-center mt-4">
-                                        <div class="fs-min fw-normal">
-                                            32.000
-                                        </div>
-                                        <div class="fs-3">
-                                            <i class="fas fa-plus-circle color-primary"></i>
-                                        </div>
-                                    </div>
-                            </div>
-                          
-                        </div>
-                        </a>
-                       
-                    </div>
-                </div>
-
-                <div class="col-lg-2 col-md-4 col-sm-12">
-                    <div class="border-product">
-                        <a href="" class="a-none text-dark">
-                             <div class="">    
-                            <div>
-                                <img class="img-product" src="https://minio.thecoffeehouse.com/image/admin/caphesuada-moi_847396.jpg" alt="">
-                            </div>
-                            <div class="preview-info-product">
-                                  <h4 class="name-product">
-                                        Cà Phê Sữa Đá
-                                    </h4>
-                                    <div class="d-flex justify-content-between align-items-center mt-4">
-                                        <div class="fs-min fw-normal">
-                                            32.000
-                                        </div>
-                                        <div class="fs-3">
-                                            <i class="fas fa-plus-circle color-primary"></i>
-                                        </div>
-                                    </div>
-                            </div>
-                          
-                        </div>
-                        </a>
-                       
-                    </div>
-                </div>
-
-                <div class="col-lg-2 col-md-4 col-sm-12">
-                    <div class="border-product">
-                        <a href="" class="a-none text-dark">
-                             <div class="">    
-                            <div>
-                                <img class="img-product" src="https://minio.thecoffeehouse.com/image/admin/caphesuada-moi_847396.jpg" alt="">
-                            </div>
-                            <div class="preview-info-product">
-                                  <h4 class="name-product">
-                                        Cà Phê Sữa Đá
-                                    </h4>
-                                    <div class="d-flex justify-content-between align-items-center mt-4">
-                                        <div class="fs-min fw-normal">
-                                            32.000
-                                        </div>
-                                        <div class="fs-3">
-                                            <i class="fas fa-plus-circle color-primary"></i>
-                                        </div>
-                                    </div>
-                            </div>
-                          
-                        </div>
-                        </a>
-                       
-                    </div>
-                </div>
-                
-             </div>
 
             </div>
             <div class="text-center">
-                <a href="" class="a-none color-primary fs-6">Xem tất cả <i class="fas fa-arrow-right"></i></a>
+                <a href="/product" class="a-none color-primary fs-6">Xem tất cả <i class="fas fa-arrow-right"></i></a>
             </div>
         </div>
     </div>
@@ -404,180 +113,45 @@
             </div>
             <div class="preview-News mt-5">
                 <div class="row my-3">
+                    {{#each dataPost}}
                     <div class="col-lg-3 col-md-6 col-sm-12 my-2">
-                         <div>
-                            <img class="img-News" src="https://feed.thecoffeehouse.com//content/images/2021/10/Thumbnail_2010.png" alt="">
-                        </div>
+                        <a href="/news/{{this.slug}}">
+                            <img class="img-News" src="uploads/{{this.image}}" alt="">
+                        </a>
                         <div class="border-news">
-                           
-                             <div class="my-4">
-                                <h6>CHAI FRESH: THAY LỜI YÊU DÀNH TẶNG</h6>
+                            <div class="my-4">
+                                <h6 class="text-uppercase cut-text fw-bold">{{this.title}}</h6>
                             </div>
-                            <div class="my-2 ">
-                                <p class="fs-min-plus fw-normal">Bạn mua 5 ly cà phê - Nhà tặng thêm 2 (Hạn sử dụng 10 ngày kể từ ngày mua).</p>
-                            </div>
-                            <div class="d-flex flex-row-reverse mt-5">
-                                <div class="btn background-primary rounded-pill text-white fs-min-plus fw-bold my-2">
+                            <div class="d-flex flex-row-reverse mt-3">
+                                <a href="/news/{{this.slug}}"
+                                    class="btn bg-gradient-primary rounded-pill text-white fs-min-plus fw-bold my-2">
                                     Đọc tiếp
-                                </div>
+                                </a>
                             </div>
                         </div>
-                       
+
                     </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12 my-2">
-                         <div>
-                            <img class="img-News" src="https://feed.thecoffeehouse.com//content/images/2021/10/Thumbnail_2010.png" alt="">
-                        </div>
-                        <div class="border-news">
-                           
-                             <div class="my-4">
-                                <h6>CHAI FRESH: THAY LỜI YÊU DÀNH TẶNG</h6>
-                            </div>
-                            <div class="my-2 ">
-                                <p class="fs-min-plus fw-normal">Bạn mua 5 ly cà phê - Nhà tặng thêm 2 (Hạn sử dụng 10 ngày kể từ ngày mua).</p>
-                            </div>
-                            <div class="d-flex flex-row-reverse mt-5">
-                                <div class="btn background-primary rounded-pill text-white fs-min-plus fw-bold my-2">
-                                    Đọc tiếp
-                                </div>
-                            </div>
-                        </div>
-                       
-                    </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12 my-2">
-                         <div>
-                            <img class="img-News" src="https://feed.thecoffeehouse.com//content/images/2021/10/Thumbnail_2010.png" alt="">
-                        </div>
-                        <div class="border-news">
-                           
-                             <div class="my-4">
-                                <h6>CHAI FRESH: THAY LỜI YÊU DÀNH TẶNG</h6>
-                            </div>
-                            <div class="my-2 ">
-                                <p class="fs-min-plus fw-normal">Bạn mua 5 ly cà phê - Nhà tặng thêm 2 (Hạn sử dụng 10 ngày kể từ ngày mua).</p>
-                            </div>
-                            <div class="d-flex flex-row-reverse mt-5">
-                                <div class="btn background-primary rounded-pill text-white fs-min-plus fw-bold my-2">
-                                    Đọc tiếp
-                                </div>
-                            </div>
-                        </div>
-                       
-                    </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12 my-2">
-                         <div>
-                            <img class="img-News" src="https://feed.thecoffeehouse.com//content/images/2021/10/Thumbnail_2010.png" alt="">
-                        </div>
-                        <div class="border-news">
-                           
-                             <div class="my-4">
-                                <h6>CHAI FRESH: THAY LỜI YÊU DÀNH TẶNG</h6>
-                            </div>
-                            <div class="my-2 ">
-                                <p class="fs-min-plus fw-normal">Bạn mua 5 ly cà phê - Nhà tặng thêm 2 (Hạn sử dụng 10 ngày kể từ ngày mua).</p>
-                            </div>
-                            <div class="d-flex flex-row-reverse mt-5">
-                                <div class="btn background-primary rounded-pill text-white fs-min-plus fw-bold my-2">
-                                    Đọc tiếp
-                                </div>
-                            </div>
-                        </div>
-                       
-                    </div>
+                    {{/each}}
                 </div>
-                
-                 <div class="row my-3">
-                    <div class="col-lg-3 col-md-6 col-sm-12 my-2">
-                         <div>
-                            <img class="img-News" src="https://feed.thecoffeehouse.com//content/images/2021/10/Thumbnail_2010.png" alt="">
-                        </div>
-                        <div class="border-news">
-                           
-                             <div class="my-4">
-                                <h6>CHAI FRESH: THAY LỜI YÊU DÀNH TẶNG</h6>
-                            </div>
-                            <div class="my-2 ">
-                                <p class="fs-min-plus fw-normal">Bạn mua 5 ly cà phê - Nhà tặng thêm 2 (Hạn sử dụng 10 ngày kể từ ngày mua).</p>
-                            </div>
-                            <div class="d-flex flex-row-reverse mt-5">
-                                <div class="btn background-primary rounded-pill text-white fs-min-plus fw-bold my-2">
-                                    Đọc tiếp
-                                </div>
-                            </div>
-                        </div>
-                       
-                    </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12 my-2">
-                         <div>
-                            <img class="img-News" src="https://feed.thecoffeehouse.com//content/images/2021/10/Thumbnail_2010.png" alt="">
-                        </div>
-                        <div class="border-news">
-                           
-                             <div class="my-4">
-                                <h6>CHAI FRESH: THAY LỜI YÊU DÀNH TẶNG</h6>
-                            </div>
-                            <div class="my-2 ">
-                                <p class="fs-min-plus fw-normal">Bạn mua 5 ly cà phê - Nhà tặng thêm 2 (Hạn sử dụng 10 ngày kể từ ngày mua).</p>
-                            </div>
-                            <div class="d-flex flex-row-reverse mt-5">
-                                <div class="btn background-primary rounded-pill text-white fs-min-plus fw-bold my-2">
-                                    Đọc tiếp
-                                </div>
-                            </div>
-                        </div>
-                       
-                    </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12 my-2">
-                         <div>
-                            <img class="img-News" src="https://feed.thecoffeehouse.com//content/images/2021/10/Thumbnail_2010.png" alt="">
-                        </div>
-                        <div class="border-news">
-                           
-                             <div class="my-4">
-                                <h6>CHAI FRESH: THAY LỜI YÊU DÀNH TẶNG</h6>
-                            </div>
-                            <div class="my-2 ">
-                                <p class="fs-min-plus fw-normal">Bạn mua 5 ly cà phê - Nhà tặng thêm 2 (Hạn sử dụng 10 ngày kể từ ngày mua).</p>
-                            </div>
-                            <div class="d-flex flex-row-reverse mt-5">
-                                <div class="btn background-primary rounded-pill text-white fs-min-plus fw-bold my-2">
-                                    Đọc tiếp
-                                </div>
-                            </div>
-                        </div>
-                       
-                    </div>
-                    <div class="col-lg-3 col-md-6 col-sm-12 my-2">
-                         <div>
-                            <img class="img-News" src="https://feed.thecoffeehouse.com//content/images/2021/10/Thumbnail_2010.png" alt="">
-                        </div>
-                        <div class="border-news">
-                           
-                             <div class="my-4">
-                                <h6>CHAI FRESH: THAY LỜI YÊU DÀNH TẶNG</h6>
-                            </div>
-                            <div class="my-2 ">
-                                <p class="fs-min-plus fw-normal">Bạn mua 5 ly cà phê - Nhà tặng thêm 2 (Hạn sử dụng 10 ngày kể từ ngày mua).</p>
-                            </div>
-                            <div class="d-flex flex-row-reverse mt-5">
-                                <div class="btn background-primary rounded-pill text-white fs-min-plus fw-bold my-2">
-                                    Đọc tiếp
-                                </div>
-                            </div>
-                        </div>
-                       
-                    </div>
-                </div>
+
             </div>
             <div class="text-center">
-                <a href="" class="a-none color-primary fs-6">Xem tất cả <i class="fas fa-arrow-right"></i></a>
+                <a href="/news" class="a-none color-primary fs-6">Xem tất cả <i class="fas fa-arrow-right"></i></a>
             </div>
         </div>
     </div>
-  
+
 </div>
 
+
 <script>
-  
+    document.addEventListener("DOMContentLoaded", function () {
+        var price = $(".price");
+        price.each(function () {
+            $(this).text(formatter.format($(this).text()));
+        })
+    })
+</script>
+
 
 </script>

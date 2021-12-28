@@ -2,99 +2,57 @@
 const Category = require('../model/category')
 const Product = require('../model/product');
 const Order = require('../model/order');
-const Topping = require('../model/topping');
+const Post = require('../model/post');
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 const multer  = require('multer');
-const productCart = require('../model/productCart');
-
-
 const storeage = multer.diskStorage({
     destination:'src/public/uploads',
     filename: function (req,file,cb) {
-     
+        
         cb(null,  Date.now() +'-' + file.originalname)
     }
 })
-
 var upload = multer({
     storage:storeage
 })
 const uploadProduct = upload.single('imageProduct');
+const uploadPost = upload.single('imagePost');
 const uploadCategory = upload.array('imageCategory');
 const uploadCategorySingle = upload.single('imageCategory');
 class meControllers{
     // Category > Item Category > Product
-    
     //Bin Category
     binCategory(req,res,next){
-        Category.findDeleted()
-        .lean()
-        .sort({deletedAt:-1})
+        Category.findDeleted().lean().sort({deletedAt:-1})
         .then(data=>{
-            var newData = data;
-            newData = newData.map(element=>{
-                element.date = element.deletedAt.toLocaleString("en-US")
-                return element;
-         });
-          
-            res.render('adminPage/PageCategorys/bin',{layout:'admin',data:newData})
+            res.render('adminPage/PageCategorys/bin',{layout:'admin',data:data})
         })
         .catch((err)=>{
-            res.send(err);
+            res.render('partials/SomeThingWrong',{err:err});
         })
     }
     restoreCategory(req,res,next){
-        
         Category.restore({_id:req.params.id},function(err){
+            Product.restore({idCategory:req.params.id},function(err){
+                if(err){
+                    res.render('partials/SomeThingWrong',{err:err});
+                }
+                else{
+                    res.redirect('back');
+                }
+            })
+        })
+    }
+    deleteOutBinCategory(req,res,next){
+        Category.findByIdAndDelete({_id:req.params.id},function(err){
             if(err){
-                res.json(err);
+                res.render('partials/SomeThingWrong',{err:err});
             }
             else{
                 res.redirect('back');
             }
         })
-        
-       
-    }
-    deleteOutBinCategory(req,res,next){
-        Category.findByIdAndDelete({_id:req.params.id})
-        .lean()
-        .then(data=>{
-            res.redirect('back');
-        })
-        .catch(()=>{
-            res.render('SomeThingWrong');
-        })
-    }
-    optionServiceBin(req,res,next){
-        var caseAction = req.body.slc_action_bin;
-        var groupId = req.body.chkItemCategoryDeleted;
-        if(caseAction ==='delete'){
-            Category.deleteMany({_id:{$in:groupId}},function(err){
-                if(err){
-                    res.json(err);
-                }
-                else{
-                    res.redirect('back');
-                }
-            })
-            
-        }
-        else if (caseAction =='restore'){
-            Category.restore({_id:{$in:groupId}},function(err){
-                if(err){
-                    res.json(err);
-                }
-                else{
-                    res.redirect('back');
-                }
-            })
-        }
-        else{
-            res.render('Pagenotfound');
-        }
-
     }
     //Page Category 
     Category(req,res,next){  
@@ -102,732 +60,561 @@ class meControllers{
         .then(([data,numTrash])=>{
             res.render('adminPage/PageCategorys/home',{layout:'admin',data:data,numTrash:numTrash});
         })
+        .catch(()=>{
+            res.render("partials/Pagenotfound",{layout:"admin"});
+        })
     }
     storeCategory(req,res,next){  
       uploadCategory(req,res,function(err) {
-          
-          var arrayImage = req.files;
-          var arrayNameCategory = req.body.nameCategory;
-          var arrayCateogry = [];
-          arrayNameCategory.forEach((element,index)=>{
-                var category = new Category({
-                    nameCategory:normalization(element),
-                    imageCategory:arrayImage[index].filename,
-                    slug: ChangeToSlug(element),
-                })
-                arrayCateogry.push(category);   
-          })
-          Category.insertMany(arrayCateogry,function(err){
-              if(err){
-
-              }else{
-                res.redirect('back');
-              }
-          });
-        
-        
-      })
-     
-       
-           
+          if(err){
+            res.render('partials/SomeThingWrong',{err:err});
+          }else{
+            var arrayImage = req.files;
+            var arrayNameCategory = req.body.nameCategory;
+            var arrayCateogry = [];
+            arrayNameCategory.forEach((element,index)=>{
+                    var category = new Category({
+                        nameCategory:normalization(element),
+                        imageCategory:arrayImage[index].filename,
+                        slug: ChangeToSlug(element),
+                    })
+                    arrayCateogry.push(category);   
+            })
+            Category.insertMany(arrayCateogry,function(err){
+                if(err){
+                    res.render('partials/SomeThingWrong',{err:err});
+                }else{
+                    res.redirect('back');
+                }
+            });
+        }
+      }) 
     }
     editCategory(req,res,next){
-        
         var id = req.params.id;
-        Category.findById({_id:id})
-        .lean()
+        Category.findById({_id:id}).lean()
         .then(data=>{
             res.render('adminPage/PageCategorys/edit',{layout:'admin',data:data});
         })
-       
-       
+        .catch(()=>{
+            res.render("partials/Pagenotfound",{layout:"admin"});
+        })
     }
     updateCategory(req,res,next){
-        //var name = req.body.nameCategory;
-        //var icon = req.body.iconCategory;
-        //var nameNomarlize = normalization(name);
         uploadCategorySingle(req,res,function(err){
             var idCategory = req.body.idCategory;
             var nameCategory = req.body.nameCategory;
+            var file =req.file.filename
             if(req.file){
-                Category.findByIdAndUpdate({_id:idCategory},{$set:{nameCategory:normalization(nameCategory),imageCategory:req.file.filename}})
-                .lean()
-                .then(data=>{
-                    res.redirect('./category');
-                })
+                Category.findByIdAndUpdate({_id:idCategory},{$set:{
+                    nameCategory:normalization(nameCategory),
+                    imageCategory:file}},function(err){
+                        if(err){
+                            res.render('partials/SomeThingWrong',{err:err});
+                        }else{
+                            res.redirect('./category');
+                        }
+                    })
             }
             else{
-                Category.findByIdAndUpdate({_id:idCategory},{$set:{nameCategory:normalization(nameCategory)}})
-                .lean()
-                .then(data=>{
-                    res.redirect('./category');
+                Category.findByIdAndUpdate({_id:idCategory},{$set:{nameCategory:normalization(nameCategory)}},function(err){
+                    if(err){
+                        res.render('partials/SomeThingWrong',{err:err});
+                    }else{
+                        res.redirect('./category');
+                    }
                 })
             }
         })
     
     }
     removeCategory(req,res,next){
-        Category.delete({_id:req.params.id})
-        .lean()
-        .then(data=>{
-           
-            res.redirect('back');
-        })
-        .catch(()=>{
-            res.render('SomeThingWrong');
-        })
-    }
-    removeManyCategory(req,res,next){
-        Category.delete({_id:{$in:req.body.select_Category}})
-        .lean()
-        .then(data=>{
-            res.redirect('back');
-        })
-        .catch(()=>{
-            res.render('SomeThingWrong');
-        })
-    }
-
-    //Bin ItemCategory 
-    binItemCategory(req,res,next){
-        Category.findOne({slug:req.params.slugCategory})
-        .lean()
-        .then(data=>{
-                var idItemCategory = data.listCategory;
-                ItemCategory.findDeleted({_id:{$in:idItemCategory}})
-                .lean()
-                .then(dataDelete=>{
-                    var Item = dataDelete.map(element=>{
-                        element.dateDeleted = element.deletedAt.toLocaleString("en-US");
-                        return{name:element.nameItemCategory,id:element._id,timeDeleted:element.dateDeleted}});
-        
-                    res.render('adminPage/PageItemCategorys/bin',{layout:'admin',data:Item,slugCategory:data.slug});
-                })
-              
-            })
-           
-        .catch(next)
-    }
-    restoreItemCategory(req,res,next){
-        
-        ItemCategory.restore({_id:req.params.id},function(err){
+        Category.delete({_id:req.params.id},function(err){
             if(err){
-                res.json(err);
-            }
-            else{
-                res.redirect('back');
-            }
-        })
-        
-        
-       
-    }
-    deleteOutBinItemCategory(req,res,next){
-       
-       ItemCategory.findByIdAndDelete({_id:req.params.id})
-        .then(data=>{
-                Category.findWithDeleted({slug:req.params.slugCategory})
-                .lean()
-                .then(reponse=>{
-                    if(reponse.length===1){
-                        var list = reponse[0].listCategory;
-                        var idCategory = reponse[0]._id;
-                        var newlist = list.filter(element=> element != req.params.id)
-                        Category.updateOne({_id:idCategory},{$set:{listCategory:newlist}},function(err){
-                            if(err){
-                                res.json(err);
-                            }
-                            else{
-                                res.redirect('back');
-                            }
-                        })
+                res.render('partials/SomeThingWrong',{err:err});
+            }else{
+                Product.delete({idCategory:req.params.id},function(err){
+                    if(err){
+                        res.json(err);
                     }
-                  
+                    else{
+                        res.redirect('back');
+                    }
                 })
+            }
         })
-        .catch(next);
-    
-        
-    }
-    optionServiceBinItemCategory(req,res,next){
-        var caseAction = req.body.slc_action_bin;
-        var groupId = req.body.chkItemCategoryDeleted;
-        
-        if(caseAction ==='delete'){
-            ItemCategory.deleteMany({_id:{$in:groupId}})
-            .then(data=>{
-                  
-                    Category.find({slug:req.params.slugCategory})
-                   .lean()
-                  .then(reponse=>{
-
-                    if(reponse.length===1){
-                        var list = reponse[0].listCategory;
-                        var idCategory = reponse[0]._id;
-                        var newlist = list.filter(element=> !groupId.includes(element.toString()));
-                      
-                 
-                        Category.updateOne({_id:idCategory},{$set:{listCategory:newlist}},function(err){
-                            if(err){
-                                res.json(err);
-                            }
-                            else{
-                                res.redirect('back');
-                            }
-                        })
-                     
-                       }
-                        
-                    })
-            })
-            .catch(next);
-    
-        }
-        else if (caseAction =='restore'){
-            ItemCategory.restore({_id:{$in:groupId}},function(err){
-                if(err){
-                    res.json(err);
-                }
-                else{
-                    res.redirect('back');
-                }
-            })
-        }
-        else{
-            res.render('Pagenotfound');
-        }
-        
-    }
-    //Page Item Category
-    ItemCategory(req,res,next){
-        Category.find()
-        .lean()
-        .then(data=>{
-            //res.json(data)
-            res.render('adminPage/PageItemCategorys/home',{layout:'admin',data:data})
-        })
-   
-    }
-    getItemCategory(req,res,next){
-        Category.findOne({_id:req.params.id})
-        .lean()
-        .then(reponse=>{
-            var idItemCategory = reponse.listCategory;
-            ItemCategory.findWithDeleted({_id:{$in:idItemCategory}})
-            .lean()
-            .then(data=>{
-                var arrayDeleted =  data.filter(element=>element.deleted == true);
-                var arrayNotDeleted =  data.filter(element=>element.deleted == false);
-                var Item = arrayNotDeleted.map(element=>{return{name:element.nameItemCategory,id:element._id}});
-                var slugCategory = reponse.slug;
-                 res.json({Item:Item,slugCategory:slugCategory,numTrash:arrayDeleted.length});
-            })
-        })
-        .catch(err=>{
-            res.status(404).json({Msg:"Không có dữ liệu"});
-        })
-    }
-    storeItemCategory(req,res,next){
-       var listRoot = req.body.listCategory;
-       var idCategory = req.body.idCategory;
-           ItemCategory.find({nameItemCategory:listRoot},function(err,data){
-                    try{
-                        var ArrayCategory = [];
-                        listRoot.forEach((element,index) => {
-                            var slug = ChangeToSlug(element)
-                            var nameNormalize = normalization(element);
-                           
-                            var newItemCategory = new ItemCategory({
-                                nameItemCategory:nameNormalize,
-                                 slug:slug,
-                            })
-                            ArrayCategory.push(newItemCategory);
-                    
-                        });
-                        ItemCategory.insertMany(ArrayCategory,function(err,data){
-                            if(err){
-                                res.json('save failed')
-                            }else{
-                                const arrayIdItem =data.map(element=>element._id);
-                                Category.findByIdAndUpdate({_id:idCategory},{$addToSet:{listCategory:arrayIdItem}})
-                                .lean()
-                                .then(data=>{
-                                    res.redirect('back');
-                                })
-                            }
-                        });
-                        
-                    }
-                    catch{
-                        res.json('Save fail. Try again !')
-                    }
-        })
-        
-        
-    }
-    removeItemCategory(req,res,next){
-        ItemCategory.delete({_id:req.params.id})
-        .lean()
-        .then(data=>{
-            res.redirect('back');
-        })
-        .catch(()=>{
-            res.render('SomeThingWrong');
-        })
-    }
-    removeManyItemCategory(req,res,next){
-        ItemCategory.delete({_id:{$in:req.body.select_Category}})
-        .lean()
-        .then(data=>{
-            res.redirect('back');
-        })
-        .catch(()=>{
-            res.render('SomeThingWrong');
-        })
-    }
-    editItemCategory(req,res,next){
-    
-        var id = req.params.id;
-        
-        ItemCategory.findById({_id:id})
-        .lean()
-        .then(data=>{
-            res.render('adminPage/PageItemCategorys/edit',{layout:'admin',data:data});
-        })
-       
-    }
-    updateItemCategory(req,res,next){
-       
-        var name = req.body.nameItemCategory;
-        
-        var nameNomarlize = normalization(name);
-       
-        ItemCategory.findByIdAndUpdate({_id:req.body.idItemCategory},{$set:{nameItemCategory:nameNomarlize}})
-        .lean()
-        .then(data=>{
-            res.redirect('./Itemcategory');
-        })
-        
     }
 
-   
     //Product 
     Product(req,res,next){
-        Promise.all([Category.find().lean(),Topping.find().lean()])
-      
-        .then(([data,dataTopping])=>{
-            
-            res.render('adminPage/PageProducts/add',{layout:'admin',dataCategory:data,dataTopping:dataTopping});
+        Category.find().lean()
+        .then((data)=>{
+            res.render('adminPage/PageProducts/add',{layout:'admin',dataCategory:data});
+        })
+        .catch(()=>{
+            res.render('partials/Pagenotfound');
         })
     }
-    getProduct(req,res,next){
+    getProducts(req,res,next){
        var idCategory=req.params.id
-        Category.findOne({_id:idCategory})
-        .lean()
-        .then(reponse=>{
-            var listIdProduct = reponse.listProduct;
-            Product.findWithDeleted({_id:{$in:listIdProduct}})
-            .lean()
-            .then(data=>{
-                var arrayDeleted =  data.filter(element=>element.deleted == true);
-                var arrayNotDeleted =  data.filter(element=>element.deleted == false);
-              
-              
-                 res.json({dataProduct:arrayNotDeleted,dataCount:arrayDeleted.length});
+            Category.findOne({_id:idCategory}).lean().
+            then(data=>{
+                Product.findWithDeleted({idCategory:data._id}).lean()
+                .then(data=>{
+                    var arrayDeleted =  data.filter(element=>element.deleted == true); // các phần tử dã bị xóa
+                    var arrayNotDeleted =  data.filter(element=>element.deleted == false); // các phần tử chưa xóa
+                    res.json({dataProduct:arrayNotDeleted,dataCount:arrayDeleted.length});
+                })
+                .catch(()=>{
+                    res.json({status:404,msg:"Không tìm thấy dữ liệu product"});
+                })
+            .catch(()=>{
+                res.json({status:404,msg:"Không tìm thấy dữ liệu category"});
             })
         })
-        .catch(err=>{
-            res.status(404).json({Msg:"Không có dữ liệu"});
+        .catch((err)=>{
+            res.json({status:404,err:err});
         })
-    }
+        
+    }  
     listProduct(req,res,next){
-        Category.find()
-        .lean()
+        Category.find().lean()
         .then(data=>{
-
             res.render('adminPage/PageProducts/home',{layout:'admin',dataCategory:data});
+        })
+        .catch(()=>{
+            res.render('partials/Pagenotfound');
         })
     }
     storeProduct(req,res,next){
-     
         uploadProduct(req,res,function(err){
-           
-              
             var idCategory =req.body.Category;
-            var nameProduct =req.body.nameProduct;
+            var nameProduct =normalization(req.body.nameProduct);
             var PriceRoot =req.body.PriceRoot;
             var productDescription =req.body.productDescription;
             var listSize = req.body.listSize;
             var listPriceExtra =req.body.listPriceExtra;
-            var extraTopping = req.body.extraTopping;
-            var slug = ChangeToSlug(nameProduct);
+            var slug = ChangeToSlug(normalization(nameProduct));
             var arraySize = {
                 nameSize:listSize,
                 extraSize:listPriceExtra,
             };
-        
-           
-            var convertExtraTopping = extraTopping.map(topping=>ObjectId(topping));
-            var newProduct = new Product({
-                nameProduct,
-                priceStandard:PriceRoot,
-                descriptionProduct:productDescription,
-                imageRepresent:req.file.filename,
-                Size:arraySize,
-                slug,
-                listTopping:convertExtraTopping,
-            })
-            newProduct.save(function(err){
-                if(err){
-                    res.json(err);
-                }else{
-                    Category.findByIdAndUpdate({_id:idCategory},{$addToSet:{listProduct:newProduct._id}})
-                    .lean()
-                    .then(data=>{
+            try {
+                var newProduct = new Product({
+                    nameProduct:nameProduct,
+                    priceStandard:parseFloat(PriceRoot),
+                    idCategory:idCategory,
+                    descriptionProduct:productDescription,
+                    imageRepresent:req.file.filename,
+                    Size:arraySize,
+                    slug,
+                })
+                newProduct.save(function(err){
+                    if(err){
+                        res.json({err:1,msg:"Lưu thất bại"});
+                    }else{
                         res.redirect('back');
-                    })
-                }
-            });
-        
+                    }
+                });
+            }
+            catch{
+                res.json({err:1,msg:"Thông tin sai"});
+            }
         })
         
     }
     removeProduct(req,res,next){
-    
-        Product.delete({_id:req.params.id})
-        .lean()
-        .then(data=>{
-            res.redirect('back');
-        })
-        .catch(()=>{
-            res.render('SomeThingWrong');
+        Product.delete({_id:req.params.id},function(err){
+            if(err){
+                res.render('partials/Pagenotfound',{layout:"admin"});
+            }else{
+                res.redirect('back');
+            }
         })
     }
-
-    removeManyProduct(req,res,next){
-        
-        Product.delete({_id:{$in:req.body.chkName}})
-        .lean()
-        .then(data=>{
-            res.redirect('back');
-        })
-        .catch(()=>{
-            res.render('SomeThingWrong');
-        })
-    }
-
     updateProduct(req,res,next){
-        cpUpload(req,res,function(err) {
-            
-            var ArrayFileImageRepresent = req.files['imageRepresent'];
-            var ArrayFileImageColor = req.files['listImageDetails'];
-            var ArrayNameColor = req.body.name_color;
-            var ArrayPrice = req.body.price_color;
-            var idCategory = req.body.Category;
-            var idItemCategory = req.body.ItemCategory;
-            var ArraytitleSpecification =req.body.titleSpecification;
-            var ArraydetailSpecification =req.body.detailSpecification;
-           
-            
-            if(!Array.isArray(ArrayNameColor) || !Array.isArray(ArrayPrice) ){
-                ArrayNameColor = ArrayNameColor.split();
-                ArrayPrice= ArrayPrice.split();
+        uploadProduct(req,res,function(err){
+            if(req.file){
+                var idProduct = req.body.idProduct;
+                var idCategory =req.body.Category;
+                var nameProduct =normalization(req.body.nameProduct);
+                var PriceRoot =req.body.PriceRoot;
+                var productDescription =req.body.productDescription;
+                var listSize = req.body.listSize;
+                var status = req.body.status;
+                var listPriceExtra =req.body.listPriceExtra;
+                var slug = ChangeToSlug(normalization(nameProduct));
+                var arraySize = {
+                    nameSize:listSize,
+                    extraSize:listPriceExtra,
+                };
+                try {
+                    Product.findByIdAndUpdate({_id:idProduct},{
+                            nameProduct:nameProduct,
+                            idCategory:idCategory,
+                            priceStandard:PriceRoot,
+                            status:status, // ready : còn hàng //out: hết hàng
+                            Size:arraySize,
+                            descriptionProduct:productDescription,
+                            imageRepresent:req.file.filename,
+                            slug:slug,
+                    },function(err){
+                        if(err){
+                            res.render("partials/Somethingwrong",{err:err});
+                        }else{
+                            res.redirect("/me/listProduct");   
+                        }
+                    })
+                }
+                catch{
+                    res.json({err:1,msg:"Thông tin sai"});
+                }
             }
-            if(!Array.isArray(ArraytitleSpecification) || ! Array.isArray(ArraydetailSpecification)){
-                ArraytitleSpecification = ArraytitleSpecification.split();
-                ArraydetailSpecification = ArraydetailSpecification.split();
+            else{
+                var idProduct = req.body.idProduct;
+                var idCategory =req.body.Category;
+                var nameProduct =normalization(req.body.nameProduct);
+                var PriceRoot =req.body.PriceRoot;
+                var productDescription =req.body.productDescription;
+                var listSize = req.body.listSize;
+                var status = req.body.status;
+                var listPriceExtra =req.body.listPriceExtra;
+                var slug = ChangeToSlug(normalization(nameProduct));
+                var arraySize = {
+                    nameSize:listSize,
+                    extraSize:listPriceExtra,
+                };
+                try {
+                    Product.findByIdAndUpdate({_id:idProduct},{
+                            nameProduct:nameProduct,
+                            idCategory:idCategory,
+                            priceStandard:PriceRoot,
+                            status:status, // ready : còn hàng //out: hết hàng
+                            Size:arraySize,
+                            descriptionProduct:productDescription,
+                            slug:slug,
+                    },function(err){
+                        if(err){
+                            res.json(err);
+                        }else{
+                            res.redirect("/me/listProduct");   
+                        }
+                    })
+                }
+                catch{
+                    res.json({err:1,msg:"Thông tin sai"});
+                }
             }
-
-            var ArrayColorDetails = ArrayFileImageColor.map((element,index)=>{
-               
-                    var covertPrice = Number(ArrayPrice[index]);
-                    if(covertPrice === NaN){
-                        res.json('lỗi nhập chữ vào ô giá')
-                    }
-                    else{
-                     
-                        return {name:ArrayNameColor[index],price:covertPrice,image:element.filename}
-                    }
-               
-              
-            })
-            var listSpecifications = ArraytitleSpecification.map((element,index)=>{
-                return {title:element,details:ArraydetailSpecification[index]};
-            })
-             var nameProduct=normalization(req.body.nameProduct);
-            var slug = ChangeToSlug(nameProduct);
-            const newProduct = new Product({
-                nameProduct: nameProduct,
-                priceStandard:req.body.PriceRoot,
-                listColorDetails:ArrayColorDetails,
-                imageRepresent:ArrayFileImageRepresent[0].filename,
-                listSpecifications:listSpecifications,
-                status:req.body.statusProduct,
-                slug: slug,
-            })
-            res.json(newProduct);
-        
-        
         })
+     
     }
     editProduct(req,res,next){
-        Product.findById({_id:req.params.id})
-        .lean()
-        .then(data=>{
-            var typeColor =data.listColorDetails;
-            var listSpecifications = data.listSpecifications;
-            res.render('adminPage/PageProducts/edit',{layout:'admin',product:data,typeColor:typeColor,listSpecifications:listSpecifications})
+        Promise.all([Category.find().lean(),Product.findById({_id:req.params.id}).lean()])
+        .then(([dataCategory,dataProduct])=>{
+            var sizeName = dataProduct.Size.nameSize;
+                var sizeValue = dataProduct.Size.extraSize;
+                var newsize = sizeName.map((size,index)=>{
+                    return {name:size,value:sizeValue[index]};
+                })  
+            res.render('adminPage/PageProducts/edit',{layout:'admin',dataCategory:dataCategory,dataProduct:dataProduct,size:newsize});
+        })
+        .catch(()=>{
+            res.render("partials/Pagenotfound",{layout:"admin"});
         })
     }
     //Bin Product
     binProduct(req,res,next){
-
         Category.findOne({_id:req.params.idCategory})
         .lean()
         .then(data=>{
                 var idProduct = data.listProduct;
-    
                 Product.findDeleted({_id:{$in:idProduct}})
                 .lean()
                 .then(dataDelete=>{
-                    var Item = dataDelete.map(element=>{
-                        element.dateDeleted = element.deletedAt.toLocaleString("en-US");
-                        return element;
-                    });
-                  
-                res.render('adminPage/PageProducts/bin',{layout:'admin',data:Item,idCategory:req.params.idCategory});
-               
+                    res.render('adminPage/PageProducts/bin',{layout:'admin',data:dataDelete,idCategory:req.params.idCategory});
                 })  
+                .catch(()=>{
+                    res.render('partials/Pagenotfound');
+                })
             })
-           
-        .catch(next)
+        .catch(()=>{
+            res.render('partials/Pagenotfound:');
+        })
        // res.json(req.params.idItemCategory);
     }
     restoreProduct(req,res,next){
         Product.restore({_id:req.params.id},function(err){
             if(err){
-                res.json(err);
+                res.render('partials/Somethingwrong',{err:err});
             }
             else{
                 res.redirect('back');
             }
         })
         
-    }
+    }// Xóa vĩnh viễn thùng rác
     deleteOutBinProduct(req,res,next){
         var idCategory =req.params.idCategory;
-        var idProduct = req.params.id;
-    
-        
-        Product.findByIdAndDelete({_id:idProduct})
-        .then(data=>{
+        var idProduct = req.params.id;      
+        Product.findByIdAndDelete({_id:idProduct},function(err){
+            if(err){
+                res.render("partials/Somethingwrong",{err:err});
+            }else{
                 Category.findOne({_id:idCategory})
-                .lean()
-                .then(reponse=>{
-                    
-                        var list = reponse.listProduct;
-                        var idCategory = reponse._id;
-                        var newlist = list.filter(element=> element != req.params.id)
-                        Category.updateOne({_id:idCategory},{$set:{listProduct:newlist}},function(err){
-                            if(err){
-                                res.json(err);
-                            }
-                            else{
-                                res.redirect('back');
-                            }
-                        })
-                   
-                  
-                })
-        })
-        .catch(next);
-        
-    }
-    optionServiceBinProduct(req,res,next){
-        var caseAction = req.body.slc_action_bin;
-        var groupId = req.body.chkName;
-        var idCategory =req.body.idCategory;
-      
-        
-        if(caseAction ==='delete'){
-            Product.deleteMany({_id:{$in:groupId}})
-            .then(data=>{
-                    Category.findOne({_id:idCategory})
-                   .lean()
-                  .then(reponse=>{
-                        var listProduct= reponse.listProduct;
-                    
-                        //trả về mảng mới kh chưa mấy p tử đã xoá
-                        var newlist = listProduct.filter(element=> !groupId.includes(element.toString()));
-                        Category.updateOne({_id:idCategory},{$set:{listProduct:newlist}},function(err){
-                            if(err){
-                                res.json(err);
-                            }
-                            else{
-                                res.redirect('back');
-                            }
-                        })
-                        
-                         
+                    .lean()
+                    .then(reponse=>{
+                            var list = reponse.listProduct;
+                            var idCategory = reponse._id;
+                            var newlist = list.filter(element=> element != req.params.id);
+                            Category.updateOne({_id:idCategory},{$set:{listProduct:newlist}},function(err){
+                                if(err){
+                                    res.render("partials/Somethingwrong",{err:err});
+                                }
+                                else{
+                                    res.redirect('back');
+                                }
+                            })
                     })
-                   
-            })
-            .catch(next);
-    
-        }
-        else if (caseAction =='restore'){
-            Product.restore({_id:{$in:groupId}},function(err){
-                if(err){
-                    res.json(err);
-                }
-                else{
-                    res.redirect('back');
-                }
-            })
-        }
-        else{
-            res.render('Pagenotfound');
-        }
-
-        
+                    .catch(()=>{
+                        res.render("partials/Pagenotfound",{layout:"admin"});
+                    })
+            }
+        })
     }
-    
-    //Đơn hàng
-    //Danh sach 
+    //Order
     listOrder(req,res,next){
-    
         Order.find({})
         .lean()
         .sort({createdAt:-1})
         .then(data=>{
-            
-            var newData = data;
-            newData = newData.map(element=>{
-                element.dateConvert = element.createdAt.toLocaleString("en-US",{dateStyle:"medium"});
-                return element;
-            })
-       
-           res.render('adminPage/Order/listOrder',{layout:'admin',data:newData})
+           res.render('adminPage/Order/listOrder',{layout:'admin',data:data})
+        })
+        .catch(()=>{
+            res.render("partials/Pagenotfound",{layout:"admin"});
         })
     }
-
     listOrderPending(req,res,next){
         var status = req.params.status;
-        Order.find({statusOrder:status})
-        .lean()
-        .sort({createdAt:-1})
-        .then(data=>{
-            
-            var newData = data;
-            newData = newData.map(element=>{
-                element.dateConvert = element.createdAt.toLocaleString("en-US");
-                return element;
+        var query = req.query.q;
+        if(query==="today"){
+            var start = new Date();
+            start.setHours(0,0,0,0);
+            var end = new Date();
+            end.setHours(23,59,59,999);
+            Order.find({$and:[{createdAt: {$gte: start, $lt: end}},{statusOrder:status}]}).lean().sort({createdAt:-1})
+            .then(data=>{
+                res.render('adminPage/Order/listOrder',{layout:'admin',data:data})
             })
-           res.render('adminPage/Order/listOrder',{layout:'admin',data:newData})
-        })
+            .catch(()=>{
+                res.render("partials/Pagenotfound",{layout:"admin"});
+            })
+        }else{
+            if (status === "inprogress"){
+                Order.find({$or:[{statusOrder:status},{statusOrder:"Đã thanh toán VNPay"}]}).lean()
+                .sort({createdAt:-1})
+                .then(data=>{
+                    res.render('adminPage/Order/listOrder',{layout:'admin',data:data})
+                })
+                .catch(()=>{
+                    res.render("partials/Pagenotfound",{layout:"admin"});
+                })
+            }
+                else{
+                    Order.find({statusOrder:status})
+                    .lean()
+                    .sort({createdAt:-1})
+                    .then(data=>{
+                        res.render('adminPage/Order/listOrder',{layout:'admin',data:data})
+                    })
+                    .catch(()=>{
+                        res.render("partials/Pagenotfound",{layout:"admin"});
+                    })
+                }     
+        }
+       
     }
-
     activeDonHang(req,res,next){
         var id = req.body.id;
         var status =req.body.status;
-        Order.findByIdAndUpdate({_id:id},{$set:{statusOrder:status}})
-        .lean()
-        .then(data=>{
-            res.json('success');
+        Order.findByIdAndUpdate({_id:id},{$set:{statusOrder:status}},function(err){
+            if(err){
+                res.json(err);
+            }else{
+                res.json('success');
+            }
         })
     }
-    
     detailsOrder(req,res,next){
             var id = req.params.id;
-
-            
             Order.findById({_id:id}).lean()
             .then(order=>{
-                var listProductCart = order.listProductCart;
-                 
-                productCart.aggregate([
-                    {
-                        $lookup:{
-                            from:"products",
-                            localField:"idProduct",
-                            foreignField:"_id",
-                            as:"cartProduct"
-                        }
-                       
-                    }, {
-                            $match:{
-                            _id:{$in:listProductCart}
-                        }  
-                    },{
-                        $project:{
-                            _id:0,
-                        }
-                    },{
-                        $unwind:"$cartProduct" // giúp trả về object
-                        
-                    }
-                   ],function(err,cartProduct){ // data này là mảng chứ 
-                      
-                        //res.json(cartProduct);
-                       res.render("adminPage/Order/detailsOrder",{layout:"admin",data:order,cartProduct:cartProduct})
-                   })
-
+                var listProductCart = order.listProductCart;           
+                     //res.json(listProductCart);
+                    res.render("adminPage/Order/detailsOrder",{layout:"admin",data:order,cartProduct:listProductCart})
             })
-            
-       
+            .catch(()=>{
+                res.render("partials/Pagenotfound",{layout:"admin"});
+            })
     }
-    
     countOrderPending(req,res,next){
-        var status = 'pending';
-        Order.find({statusOrder:status})
+        var status = 'inprogress';
+        Order.find({$or:[{statusOrder:status},{statusOrder:"Đã thanh toán VNPay"}]})
         .lean()
-        .then(data=>{
-            
+        .then(data=>{    
            res.json(data.length);
         })
     }
     //dashboard
     dashboard(req,res,next){
-     
-        var user = res.locals.user;
-   
+        var start = new Date();
+        start.setHours(0,0,0,0);
+        var end = new Date();
+        end.setHours(23,59,59,999);
+        var product = Product.find().lean();
+        var category = Category.find().lean();    
+        var orderDone = Order.find({$and:[{createdAt: {$gte: start, $lt: end}},{statusOrder:"done"}]}).lean();
+        var orderCancel = Order.find({$and:[{createdAt: {$gte: start, $lt: end}},{statusOrder:"cancel"}]}).lean();
+        Promise.all([product,category,orderDone,orderCancel])
+        .then(([product,category,orderDone,orderCancel])=>{
+            res.render('adminPage/dashboard',{layout:'admin',product:product.length,category:category.length,orderDone:orderDone.length,orderCancel:orderCancel.length}); 
+        })
+        .catch(()=>{
+            res.render("partials/Pagenotfound",{layout:"admin"});
+        })
+    }
 
-        res.render('dashboard',{layout:'admin',user:user});
-     
-    }
-    addTopping(req,res,next){
-        res.render('adminPage/PageTopping/add',{layout:'admin'});
-    }
-    listTopping(req,res,next){
-        Topping.find()
-        .lean()
+    getChartToDay(req,res,next){
+        var start = new Date();
+        start.setHours(0,0,0,0);
+        var end = new Date();
+        end.setHours(23,59,59,999);
+        Order.find({$and:[{createdAt: {$gte: start, $lt: end}},{statusOrder:"done"}]}).lean()
         .then(data=>{
-            res.render('adminPage/PageTopping/list',{layout:'admin',data:data});
+            var listProductToday = []; // mảng chứa các sản phẩm bán ra hôm nay
+            var listFinal = [];   // mảng cuối cùng , mảng gửi thông tin cho người dùng
+            data.forEach(order=>{ // từng đơn hàng  
+                var productCart = order.listProductCart; // đơn hàng có nhiều sản phẩm trong giỏ hàng
+                productCart.forEach(element=>{
+                    for(var i = 1; i<= element.quanityProduct;i++){
+                        listProductToday.push(element.name_product); 
+                    }
+                })
+            })
+            var listUnitProductToday = unique(listProductToday); // x lúc này chứa các mảng tên nhưng không bị trùng lặp
+            listUnitProductToday.forEach(element=>{ // hàm này đếm chuẩn xác tên sản phẩm có bao nhiêu số lượng mua
+                var count = 0;
+                listProductToday.forEach(elementProduct=>{
+                    if(elementProduct === element){
+                        count++;
+                    }
+                })
+                listFinal.push({name:element,quantity:count});
+            })
+            res.json(listFinal);
         })
     }
-    storeTopping(req,res,next){
-        
-        const newTopping = new Topping({
-            name:req.body.nameTopping,
-            priceExtra:req.body.PriceTopping,
-            unit:req.body.unitTopping,
-        })
-        newTopping.save(function(err){
-            if(err)
-                res.json(err);
+    //Bài Viết
+    post(req,res,next){
+        res.render("adminPage/Post/add",{layout:"admin"});
+    }
+    storePost(req,res,next){
+        uploadPost(req,res,function(err){
+            if(err){
+                res.render("partials/Somethingwrong",{err:err});
+            }
             else{
-                res.redirect('back');
+                var title = normalization(req.body.postTitle);
+                var image = req.file.filename;
+                var content = req.body.content;
+                var slug = ChangeToSlug(title);
+                var post = new Post({
+                    title,
+                    image,
+                    content,
+                    slug,
+                })
+                post.save(function(err){
+                    if(err){
+                        res.json(err);
+                    }else{
+                        res.redirect('back');
+                    }
+                })
             }
         })
     }
+    listPost(req,res,next){
+        Post.find()
+        .lean()
+        .then(data=>{
+            res.render('adminPage/Post/home',{layout:'admin',dataPost:data});
+        })
+        .catch(()=>{
+            res.render("partials/Pagenotfound");
+        })
+    }
+    editPost(req,res,next){
+        var id = req.params.id;
+        Post.findById({_id:id})
+        .lean()
+        .then(data=>{
+            res.render('adminPage/Post/edit',{layout:'admin',post:data});
+        })
+        .catch(()=>{
+            res.render("partials/Pagenotfound",{layout:"admin"});
+        })
+    }
+    updatePost(req,res,next){
+        uploadPost(req,res,function(err){
+            if(err){
+                res.render("partials/Somethingwrong",{err:err});
+            }
+            else{
+                if(req.file){
+                    var idPost = req.body.idPost;
+                    var title = normalization(req.body.postTitle);
+                    var image = req.file.filename;
+                    var content = req.body.content;
+                    var slug = ChangeToSlug(title);               
+                    Post.findByIdAndUpdate({_id:idPost},{image:image,title:title,slug:slug,content:content},function(err){
+                        if(err){
+                            res.json(err);
+                        }else{
+                            res.redirect("/me/listPost");
+                        }
+                    })
+                }else{
+                    var idPost = req.body.idPost;
+                    var title = normalization(req.body.postTitle);
+                    
+                    var content = req.body.content;
+                    var slug = ChangeToSlug(title);               
+                    Post.findByIdAndUpdate({_id:idPost},{title:title,slug:slug,content:content},function(err){
+                        if(err){
+                            res.json(err);
+                        }else{
+                            res.redirect("/me/listPost");
+                        }
+                    })
+                }
+            }
+        })
+    }
+    deletePost(req,res,next){
+        Post.findByIdAndDelete({_id:req.params.id})
+        .lean()
+        .then(data=>{
+            res.redirect('back');
+        })
+        .catch((err)=>{
+            res.render('partials/SomeThingWrong',{err:err});
+        })
+    }
 }
-
-
-
 function ChangeToSlug(input)
 {
     var slug;
-    const formName = input;
+    const formName = input.replace(/\s+/g, ' ');
     slug = formName
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "")
@@ -836,7 +623,6 @@ function ChangeToSlug(input)
       .toLowerCase()
       .split(" ")
       .join("-");
-    
     return slug;
 }
 function normalization(string) {
@@ -844,4 +630,13 @@ function normalization(string) {
     var stringTrim = stringLowcase.replace(/\s+/g, ' ');
     return stringTrim;
   }
+  function unique(arr) {
+    var newArr = []
+    for (var i = 0; i < arr.length; i++) {
+      if (newArr.indexOf(arr[i]) === -1) {
+        newArr.push(arr[i])
+      }
+    }
+    return newArr
+}
 module.exports = new meControllers;

@@ -41,3 +41,27 @@
     border: 3px solid $color-primary !important;
     
 }
+.modal-cart{
+    //background: linear-gradient(to right,#fead3c,#fb8f19);
+    width: 680px;
+    background:white;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+    border-radius: 8px;
+    .btn-modal-cart{
+        background: linear-gradient(to right,#fead3c,#fb8f19);
+        color: white;
+        border: 0px;
+    }
+}
+.btn-delte-product-cart{
+    cursor: pointer;
+    color: $color-primary-hover;
+}
+.img-cart-modal{
+    width: 160px;
+    height: 160px;
+    border-radius: 8px;
+}
+.text-admin{
+    color: #fdcd98;
+}

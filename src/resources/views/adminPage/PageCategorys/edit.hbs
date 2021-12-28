@@ -1,55 +1,47 @@
-
- {{!-- {{#if data}} --}}
+{{!-- {{#if data}} --}}
 <div class="container pd-admin">
-   <div class="pd-bd-admin box-shadow-1 text-white bg-child-admin">
-      <form method="POST" action="/me/updateCategory?_method=PUT" enctype="multipart/form-data">
-    <div class="d-flex my-2 align-items-center">  
-        <div>
-            <a href="/me/category"><i class="fas fa-chevron-left"></i>Quay lại</a>
-        </div>
-    </div>
- 
-  <div >
-      Thông tin chi tiết
-      {{#with data}}
-      <div class="my-3">
-     
-         <div class="my-3">
-            <label  class="form-label">Tên category</label>
+  <div class="pd-bd-admin box-shadow-1 text-dark bg-child-admin">
+    <h3 class="text-center fw-bold">Sửa danh mục</h3>
+    <form method="POST" action="/me/updateCategory?_method=PUT" enctype="multipart/form-data">
+      <div class="d-flex my-2 align-items-center">
+        <a href="/me/category">
+          <div class="btn bg-gradient-primary text-white">
+            <i class="fas text-white fa-chevron-left"></i> Quay lại
+          </div>
+        </a>
+      </div>
+      <div class="text-dark">
+        {{#with data}}
+        <div class="my-3">
+          <div class="my-3">
+            <label class="form-label fw-bold">Tên category</label>
             <input name="nameCategory" type="text" value="{{nameCategory}}" class="form-control" required>
           </div>
-              <input name="idCategory" type="text" value="{{_id}}" hidden>
-            <input id="imgCategory" name="imageCategory" type="file" hidden>
-            <label for="imgCategory" class="img-50">
-                <img id="previewImgCategory" src="/uploads/{{this.imageCategory}}" alt="">
-            </label>
-            <label id="fileNameCategory" for="imgCategory" class="my-3">{{this.imageCategory}}</label>
-         
-              
+          <input name="idCategory" type="text" value="{{_id}}" hidden>
+          <input id="imgCategory" name="imageCategory" type="file" hidden>
+          <label for="imgCategory">
+            <img class="img-preview" id="previewImgCategory" src="/uploads/{{this.imageCategory}}" alt="">
+          </label>
+          <label id="fileNameCategory" for="imgCategory" class="my-3">{{this.imageCategory}}</label>
+        </div>
+        {{/with}}
+        <div class="d-flex flex-row-reverse">
+          <button type="submit" class="btn btn-success my-2">Lưu</button>
+        </div>
       </div>
-       
-      {{/with}}
-      <button type="submit" class="btn btn-primary my-2" >Lưu</button>
-     
-     
-    
-  </div>
-  </form>
+    </form>
   </div>
 </div>
 <script>
-    var imgCategory = document.getElementById('imgCategory');
-    var previewImgCategory = document.getElementById('previewImgCategory');
-    var fileNameCategory = document.getElementById('fileNameCategory');
-    imgCategory.onchange = evt => {
+  var imgCategory = document.getElementById('imgCategory');
+  var previewImgCategory = document.getElementById('previewImgCategory');
+  var fileNameCategory = document.getElementById('fileNameCategory');
+  imgCategory.onchange = evt => {
     const [file] = imgCategory.files
     if (file) {
       console.log(file);
       previewImgCategory.src = URL.createObjectURL(file);
       fileNameCategory.innerText = file.name;
     }
-}
+  }
 </script>
- {{!-- {{else}}
-           {{>Pagenotfound}}
-{{/if}} --}}

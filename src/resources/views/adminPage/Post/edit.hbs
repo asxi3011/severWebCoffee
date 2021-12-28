@@ -1,0 +1,56 @@
+<div class="container pd-admin">
+        <div class="pd-bd-admin box-shadow-1 text-dark bg-child-admin">
+                <h3 class="text-center fw-bold">Sửa bài viết</h3>
+                {{#with post}}
+                <form method="POST" action="../../updatePost?_method=PUT" id="formPost" enctype="multipart/form-data">
+                        <input type="text" name="idPost" value="{{this._id}}" hidden>
+                        <div class="mb-3">
+                                <label class="form-label">Tiêu đề</label>
+                                <input name="postTitle" value="{{this.title}}" type="text" class="form-control"
+                                        placeholder="VD: Quà gắn kết - Tết đậm đà">
+                        </div>
+                        <div class="mb-3">
+                                <label class="form-label">Hình sản phẩm</label>
+                        </div>
+                        <div class="mb-3">
+                                <input class="form-control" id="imgPost" name="imagePost" type="file">
+                                <img id="previewImgPost" class="img-preview-post my-4" src="/uploads/{{this.image}}"
+                                        alt="">
+                        </div>
+                        <div class="mb-3">
+                                <label class="form-label">Nội dung bài viết</label>
+                                <div id="editor"></div>
+                                <textarea name="content" style="display:none" id="hiddenArea"
+                                        hidden>{{{this.content}}}</textarea>
+                        </div>
+                        <div class="d-flex flex-row-reverse gap-3">
+                                <button type="submit" class="btn bg-gradient-primary d-block text-white"
+                                        id="btnSubmit">Lưu thay đổi</button>
+                                <a href="/me/listPost" class="btn btn-secondary d-block text-white" id="btnSubmit">Hủy
+                                        bỏ</a>
+                        </div>
+                </form>
+                {{/with}}
+        </div>
+</div>
+<script>
+        document.addEventListener("DOMContentLoaded", function () {
+                //===== cấu hình quill
+                $('#editor').trumbowyg();
+                var imgPost = document.getElementById("imgPost");
+                var previewImgPost = document.getElementById("previewImgPost");
+                imgPost.onchange = evt => {
+                        const [file] = imgPost.files
+                        if (file) {
+                                console.log(file);
+                                previewImgPost.src = URL.createObjectURL(file);
+                        }
+                }
+                $('#editor').html($("#hiddenArea").text());
+                $("#formPost").on("submit", function () {
+                        $("#hiddenArea").text($('#editor').html());
+                })
+                // chức năng code
+
+        })
+</script>

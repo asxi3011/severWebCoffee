@@ -1,14 +1,12 @@
 const User = require('../model/user');
-const Tokenn = require('../model/Token');
 var jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const Token = require('../model/Token');
 const saltRounds = 10;
 const privateKey = 'doAnChuyenNganh123';
 class managerControllers{
    
     login(req,res){
-        res.render('clientPage/managerLogin')
+        res.render('clientPage/managerLogin',{layout:"none"})
     }
     authenticationAccount(req,res){
         const myPlaintextPassword = req.body.password;
@@ -18,7 +16,6 @@ class managerControllers{
             var hashPass = data.password;
             bcrypt.compare(myPlaintextPassword, hashPass, function(err, result) {
                 if(result == true){
-                  
                     jwt.sign({
                         idUser:data._id,
                         user:data.user,
@@ -29,49 +26,21 @@ class managerControllers{
                             res.json('Tao token that bai');
                         }
                         else{
-                          
-                      
-                            var currenToken = new Tokenn({
-                                Token:Token,
-                                UserId:data._id,
-                                RegisterDate:Date.now(),
-                                State:true,
-                            })
-                            currenToken.save(function (err) {
-                                if(err){
-                                    res.json('Save Token that bai'+err);
-                                }else{
-                                    res.cookie('Token',Token);
-                                    res.redirect('/me/category');
-                                }
-                            })
-                  
+                            res.cookie('Token',Token);
+                            res.redirect('/me/category');
                         }
                     })
                     //es.redirect('/me/dashboard')
                 }else{
-                    res.json('sai mat khau');
+                    res.render('clientPage/managerLogin',{layout:"none",msg:"Sai mật khẩu"});
                 }
             });
         })
-       
-      
-    }
-
-    verifyToken(req,res){
-        Token.findOne({Token:req.body.Token,State:true})
-        .lean()
-        .then(result=>{
-            if(!result){
-                res.json('Token khong hợp lệ');
-                return;
-            }
-            jwt.verify(req.body.Token,privateKey,function (err,decode) {
-                res.json({user:decoded})
-            })
+        .catch(()=>{
+            res.render('clientPage/managerLogin',{layout:"none",msg:"Sai thông tin tài khoản"});
         })
     }
-
+   
 }
 
 module.exports = new managerControllers;

@@ -1,71 +1,47 @@
-
 <div class="container pd-admin">
-    <div class="pd-bd-admin box-shadow-1 text-white bg-child-admin">
 
-   
-    <h1>Thùng rác</h1>
-     <form method="POST" action="bin/optionServiceBin">
+  <div class="pd-bd-admin box-shadow-1 text-dark bg-child-admin">
+    <h3 class="text-center fw-bold">Thùng rác</h3>
     <div class="d-flex my-2 align-items-center justify-content-between">
-        <div>
-            <a href="/me/category"><i class="fas fa-chevron-left"></i>Quay lại</a>
+      <a href="/me/category">
+        <div class="btn bg-gradient-primary text-white a-none">
+          <i class="fas fa-chevron-left"></i> Quay lại
         </div>
-      <div class="d-flex gap-3 align-items-center"> 
-      <span class="d-flex align-items-center gap-2">
-      <input class="form-check-input" type="checkbox" value="" id="chkAllBin"> <span>SelectAll</span> 
-      </span>
-      <div>
-          <select name="slc_action_bin" id="slc_action_bin" required>
-            <option value="">-Chọn hành động-</option>
-            <option value="delete">Xoá</option>
-            <option value="restore">Hồi phục</option>
-          </select>
-      </div>
-      <button type="submit" class="btn btn-success bd-none" id="btnActionMany" disabled>
-          Thực thi
-      </button>
-      </div>
+      </a>
     </div>
- 
-  <div id='appendListCategory'>
-    {{#if data}}
-      
-      <table class="table table-success table-text-form table-striped my-3 align-middle text-center ">
-           <tr>
-              <th class="">STT</th>
-              <th class="">Tên Category</th>
-              <th class="">icon</th>
-              <th>Ngày xoá</th>
-              <th class=""></th>
-              <th class="">Thao tác</th> 
-            </tr>
-      {{#each data}}
-
-            <tr>
-              <td class="">{{inc @index}}</td>
-              <td class="">{{nameCategory}}</td>
-              <td class=""><img src="/uploads/{{this.imageCategory}}" alt=""></td>
-              <td>{{this.date}}</td>
-              <td class=""> <input class="form-check-input" type="checkbox" value="{{this._id}}" name="chkItemCategoryDeleted[]"></td>
-              <td class="">
-                    <div class="btn btn-dark-custom my-2" data-bs-toggle="modal" data-bs-target="#ModalDelete" data-id="{{this._id}}">Xoá</div>
-                 <button class="btn btn-success my-2 btn-restore" type="button" value="{{this._id}}">Hồi phục</button>
-              </td> 
-            </tr>
-
-
-      {{/each}}
+    <div id='appendListCategory'>
+      {{#if data}}
+      <table id="table_category" class="table table-text-form-40 table-striped my-3 align-middle text-center ">
+        <thead>
+          <tr>
+            <th class="">STT</th>
+            <th class="">Tên Category</th>
+            <th class="">Hình</th>
+            <th>Ngày xoá</th>
+            <th class="">Thao tác</th>
+          </tr>
+        </thead>
+        {{#each data}}
+        <tr>
+          <td class="">{{inc @index}}</td>
+          <td class="">{{nameCategory}}</td>
+          <td class=""><img src="/uploads/{{this.imageCategory}}" alt=""></td>
+          <td>{{formatDate this.createdAt}}</td>
+          <td class="">
+            <div class="btn btn-dark-custom my-2 mx-2" data-bs-toggle="modal" data-bs-target="#ModalDelete"
+              data-id="{{this._id}}">Xoá vĩnh viễn</div>
+            <button class="btn btn-success my-2 btn-restore" type="button" value="{{this._id}}">Hồi phục</button>
+          </td>
+        </tr>
+        {{/each}}
       </table>
-     
       {{else}}
-           {{>empty}}
-    {{/if}}
+      {{>empty}}
+      {{/if}}
+    </div>
+    <form method="POST" name="restoreItemCategory"></form>
+    <form name="removeItemCategory" method="POST"></form>
   </div>
-  </form>
-<form method="POST" name="restoreItemCategory"></form>
-
-
-<form name="removeItemCategory" method="POST" ></form>
- </div>
 </div>
 
 <div class="modal fade" id="ModalDelete" tabindex="-1" aria-labelledby="TitleModal" aria-hidden="true">
@@ -81,73 +57,37 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Huỷ bỏ</button>
-        <button type="button" class="btn btn-danger del-category" >Xoá</button>
+        <button type="button" class="btn btn-danger del-category">Xoá</button>
       </div>
     </div>
   </div>
 </div>
-<form name="frmActionMany" method="POST"></form>
-
 <script>
-  document.addEventListener('DOMContentLoaded',function(){
-      // Khai báo biến
-      var formRemoveItemCategory = document.forms['removeItemCategory'];
-      var formRestoreItemCategory = document.forms['restoreItemCategory'];
-      var frmActionMany = document.forms['frmActionMany'];
-      var btnActionMany = $('#btnActionMany');
-      var chkAllBin =$('#chkAllBin');
-      var namecheckbox ='chkItemCategoryDeleted[]';
-      var listItemCheckBox =$('input[name="chkItemCategoryDeleted[]"]');
-      var slc_action_bin = $('#slc_action_bin');
-      
-      // Xoá vĩnh viễn 
-      var ModalDelete = document.getElementById('ModalDelete')
-          ModalDelete.addEventListener('show.bs.modal', function (event) {
-            // Button that triggered the modal  
-             var button = event.relatedTarget;
-              var idCategory = button.getAttribute('data-id')
-            // Extract info from data-bs-* attributes
-              var delCategory=document.querySelector('.del-category');
-              delCategory.onclick =function(){
-                formRemoveItemCategory.action =`bin/deleteOutBinCategory/${idCategory}?_method=DELETE`;
-                formRemoveItemCategory.submit();
-              }
-            })
-        //Hồi phục
-        
-        var btn_restore =$('.btn-restore')
-           btn_restore.on('click',function( e){
-               idCategory = (e.target).value;
-                 formRestoreItemCategory.action =`bin/restoreCategory/${idCategory}?_method=PUT`;
-                formRestoreItemCategory.submit();
-           })
-
-         
-          checkboxValidation(chkAllBin,namecheckbox,listItemCheckBox,btnActionMany);
-          slc_action_bin.on('change',function(e){
-            if(slc_action_bin.val() === 'delete' ){
-               bgChangeRed(btnActionMany)
-            }
-            else{
-              bgChangeGreen(btnActionMany);
-            }
-          })
-
-          btnActionMany.on('click',function(event){
-             if($('#slc_action_bin').val() != ""){
-                      frmActionMany.submit();
-              }
-          })
-        
-})
-
-function bgChangeRed(btnActionMany){
-   btnActionMany.removeClass('bg-success');
-    btnActionMany.addClass('bg-danger');
-}
-function bgChangeGreen(btnActionMany){
-  btnActionMany.removeClass('bg-danger');
-  btnActionMany.addClass('bg-success');
-}
+  document.addEventListener('DOMContentLoaded', function () {
+    // Khai báo biến
+    var formRemoveItemCategory = document.forms['removeItemCategory'];
+    var formRestoreItemCategory = document.forms['restoreItemCategory'];
+    // Xoá vĩnh viễn 
+    var ModalDelete = document.getElementById('ModalDelete')
+    ModalDelete.addEventListener('show.bs.modal', function (event) {
+      // Button that triggered the modal  
+      var button = event.relatedTarget;
+      var idCategory = button.getAttribute('data-id')
+      // Extract info from data-bs-* attributes
+      var delCategory = document.querySelector('.del-category');
+      delCategory.onclick = function () {
+        formRemoveItemCategory.action = `bin/deleteOutBinCategory/${idCategory}?_method=DELETE`;
+        formRemoveItemCategory.submit();
+      }
+    })
+    //Hồi phục
+    var btn_restore = $('.btn-restore')
+    btn_restore.on('click', function (e) {
+      idCategory = $(this).val();
+      formRestoreItemCategory.action = `bin/restoreCategory/${idCategory}?_method=PUT`;
+      formRestoreItemCategory.submit();
+    })
+    var table_category = $("#table_category");
+    table_category.DataTable();
+  })
 </script>
-

@@ -1,0 +1,40 @@
+<div class="container pd-admin">
+        <div class="pd-bd-admin box-shadow-1 text-dark bg-child-admin">
+                <h3 class="text-center fw-bold">Thêm bài viết</h3>
+                <form method="POST" action="storePost" id="formPost" enctype="multipart/form-data">
+                        <div class="mb-3">
+                                <label class="form-label">Tiêu đề</label>
+                                <input name="postTitle" type="text" class="form-control"
+                                        placeholder="VD: Quà gắn kết - Tết đậm đà">
+                        </div>
+                        <div class="mb-3">
+                                <label class="form-label">Hình sản phẩm</label>
+                        </div>
+
+                        <div class="mb-3">
+                                <input class="form-control" name="imagePost" type="file" required>
+                        </div>
+                        <div class="mb-3">
+                                <label class="form-label">Nội dung bài viết</label>
+                                <div id="editor"></div>
+                                <textarea name="content" style="display:none" id="hiddenArea"></textarea>
+                        </div>
+                        <div class="d-flex flex-row-reverse">
+                                <button type="submit" class="btn bg-gradient-primary d-block" id="btnSubmit">Thêm bài
+                                        viết</button>
+                        </div>
+                </form>
+        </div>
+</div>
+
+<script>
+        document.addEventListener("DOMContentLoaded", function () {
+                
+                $('#editor').trumbowyg();
+                $("#formPost").on("submit", function () {
+                        $("#hiddenArea").text($('#editor').html());
+                })
+                // chức năng code
+        })
+
+</script>
