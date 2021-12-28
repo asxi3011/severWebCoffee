@@ -1,0 +1,96 @@
+<div class="container pd-admin ">
+  <div class="pd-bd-admin box-shadow-1 text-dark bg-child-admin">
+    <h3 class="text-center fw-bold">Danh sách bài viết</h3>
+    <div>
+      <div id='appendListCategory'>
+        {{#if dataPost}}
+        <table id="table_Category" class="table table-text-form-40 table-striped my-3 align-middle text-center ">
+          <thead>
+            <tr>
+              <th class="">STT</th>
+              <th class="">Tiêu đề</th>
+              <th class="">Hình ảnh</th>
+              <th class="">Ngày đăng</th>
+              <th class="">Thao tác</th>
+            </tr>
+          </thead>
+          {{#each dataPost}}
+          <tr>
+            <td class="">{{inc @index}}</td>
+            <td class="">{{this.title}}</td>
+            <td class="image-table-product"><img class="" src="/uploads/{{this.image}}" alt=""></td>
+            <td class=""> {{this.createAt}}</td>
+            <td class="">
+              <div class="btn btn-dark-custom my-2 mx-2" data-bs-toggle="modal" data-bs-target="#ModalDelete"
+                data-id="{{this._id}}">Xoá</div>
+              <button class="btn btn-blue-custom my-2 btn_edit_category" type="button"
+                value="{{this._id}}">Sửa</button>
+            </td>
+          </tr>
+          {{/each}}
+        </table>
+        {{else}}
+        {{>empty}}
+        {{/if}}
+      </div>
+      </form>
+
+    </div>
+
+    <form name="removeItemCategory" method="POST"></form>
+  </div>
+</div>
+
+<div class="modal fade" id="ModalDelete" tabindex="-1" aria-labelledby="TitleModalDelete" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="TitleModalDelete">Thông báo</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Bạn muốn xoá file này ?
+        <div class="fs-normal text-danger"> (Các dữ liệu con bên trong sẽ biến mất.)</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Huỷ bỏ</button>
+        <button type="button" class="btn btn-danger del-category">Xoá </button>
+      </div>
+    </div>
+  </div>
+</div>
+<form name="frmCategoryEdit" method="GET"></form>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Khai báo biến
+    //Modal
+    var ModalDelete = document.getElementById('ModalDelete');
+    //forms
+    var formRemoveItemCategory = document.forms['removeItemCategory'];
+    var btn_edit_category = $('.btn_edit_category');
+    var frmCategoryEdit = document.forms['frmCategoryEdit'];
+    //Show Modal Delete
+    ModalDelete.addEventListener('show.bs.modal', function (event) {
+      // Button that triggered the modal  
+      var button = event.relatedTarget;
+      var idPost = button.getAttribute('data-id')
+      // Extract info from data-bs-* attributes
+      var delCategory = document.querySelector('.del-category');
+      delCategory.onclick = function () {
+        formRemoveItemCategory.action = `deletePost/${idPost}?_method=DELETE`;
+        formRemoveItemCategory.submit();
+      }
+    })
+    btn_edit_category.on('click', function (e) {
+      var id = e.target.value;
+      frmCategoryEdit.action = `post/edit/${id}`;
+      frmCategoryEdit.submit();
+    })
+    //Checkbox Valdation
+    var table_Category = $("#table_Category");
+    table_Category.DataTable({
+      "lengthMenu": [[10, -1], [10, "Tất cả"]]
+    });
+  })
+
+</script>

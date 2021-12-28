@@ -1,5 +1,5 @@
 <style>
-  .input_thongso_products{
+  .input_thongso_products {
     border-radius: 8px;
     outline: none;
     border: 1px solid;
@@ -8,180 +8,151 @@
 </style>
 
 <div class="container pd-admin">
-   <div class="pd-bd-admin box-shadow-1 text-white bg-child-admin">
+  <div class="pd-bd-admin box-shadow-1 text-dark bg-child-admin">
 
-    <h1>Thêm sản phẩm</h1>
-<form method="POST" action="storeProduct" enctype="multipart/form-data">
-  <div class="mb-3">
-      <h3>Chọn category</h3>
-      <select name="Category" class="form-control" id="slc_choose_category" required>
-        <option value="">-Chọn category-</option>
-        {{#each dataCategory}}
-        <option value="{{this._id}}">{{this.nameCategory}}</option>
-        {{/each}}
-      </select>
-    
-  </div>
-  
-  <div class="mb-3">
-    <label  class="form-label">Tên sản phẩm</label>
-     <input name="nameProduct" type="text" class="form-control" placeholder="VD: Cà phê sữa" >
-  </div>
-  <div class="mb-3">
-    <label  class="form-label">Giá</label>
-    <input name="PriceRoot" type="text" class="form-control" placeholder="VD: 23000 (đơn vị là VND)"  >
-  </div>
-  
-    <div class="mb-3">
-    <label  class="form-label">Hình sản phẩm</label>
-    <div>
-    
-    <div class="mb-3">
-    <input class="form-control" name="imageProduct" type="file" required>
-</div>
-    </div>
-    </div>
-    
-  <div class="mb-3">
-    Mô tả:
-  
-  <textarea class="form-control" name="productDescription"></textarea>
+    <h3 class="text-center fw-bold">Sửa sản phẩm</h3>
+    <form method="POST" action="../updateProduct?_method=PUT" enctype="multipart/form-data">
+      <div class="mb-3">
+        <label class="form-label">Chọn category</label>
+        <select name="Category" class="form-select" id="slc_choose_category" aria-label="Default select example"
+          required>
+          {{#each dataCategory}}
+          <option value="{{this._id}}">{{this.nameCategory}}</option>
+          {{/each}}
+        </select>
+      </div>
+      {{#with dataProduct}}
+      <div class="mb-3">
+        <label class="form-label">Tên sản phẩm</label>
+        <input name="nameProduct" type="text" class="form-control" placeholder="VD: Cà phê sữa"
+          value="{{this.nameProduct}}">
+      </div>
+      <input name="idProduct" type="text" value="{{this._id}}" hidden>
+      <div id="idCategory" hidden>{{this.idCategory}}</div>
+      <div id="statusProduct" hidden>{{this.status}}</div>
+      <div class="mb-3">
+        <label class="form-label">Giá</label>
+        <input name="PriceRoot" type="text" class="form-control" placeholder="VD: 23000 (đơn vị là VND)"
+          value="{{this.priceStandard}}">
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Hình sản phẩm</label>
+        <div>
+          <div class="mb-3">
 
-  </div>
-  <div class="mb-3">
-    <label  class="form-label">Size</label>
-    <div class="row">
-       <div class="col-12 test-left">
-                 <div class="specifications-products">   
-                   
-                     <div class="content-specifications-products pd-bd" id="appenHTMLSpecification_products">
-                          
-                      
-                     </div>
-                      
+            <input id="imgProduct" class="form-control" name="imageProduct" type="file">
+            <label for="imgProduct" class="my-3">
+              <img class="img-preview-product" id="previewImgProduct" src="/uploads/{{this.imageRepresent}}" alt="">
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Mô tả:</label>
+
+
+        <textarea class="form-control" name="productDescription">{{this.descriptionProduct}}</textarea>
+      </div>
+      <div class="mb-3">
+        <label class="form-label"> Trạng thái:</label>
+
+        <select id="select_status" name="status" class="form-select" aria-label="Default select example" required>
+          <option value="bestseller">Best seller</option>
+          <option value="ready">ready</option>
+          <option value="soldout">sold out</option>
+          <option value="cancel">cancel</option>
+        </select>
+      </div>
+      {{/with}}
+      <div class="">
+        <label>Size</label>
+        <div class="row">
+          <div class="col-12 test-left">
+            <div class="specifications-products">
+              <div class="content-specifications-products pd-bd-y-0" id="appenHTMLSpecification_products">
+                {{#each size}}
+                <div class="d-flex gap-3 my-3 align-items-end">
+                  <div class="w-50">
+                    <label class="form-label">Tên Size</label>
+                    <input name="listSize[]" value="{{this.name}}" type="text" class="form-control" required>
+                  </div>
+                  <div class="w-50">
+                    <label class="form-label">Cộng thêm</label>
+                    <input name="listPriceExtra[]" value="{{this.value}}" type="text" class="form-control" required>
+                  </div>
+                  <div class="btn-remove-size  btn btn-danger rounded-circle fs-normal">X</div>
                 </div>
-                <div class="btn btn-success mb-3 w-100 fw-bold fs-4" id="btn_ThemLine_Specification">
-                  +
+                {{/each}}
               </div>
             </div>
-    </div>
-   
-  </div>
-
-  <div class="mb-3">
-       <label  class="form-label">Chọn topping</label>
-       <div class="row">
-        <div class="col-6">
-          <div class="row">
-       {{#each dataTopping}}
-       
-         <div class="col-6 my-2">
-            <div class="d-flex gap-2 align-items-baseline">
-          <input name="extraTopping[]" type="checkbox" value="{{this._id}}" class="form-check-input"> {{this.name}}
+            <div class="btn bg-gradient-primary mb-3 w-100 fw-bold fs-4 text-white" id="btn_ThemLine_Specification">
+              +
+            </div>
+          </div>
         </div>
 
-         </div>
-        
-      
-       
-       {{/each}}
-       </div>
-        </div>
-       </div>
+      </div>
+      <div class="d-flex flex-row-reverse gap-3">
+        <button type="submit" class="btn btn-success text-white" id="btnSubmit">Lưu thay đổi</button>
+         <a href="/me/listProduct" class="btn btn-secondary text-white" id="btnSubmit">Hủy bỏ</a>
+      </div>
+    </form>
   </div>
- 
-  <button type="submit" class="btn btn-primary" id="btnSubmit" disabled>Submit</button>
-</form>
 </div>
-  </div>
 <script>
-  document.addEventListener('DOMContentLoaded',function(){
-      var elemt_select_category = $('#slc_choose_category');
-      var slc_select_Itemcategory = $('#slc_choose_Itemcategory');
-      var notifycation_validation_slc_Category =$('#notifycation_validation_slc_Category');
-      var appenHTMLSpecification_products = $('#appenHTMLSpecification_products');
-      var btnThemLine = $('#btn_ThemLine_Specification');
-      var btn_ThemMau = $('#btn_ThemMau');
-      var appendInputColor = $('#appendInputColor');
-      var countElemet = 0;
-      var countMauElement =0;
-      var btnSubmit = $('#btnSubmit');
-      elemt_select_category.change(function(){
-        loadDuLieu();
-      })
-    
-    btnThemLine.on('click',function(){
-           var elementChildNodeAppendLine =appenHTMLSpecification_products.children().length;
-           if(elementChildNodeAppendLine>=3){
-             alert("Chỉ được thêm 3 size")
-           }else{
-               countElemet++;
-        
-          var title = 'listSize[]';
-          var detail = 'listPriceExtra[]'
-          appenHTMLSpecification_products.append(renderItemSpecifications(countElemet,title,detail));
-          
-          var btn_of_line = $(`.btn-remove-specification-line-${countElemet}`); //btn đỏ của từng dòng
-          var parent_btn_of_line = $(`.number-element-${countElemet}`);  //div cha của btn đỏ
-          var elementChildNodeAppendLine =appenHTMLSpecification_products.children().length; //đếm length các phẩn tử con của id "appendLineAddCategory"
-          toggleDisabledWithLength(elementChildNodeAppendLine,btnSubmit);  //Vô hiệu hoá btn Lưu khi ấn nút thêm line xanh lá
-          btn_of_line.on('click',function(){
-              parent_btn_of_line.remove();
-              //Vô hiệu hoá btn Lưu khi ấn nút xoá line đỏ
-              var elementChildNodeAppendLine =appenHTMLSpecification_products.children().length;
-             
-              toggleDisabledWithLength(elementChildNodeAppendLine,btnSubmit);
-             
-              
-              
-          })
-           }
-        
-          
-        })
-  btn_ThemMau.on('click',function(){
-    countMauElement++;
-    appendInputColor.append(renderMoreColor(countMauElement));
-    var btn_remove_color =$(`.btn-remove-color-${countMauElement}`);
-      var parent_btn_remove_color = $(`.color-file-${countMauElement}`);
-    btn_remove_color.on('click',function(){
-        parent_btn_remove_color.remove();
-    })
-  
-  
-  })
-    function loadDuLieu(){
-    if(elemt_select_category.val() != "")
-          {
-               
-              var id =elemt_select_category.val();
-              const item = getListCategory(id);
-              item.then(response=>{  
-               var Item = response.data.Item;
-              var htmlSlcItemCategory = renderOptionSelect(Item);
-              slc_select_Itemcategory.html(htmlSlcItemCategory);
-               slc_select_Itemcategory.removeAttr('disabled','disabled');
-               notifycation_validation_slc_Category.html(``);
-          })
-          }
-    else{
-       notifycation_validation_slc_Category.html(`<div class="text-danger">Vui lòng chọn category</div>`);
-       slc_select_Itemcategory.html("");
-       slc_select_Itemcategory.attr('disabled','disabled');
-
-    }
-      
-  }
-
-   async function getListCategory(id){
-      try{
-        const reponse = await axios.get(`getItemCategory/${id}`)
-        return reponse
-      }  
-      catch (error){
-        console.log(error);
+  document.addEventListener('DOMContentLoaded', function () {
+    var elemt_select_category = $('#slc_choose_category');
+    var slc_select_Itemcategory = $('#slc_choose_Itemcategory');
+    var notifycation_validation_slc_Category = $('#notifycation_validation_slc_Category');
+    var appenHTMLSpecification_products = $('#appenHTMLSpecification_products');
+    var btnThemLine = $('#btn_ThemLine_Specification');
+    var btn_ThemMau = $('#btn_ThemMau');
+    var appendInputColor = $('#appendInputColor');
+    var countElemet = 0;
+    var countMauElement = 0;
+    var btnSubmit = $('#btnSubmit');
+    var imgProduct = document.getElementById('imgProduct');
+    var previewImgProduct = document.getElementById('previewImgProduct');
+    var fileNameCategory = document.getElementById('fileNameCategory');
+    imgProduct.onchange = evt => {
+      const [file] = imgProduct.files
+      if (file) {
+        console.log(file);
+        previewImgProduct.src = URL.createObjectURL(file);
       }
     }
+    var select_status = $("#select_status");
+
+    select_status.val($("#statusProduct").text());
+    var idCategory = $("#idCategory").text();
+    elemt_select_category.val(idCategory);
+    addEventsBtnXoa();
+    btnThemLine.on('click', function () {
+      var elementChildNodeAppendLine = appenHTMLSpecification_products.children().length;
+      if (elementChildNodeAppendLine >= 3) {
+        alert("Chỉ được thêm 3 size")
+      } else {
+        countElemet++;
+        var title = 'listSize[]';
+        var detail = 'listPriceExtra[]'
+        appenHTMLSpecification_products.append(renderSize(title, detail));
+        addEventsBtnXoa();
+        var elementChildNodeAppendLine = appenHTMLSpecification_products.children().length; //đếm length các phẩn tử con của id "appendLineAddCategory"
+        toggleDisabledWithLength(elementChildNodeAppendLine, btnSubmit);  //Vô hiệu hoá btn Lưu khi ấn nút thêm line xanh lá
+
+      }
+    })
+    function addEventsBtnXoa() {
+      var btn_remove_of_line = $(`.btn-remove-size`); //btn đỏ của từng dòng
+      btn_remove_of_line.each(function () {
+        $(this).on("click", function (e) {
+          console.log($(this).parent().remove());
+          var elementChildNodeAppendLine = appenHTMLSpecification_products.children().length;
+          toggleDisabledWithLength(elementChildNodeAppendLine, btnSubmit);
+        })
+
+      })
+    }
   })
- 
+
 </script>

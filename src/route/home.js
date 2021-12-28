@@ -1,14 +1,18 @@
 const express = require('express');
 const router = express.Router();
 const home = require('../app/controller/homeController');
-
-
-
-
-router.get('/product/:slug',home.detailProduct);
-router.get('/cart',home.cart);
 router.post('/order',home.storeOrder);
-router.post('/storeCart',home.storeCart);
+router.post('/sendMail',home.sendMail);
+router.post('/create_payment_url',home.create_payment_url); 
+router.get('/vnpay_return',home.vnpay_return);
+router.get('/getOrder',home.getOrder);
+router.get('/product/',home.getAllProduct);
+router.get('/product/:slug',home.detailProduct);
+router.get('/getProduct',home.getProduct);
+router.get('/tracuudonhang',home.checkOrder);
+router.get('/news/',home.getAllPost);
+router.get('/news/:slug',home.detailPost);
+router.get('/cart',home.cart);
 router.get('/',home.index);
 router.get('/:slug',home.products);
 module.exports = router; 

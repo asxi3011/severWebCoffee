@@ -1,81 +1,144 @@
 <div class="bg-header header-app ">
     <div class="text-white align-items-center container-fluid">
         <div class="d-flex align-items-center header-height justify-content-between  pd-w-100 ">
-            
+
 
             <div class="d-flex gap-5  align-items-center">
                 <a href="/" class="d-flex logo-width">
-                <img class="w-100 m-auto" src="https://www.thecoffeehouse.com/_nuxt/img/logo.174bdfd.svg" alt="">
-             </a>
-             <div class="border-giaohang d-flex gap-2 align-items-center">
-                 <div class="img-addres">
-                     <img class="w-100 h-100" src="https://minio.thecoffeehouse.com/images/tch-web-order/Delivery2.png" alt="">
-                 </div>
-                 <div class="d-flex align-items-center gap-2">
-                     <div class="">
-                     <span class="fw-bold">
-                         Giao hàng
-                     </span>
-                     <div class="fs-min-plus text-address">
-                         Tại :145 điện biên phủ 
-                     </div>
-                     
+                    <img class="w-100 m-auto" src="https://order.thecoffeehouse.com/_nuxt/img/logo.174bdfd.svg" alt="">
+                </a>
+                <div class="border-giaohang d-flex gap-2 align-items-center">
+                    <div class="img-addres">
+                        <img class="w-100 h-100"
+                            src="https://minio.thecoffeehouse.com/images/tch-web-order/Delivery2.png" alt="">
                     </div>
-                    <div>
-                        <i class="fas fa-angle-down"></i>
+                    <div class="d-flex align-items-center gap-2 px-2">
+                        <div class="">
+                            <span class="fw-bold">
+                                Giao hàng
+                            </span>
+                            <div class="fs-min-plus text-address">
+                                Tận nhà của bạn
+                            </div>
+
+                        </div>
+
                     </div>
-                 </div>
-                 
-             </div>
-             <div class="d-flex gap-3 fw-bold navivation-header fs-min-plus">
-                 <a href="" class="a-none text-white page-header">
-                     Đặt hàng
-                 </a>
-                 <a href="" class="a-none text-white  page-header">
-                    Tin tức
-                 </a>
-                 <a href="" class="a-none text-white page-header">
-                     Cửa hàng
-                 </a>
-                 <a href="" class="a-none text-white page-header">
-                     Khuyến mãi
-                 </a>
-                 <a href="" class="a-none text-white page-header">
-                     Tuyển dụng
-                 </a>
-             </div>
-             
-              
+
+                </div>
+                <div class="d-flex gap-3 fw-bold navivation-header fs-min-plus">
+                    <a href="/product" class="a-none text-white page-header">
+                        Đặt hàng
+                    </a>
+                    <a href="/news" class="a-none text-white  page-header">
+                        Tin tức
+                    </a>
+                    <a id="btn_show_Modal" class="a-none pe-cursor text-white page-header">
+                        Khuyến mãi
+                    </a>
+                    <a href="/tracuudonhang" class="a-none text-white page-header">
+                        Tra cứu đơn hàng
+                    </a>
+                </div>
+
+
             </div>
-              
+
             <div class=" ">
                 <a href="/cart" class="btn-40 bg-white d-flex rounded-circle btn-cart">
                     <i class="fas fa-shopping-bag color-primary m-auto fs-4"></i>
-                      <div class="quantities-cart rounded-circle fs-min-mini d-flex">
-                        <div class="m-auto">
-                            12
+                    <div class="quantities-cart d-none rounded-circle fs-min-mini d-flex">
+                        <div class="m-auto" id="soLuong_Cart">
+
                         </div>
                     </div>
                 </a>
-              
-             </div>
-           
-     
+
+            </div>
+
+
         </div>
-       
+
+    </div>
+</div>
+<div class="modal fade" id="modalKM" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content d-flex">
+            <div class="p-3">
+                <div class="row">
+                    <div class="text-center fw-bold fs-5">Các chương trình khuyến mãi</div>
+                    <div class="col-12  my-2">
+                        <div class="d-flex justify-content-center content-khuyenmai">
+                            <div class="row pd-bd align-items-center">
+                                <div class="col-4">
+                                    <img class="img-preview-edit"
+                                        src="https://minio.thecoffeehouse.com/image/admin/Coupondelivery10k_238803.jpg"
+                                        alt="">
+                                </div>
+                                <div class="col-8">
+                                    <span>
+                                        Giảm 30% trên tổng giá trị của đơn hàng trên 500k <br> (không bao gồm phí ship)
+                                    </span>
+                                    <div class="color-primary mt-2 pe-cursor add_coupon" data="30phantram">
+                                        Sử dụng ngay
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 my-2">
+                        <div class="d-flex justify-content-center content-khuyenmai ">
+                            <div class="row pd-bd align-items-center">
+                                <div class="col-4">
+                                    <img class="img-preview-edit"
+                                        src="https://minio.thecoffeehouse.com/image/admin/dong_gia_19k_coupon_499462.jpg"
+                                        alt="">
+                                </div>
+                                <div class="col-8">
+                                    <span>
+                                        Giảm trực tiếp 19k vào tổng tiền hóa đơn
+                                        <br> (bao gồm phí ship)
+                                    </span>
+                                    <div class="color-primary mt-2 pe-cursor add_coupon" data="19tuoixanh">
+                                        Sử dụng ngay
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div id="btn_delete_coupon" class="color-primary text-center pe-cursor mt-3">
+                    Hủy khuyến mãi
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
-<!--
-    <div class=" flex-fill flex-row-reverse header-height">
-                <div class="btn-40 bg-white d-flex rounded-circle btn-cart">
-                    <i class="fas fa-shopping-bag color-primary m-auto fs-4"></i>
-                      <div class="quantities-cart rounded-circle fs-min-mini d-flex">
-                        <div class="m-auto">
-                            12
-                        </div>
-                    </div>
-                </div>
-              
-             </div>
--->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var btn_show_Modal = $("#btn_show_Modal");
+        var add_coupon = $(".add_coupon")
+        var btn_delete_coupon = $("#btn_delete_coupon");
+        btn_delete_coupon.on("click", function () {
+            sessionStorage.removeItem('coupon');
+            sessionStorage.removeItem('price_coupon');
+            location.reload();
+        })
+        add_coupon.each(function (e) {
+            $(this).on("click", function () {
+                sessionStorage.setItem("coupon", $(this).attr("data"));
+                location.reload();
+            })
+        })
+        var ModalKM = new bootstrap.Modal(document.getElementById('modalKM'), {
+            keyboard: false
+        })
+        btn_show_Modal.on("click", function () {
+            ModalKM.show();
+        })
+    });
+</script>

@@ -2,75 +2,47 @@ const express = require('express');
 const router = express.Router();
 const me = require('../app/controller/meController.js');
 var validate =require('../resources/validate/user.validate');
-
-
-//Quy chuẩn dùng Method
-// GET : Dùng để lấy dữ liệu
-// POST : Dùng để lưu dữ liệu,ng dùng
-// PUT : Dùng để chỉnh sửa ,update ,restore dữ liệu
-// DELETE : Dùng để xoá dữ liệu
-
-
+                    //Quy chuẩn dùng Method
+                    // GET : Dùng để lấy dữ liệu
+                    // POST : Dùng để lưu dữ liệu,ng dùng
+                    // PUT : Dùng để chỉnh sửa ,update ,restore dữ liệu
+                    // DELETE : Dùng để xoá dữ liệu
 //Bin Category
-router.get('/Category/bin',me.binCategory);
-router.put('/Category/bin/restoreCategory/:id',me.restoreCategory);
-router.delete('/Category/bin/deleteOutBinCategory/:id',me.deleteOutBinCategory);
-router.post('/Category/bin/optionServiceBin',me.optionServiceBin);
+router.get('/Category/bin',validate.postCreate,me.binCategory);
+router.put('/Category/bin/restoreCategory/:id',validate.postCreate,me.restoreCategory);
+router.delete('/Category/bin/deleteOutBinCategory/:id',validate.postCreate,me.deleteOutBinCategory);
 //page Category
-router.get('/Category',me.Category);
-router.get('/Category/edit/:id',me.editCategory);
-router.put('/updateCategory',me.updateCategory) // doi sang method put
-router.post('/storeCategory',me.storeCategory)
-router.delete('/removeCategory/:id',me.removeCategory)
-router.delete('/removeManyCategory',me.removeManyCategory)
-
-//Item Category
-router.get('/getItemCategory/:id',me.getItemCategory)
-router.get('/ItemCategory',me.ItemCategory);
-router.get('/ItemCategory/edit/:id',me.editItemCategory);
-router.put('/updateItemCategory',me.updateItemCategory) 
-router.post('/storeItemCategory',me.storeItemCategory);
-router.delete('/removeItemCategory/:id',me.removeItemCategory);
-router.delete('/removeManyItemCategory/',me.removeManyItemCategory);
-
-//Bin Item Category
-router.get('/:slugCategory/binItemCategory',me.binItemCategory);
-router.put('/:slugCategory/bin/restoreItemCategory/:id',me.restoreItemCategory);
-router.delete('/:slugCategory/bin/deleteOutBinItemCategory/:id',me.deleteOutBinItemCategory);
-router.post('/:slugCategory/bin/optionServiceBinItemCategory',me.optionServiceBinItemCategory);
-
-
-
+router.get('/Category',validate.postCreate,me.Category);
+router.get('/Category/edit/:id',validate.postCreate,me.editCategory);
+router.put('/updateCategory',validate.postCreate,me.updateCategory) // doi sang method put
+router.post('/storeCategory',validate.postCreate,me.storeCategory)
+router.delete('/removeCategory/:id',validate.postCreate,me.removeCategory)
 //Product
-router.get('/Product',me.Product);
-router.get('/getProduct/:id',me.getProduct);
-router.get('/editProduct/:id',me.editProduct);
-router.get('/listProduct',me.listProduct);
-router.put('/updateProduct',me.updateProduct) 
-router.post('/storeProduct',me.storeProduct);
-router.delete('/removeProduct/:id',me.removeProduct);
-router.delete('/removeManyProduct',me.removeManyProduct);
+router.get('/Product',validate.postCreate,me.Product);
+router.get('/getProducts/:id',validate.postCreate,me.getProducts); // API cho giỏ hàng lấy thông tin sản phẩm
+router.get('/editProduct/:id',validate.postCreate,me.editProduct);
+router.get('/listProduct',validate.postCreate,me.listProduct);
+router.post('/storeProduct',validate.postCreate,me.storeProduct);
+router.put('/updateProduct',validate.postCreate,me.updateProduct) 
+router.delete('/removeProduct/:id',validate.postCreate,me.removeProduct);
 //Bin Product
-router.get('/binProduct/:idCategory',me.binProduct);
-router.put('/bin/restoreProduct/:id',me.restoreProduct);
-router.delete('/:idCategory/bin/deleteOutBinProduct/:id',me.deleteOutBinProduct);
-router.post('/:slugItemCategory/bin/optionServiceBinProduct',me.optionServiceBinProduct);
-
+router.get('/binProduct/:idCategory',validate.postCreate,me.binProduct);
+router.put('/bin/restoreProduct/:id',validate.postCreate,me.restoreProduct);
+router.delete('/:idCategory/bin/deleteOutBinProduct/:id',validate.postCreate,me.deleteOutBinProduct);
+//post
+router.get('/post',validate.postCreate,me.post);
+router.get('/post/edit/:id',validate.postCreate,me.editPost);
+router.get('/listPost',validate.postCreate,me.listPost);
+router.post('/storePost',validate.postCreate,me.storePost);
+router.put('/updatePost',validate.postCreate,me.updatePost);
+router.delete('/deletePost/:id',validate.postCreate,me.deletePost);
 //admin
-router.get('/dashboard',validate.roleAdmin,me.dashboard);
+router.get('/dashboard',validate.postCreate,me.dashboard);
+router.post('/getChartToDay',validate.postCreate,me.getChartToDay);
 //order
-router.get('/listOrder/:status',me.listOrderPending);
-router.get('/listOrder',me.listOrder);
-router.get('/detailsOrder/:id',me.detailsOrder);
-router.post('/activeDonHang',me.activeDonHang);
-router.get('/countOrderPending',me.countOrderPending);
-
-//Topping
-router.get('/listTopping',me.listTopping);
-router.get('/Topping',me.addTopping);
-router.put('/storeTopping',me.storeTopping);
-
-
-
-
+router.get('/listOrder/:status',validate.postCreate,me.listOrderPending);
+router.get('/listOrder',validate.postCreate,me.listOrder);
+router.get('/detailsOrder/:id',validate.postCreate,me.detailsOrder);
+router.post('/activeDonHang',validate.postCreate,me.activeDonHang);
+router.get('/countOrderPending',validate.postCreate,me.countOrderPending);
 module.exports = router; 

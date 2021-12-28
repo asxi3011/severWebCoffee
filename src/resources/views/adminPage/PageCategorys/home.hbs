@@ -1,80 +1,60 @@
-
-
 <div class="container pd-admin ">
-  <div class="pd-bd-admin box-shadow-1 text-white bg-child-admin">
-    <h1>Category</h1>
-<div>
-     
-    <div class="d-flex my-2 align-items-center justify-content-between">
-      <a href="category/bin" class="a-none btn btn-dark-custom">
-          <i class="fas fa-trash"></i> Thùng rác 
+  <div class="pd-bd-admin box-shadow-1 text-dark bg-child-admin">
+    <h3 class="text-center fw-bold">Danh mục</h3>
+    <div>
+      <div class="d-flex my-2 align-items-center justify-content-between">
+        <a href="category/bin" class="a-none btn bg-gradient-primary text-white">
+          <i class="fas fa-trash"></i> Thùng rác
           {{#if numTrash}}
           ({{numTrash}})
           {{else}}
-          (0) 
+          (0)
           {{/if}}
-      </a>
-      <div class="d-flex gap-3"> 
-      <span class="d-flex align-items-center gap-2">
-      <input class="form-check-input" type="checkbox" value="" id="chkCheckAll"> <span>SelectAll</span> 
-      </span>
-      <button type="button" class="btn btn-danger" id="btn_Remove_Many"  data-bs-toggle="modal" data-bs-target="#ModalDeleteMany"disabled>
-          Xoá các mục được chọn
-      </button>
+        </a>
       </div>
-    </div>
-    
-  <form method="POST" name="removeManyCategory" action="removeManyCategory?_method=DELETE" >
-  <div id='appendListCategory'>
-  
-    {{#if data}}
-        <table class="table table-success table-text-form table-striped my-3 align-middle text-center ">
-           <tr>
-              <th class="">STT</th>
-              <th class="">Tên Category</th>
-              <th class="">Hình ảnh</th>
-              <th class=""></th>
-              <th class="">Thao tác</th> 
-            </tr>
-      {{#each data}}
-
+        <div id='appendListCategory'>
+          {{#if data}}
+          <table id="table_Category" class="table table-text-form-40 table-striped my-3 align-middle text-center ">
+            <thead>
+              <tr>
+                <th class="">STT</th>
+                <th class="">Tên danh mục</th>
+                <th class="">Hình ảnh</th>
+                <th class="">Thao tác</th>
+              </tr>
+            </thead>
+            {{#each data}}
             <tr>
               <td class="">{{inc @index}}</td>
               <td class="">{{nameCategory}}</td>
-              <td class=""><img src="/uploads/{{this.imageCategory}}" alt=""></td>
-              <td class=""> <input class="form-check-input" type="checkbox" value="{{this._id}}" name="select_Category[]"></td>
+              <td class="image-table-product"><img class="" src="/uploads/{{this.imageCategory}}" alt=""></td>
               <td class="">
-                    <div class="btn btn-dark-custom my-2" data-bs-toggle="modal" data-bs-target="#ModalDelete" data-id="{{this._id}}">Xoá</div>
-                    <button class="btn btn-blue-custom my-2 btn_edit_category" type="button" value="{{this._id}}">Sửa</button>
-              </td> 
+                <div class="btn btn-dark-custom my-2 mx-2" data-bs-toggle="modal" data-bs-target="#ModalDelete"
+                  data-id="{{this._id}}">Xóa</div>
+                <button class="btn btn-blue-custom my-2 btn_edit_category" type="button"
+                  value="{{this._id}}">Sửa</i></button>
+              </td>
             </tr>
-
-
-      {{/each}}
-      </table>
-      {{else}}
-           {{>empty}}
-    {{/if}}
+            {{/each}}
+          </table>
+          {{else}}
+            {{>empty}}
+          {{/if}}
+        </div>
+      <form method="POST" action="storeCategory" enctype="multipart/form-data">
+        <div id="appendLineAddCategory">
+        </div>
+        <div class="btn bg-gradient-primary mb-3 w-100 fw-bold text-white fs-4 my-3" id="btn_ThemLine_Category">
+          +
+        </div>
+        <div class="d-flex flex-row-reverse">
+          <button type="submit" id="btn_submit_Category" class="btn bg-gradient-primary" disabled>Thêm</button>
+        </div>
+      </form>
+    </div>
+    <form name="removeItemCategory" method="POST"></form>
   </div>
-  </form>
-  <form method="POST" action="storeCategory" enctype="multipart/form-data">
-  <div id="appendLineAddCategory">
-      
-  </div>
-  
-  <div class="btn btn-success mb-3 w-100 fw-bold fs-4" id="btn_ThemLine_Category">
-      +
-  </div>
-  <div class="d-flex flex-row-reverse">
-  <button type="submit" id="btn_submit_Category" class="btn btn-primary" disabled>Lưu</button>
-  </div>
-  </form>
 </div>
-
-<form name="removeItemCategory" method="POST" ></form>
-</div>
-</div>
-
 <div class="modal fade" id="ModalDelete" tabindex="-1" aria-labelledby="TitleModalDelete" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -88,150 +68,60 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Huỷ bỏ</button>
-        <button type="button" class="btn btn-danger del-category" >Xoá </button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="modal fade" id="ModalDeleteMany" tabindex="-1" aria-labelledby="TitleModalDeleteMany" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title text-danger" id="TitleModalDeleteMany">Thông báo</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        Bạn muốn xoá những file này ?
-        <div class="fs-normal text-danger"> (Các dữ liệu con bên trong sẽ biến mất.)</div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Huỷ bỏ</button>
-        <button type="button" class="btn btn-danger del-many-category" >Xoá Tất Cả</button>
+        <button type="button" class="btn btn-danger del-category">Xoá </button>
       </div>
     </div>
   </div>
 </div>
 <form name="frmCategoryEdit" method="GET"></form>
 <script>
-  document.addEventListener('DOMContentLoaded',function(){
-      
-      
-      // Khai báo biến
-      //Button
-      var btnThemLine = $('#btn_ThemLine_Category')
-       var btn_Remove_Many = $('#btn_Remove_Many')
-      var btnSubmit =$('#btn_submit_Category');
-      //element
-      var element_line_category = $('#appendLineAddCategory');
-       //checkbox
-       var CategoryItemcheckbox = $('input[name="select_Category[]"]');
-       var chkCheckAll = $('#chkCheckAll');
-      var checkboxName = 'select_Category[]';
-      //Modal
-      var ModalDelete = document.getElementById('ModalDelete');
-      var ModalDeleteMany = document.getElementById('ModalDeleteMany');
-      //forms
-      var formRemoveItemCategory = document.forms['removeItemCategory'];
-      var removeManyCategory = document.forms['removeManyCategory'];
-      var storeCategory = document.forms['storeCategory'];
-      var btn_edit_category = $('.btn_edit_category');
-      var frmCategoryEdit = document.forms['frmCategoryEdit'];
-      //Bien cuc bo
-      var countElemet = 0;
-      var name ='nameCategory';
-      var image ='imageCategory';
-
-    
-      btnSubmit.on('click',function(e){
-        /*
-        e.preventDefault();
-        var array = [];
-        var arrayIcon = [];
-        var inputName = document.querySelectorAll(`div#appendLineAddCategory input[name="${name}"]`);
-         var inputicon = document.querySelectorAll(`div#appendLineAddCategory input[name="${image}"]`);
-        for (let i = 0; i < inputName.length; i++) {
-          array.push(inputName[i].value);
-          arrayIcon.push(inputicon[i].value)
-        }
-
-        axios.post('storeCategory', {
-          nameCategory:array,
-          imageCategory:arrayIcon,
-        })
-        .then(function (response) {
-          var kq = response.data;
-          console.log(kq);
-
-          
-          if(kq.kq===0){
-            var nameTrung=kq.dataErr;
-            var arrayNameTrung =[];
-             nameTrung.forEach(element=>{
-               arrayNameTrung.push(element.nameCategory);
-             })
-            alert(`Category Name : ${arrayNameTrung} đã có trong hệ thống`)
-          }else{
-              //location.reload();
-          }
-          
-        })
-        .catch(function (error) {
-          console.log(error);
-        }); 
-        */
-      })
-        btnThemLine.on('click',function(){
-          countElemet++;
-          element_line_category.append(renderCategroy(countElemet,name,image))
-          var btn_of_line = $(`.btn-remove-Categroy-line-${countElemet}`); //btn đỏ của từng dòng
-          var parent_btn_of_line = $(`.number-element-${countElemet}`);  //div cha của btn đỏ
-          var elementChildNodeAppendLine =element_line_category.children().length; //đếm length các phẩn tử con của id "appendLineAddCategory"
-          toggleDisabledWithLength(elementChildNodeAppendLine,btnSubmit);  //Vô hiệu hoá btn Lưu khi ấn nút thêm line xanh lá
-          btn_of_line.on('click',function(){
-              parent_btn_of_line.remove();
-              //Vô hiệu hoá btn Lưu khi ấn nút xoá line đỏ
-              var elementChildNodeAppendLine =element_line_category.children().length;
-              toggleDisabledWithLength(elementChildNodeAppendLine,btnSubmit);
+  document.addEventListener('DOMContentLoaded', function () {
+    // Khai báo biến
+    var btnThemLine = $('#btn_ThemLine_Category');
+    var btnSubmit = $('#btn_submit_Category');
+    var btn_edit_category = $('.btn_edit_category');
+    var element_line_category = $('#appendLineAddCategory');
+    var ModalDelete = document.getElementById('ModalDelete');
+    var formRemoveItemCategory = document.forms['removeItemCategory'];
+    var storeCategory = document.forms['storeCategory'];
+    var frmCategoryEdit = document.forms['frmCategoryEdit'];
+    var name = 'nameCategory';
+    var image = 'imageCategory';
+    btnThemLine.on('click', function () {
+      element_line_category.append(renderCategroy(name, image))
+      var btn_of_line = $(`.btn-remove-Categroy`); //btn đỏ của từng dòng
+      var elementChildNodeAppendLine = element_line_category.children().length; //đếm length các phẩn tử con của id "appendLineAddCategory"
+      toggleDisabledWithLength(elementChildNodeAppendLine, btnSubmit);  //Vô hiệu hoá btn Lưu khi ấn nút thêm line xanh lá
+       btn_of_line.each(function (){
+          $(this).on("click",function () {
+            $(this).parent().remove();
+            var elementChildNodeAppendLine = element_line_category.children().length;
+            toggleDisabledWithLength(elementChildNodeAppendLine, btnSubmit);
           })
-        })
-          //Show Modal Delete
-          ModalDelete.addEventListener('show.bs.modal', function (event) {
-            // Button that triggered the modal  
-             
-             var button = event.relatedTarget;
-              var idCategory = button.getAttribute('data-id')
-            // Extract info from data-bs-* attributes
-              var delCategory=document.querySelector('.del-category');
-         
-              delCategory.onclick =function(){
-                formRemoveItemCategory.action =`removeCategory/${idCategory}?_method=DELETE`;
-                formRemoveItemCategory.submit();
-              }
-            })
-            //Show Modal DeleteMany
-             ModalDeleteMany.addEventListener('show.bs.modal', function (event) {
-            // Button that triggered the modal  
-             var button = event.relatedTarget;
-               var delCategory=document.querySelector('.del-many-category');
-              delCategory.onclick =function(){
-                removeManyCategory.action =`removeManyCategory?_method=DELETE`;
-                removeManyCategory.submit();
-              }
-            })
+      })
+    })
+    //Show Modal Delete
+    ModalDelete.addEventListener('show.bs.modal', function (event) {
+      // Button that triggered the modal  
+      var button = event.relatedTarget;
+      var idCategory = button.getAttribute('data-id')
+      // Extract info from data-bs-* attributes
+      var delCategory = document.querySelector('.del-category');
+      delCategory.onclick = function () {
+        formRemoveItemCategory.action = `removeCategory/${idCategory}?_method=DELETE`;
+        formRemoveItemCategory.submit();
+      }
+    })
+    btn_edit_category.on('click', function () {
+      var id = $(this).val();
+      frmCategoryEdit.action = `category/edit/${id}`;
+      frmCategoryEdit.submit();
+    })
+    var table_Category = $("#table_Category");
+    table_Category.DataTable({
+      "lengthMenu": [[10, -1], [10, "Tất cả"]]
+    });
 
-            btn_edit_category.on('click',function(e){
-              var id = e.target.value;
-                frmCategoryEdit.action = `category/edit/${id}`;
-                frmCategoryEdit.submit();
-            })
-            //Checkbox Valdation
-            checkboxValidation(chkCheckAll,checkboxName,CategoryItemcheckbox,btn_Remove_Many);
-             
-     
-
-    
-})
+  })
 
 </script>
-

@@ -1,0 +1,125 @@
+<div class="pd-header">
+    <div class="container-fluid">
+        <div class="row">
+            <form action="/getOrder">
+                <div class="d-flex justify-content-center mt-5">
+                    <div class="col-6 d-flex">
+                        <input type="text" name="id" class="form-control d-inline border-radius-none"
+                            placeholder="Nhập mã đơn hàng">
+                        <button class="btn bg-gradient-primary w-50 border-radius-none text-white">Theo dõi đơn
+                            hàng</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="row mt-3">
+            <div class="d-flex justify-content-center my-5">
+                {{#with data}}
+                <div class="col-6 p-4 rounded box-details-order">
+
+                    <h3 class="text-center fw-bold">Chi tiết đơn hàng</h3>
+                    <div>
+
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <div class="my-2">
+                                    <span class="fw-bold">Mã đơn hàng: </span>{{idOrder}}
+                                </div>
+                                <div class="my-2">
+                                    Trạng thái: {{statusOrder}}
+                                </div>
+                                <div class="my-2">
+                                    Ngày đặt: {{formatDate createdAt}}
+                                </div>
+                            </div>
+                            <div>
+                                <div class="my-2">
+                                    Khách Hàng: {{hotenOrder}}
+                                </div>
+                                <div class="my-2">
+                                    SĐT: {{sdtOrder}}
+                                </div>
+                                <div class="my-2">
+                                    Địa chỉ: {{addressOrder}}
+                                </div>
+                            </div>
+                        </div>
+                        {{/with}}
+                        <div id='appendListCategory'>
+                            {{#if cartProduct}}
+                            <h5>Giỏ hàng</h5>
+                            <div class="line_bottom"></div>
+                            <table class="table table-striped my-3 align-middle text-center table-text-form">
+                                <tr>
+                                    <th class="">STT</th>
+                                    <th class="">tên sản phẩm</th>
+                                    <th class="">số lượng</th>
+                                    <th class="">Size</th>
+                                    <th class="">Giá sản phẩm</th>
+                                    <th class="">Ghi chú</th>
+                                    <th>Tổng giá</th>
+                                </tr>
+                                {{#each cartProduct}}
+
+                                <tr>
+                                    <td class="">{{inc @index}}</td>
+                                    <td class="">{{this.name_product}}</td>
+                                    <td class="">{{this.quanityProduct}}</td>
+                                    <td>{{this.sizeName}}(+{{this.sizePrice}})</td>
+                                    <td>{{formatNum this.currentPriceProduct}}</td>
+                                    <td>{{this.note}}</td>
+                                    <td>{{formatNum this.priceTotal}}</td>
+
+                                </tr> 
+
+                                {{/each}}
+                            </table>
+                            {{else}}
+                            <div class="col-12 p-4 rounded text-center">
+                                <div>{{msg}}</div>
+                                <img class="img-getOrder"
+                                    src="https://image.freepik.com/free-vector/design-thinking-concept-illustration_114360-3330.jpg"
+                                    alt="">
+                            </div>
+                            {{/if}}
+
+                            {{#with data}}
+                            <div class="d-flex justify-content-between my-2">
+                                <div>
+                                    Khuyễn mãi:
+                                </div>
+                                <div>
+                                    {{#if this.nameCounpon}}
+                                        ({{this.nameCoupon}})
+                                    {{/if}}
+                                    {{formatNum this.priceCoupon}}
+                                </div>
+
+                            </div>
+                            <div class="d-flex justify-content-between my-2">
+                                <div>
+                                    Phí ship:
+                                </div>
+                                <div>
+                                    {{formatNum this.priceCharge}}
+                                </div>
+
+                            </div>
+                            <div class="d-flex justify-content-between my-2">
+                                <div class="color-primary fs-5 fw-bold">
+                                    Thành Tiền:
+                                    <div class="line_bottom"></div>
+                                </div>
+                                <div class="color-primary fs-5 fw-bold">
+                                    {{formatNum this.priceTotal}}
+                                </div>
+                            </div>
+                            {{/with}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

@@ -6,13 +6,16 @@ const order = new Schema({
     
     idOrder:{type:String},
     priceTotal:{type:Number},
-    priceSale:{type:Number,default:0},
+    priceCharge:{type:Number,default:0},
     noteOrder:{type:String},
-    statusOrder:{type:String}, //pending: chờ duyệt , //in progess đã duyệt (đang làm,đang giao) //Done: Hoàn tất //Cancel
+    statusOrder:{type:String,default:"inprogress"},  //in progess:đang xử lý  //Done: Hoàn tất thành công //Cancel: Hoàn tất hủy bỏ
     addressOrder:{type:String},
     hotenOrder:{type:String},
     sdtOrder:{type:String},
     listProductCart:{type:Array},
+    priceCoupon:{type:Number,default:0},
+    nameCoupon:{type:String},
+    payment:{type:String},
 },{
     timestamps:true,
 })
