@@ -1,0 +1,224 @@
+[{
+  "_id": {
+    "$oid": "61c185e04daf08de0331181a"
+  },
+  "nameCategory": "thưởng thức tại nhà ",
+  "imageCategory": "1640072672665-1634628507828-FOODHOME.png",
+  "listProduct": [
+    {
+      "$oid": "61c194ef19313ace166f9062"
+    },
+    {
+      "$oid": "61c1951119313ace166f9068"
+    }
+  ],
+  "slug": "thuong-thuc-tai-nha-",
+  "deleted": false,
+  "__v": 0,
+  "createdAt": {
+    "$date": "2021-12-21T07:44:32.725Z"
+  },
+  "updatedAt": {
+    "$date": "2021-12-21T08:49:22.051Z"
+  }
+},{
+  "_id": {
+    "$oid": "61c185e04daf08de03311817"
+  },
+  "nameCategory": "cà phê",
+  "imageCategory": "1640072672657-1634628507821-COFFE.png",
+  "listProduct": [
+    {
+      "$oid": "61c1882e527c12297e7521dc"
+    },
+    {
+      "$oid": "61c1884e527c12297e7521e2"
+    },
+    {
+      "$oid": "61c18893527c12297e7521e8"
+    },
+    {
+      "$oid": "61c188c5527c12297e7521ee"
+    },
+    {
+      "$oid": "61c18913527c12297e7521f4"
+    },
+    {
+      "$oid": "61c18943527c12297e7521fa"
+    },
+    {
+      "$oid": "61c18982527c12297e752200"
+    },
+    {
+      "$oid": "61c189b5527c12297e752206"
+    },
+    {
+      "$oid": "61c189f3527c12297e75220c"
+    },
+    {
+      "$oid": "61c18a1c527c12297e752212"
+    },
+    {
+      "$oid": "61c18a40527c12297e752218"
+    },
+    {
+      "$oid": "61c18a70527c12297e75221e"
+    },
+    {
+      "$oid": "61c18b13527c12297e752224"
+    },
+    {
+      "$oid": "61c18b84527c12297e75222a"
+    },
+    {
+      "$oid": "61c18baa527c12297e752230"
+    },
+    {
+      "$oid": "61c18bdc527c12297e752236"
+    },
+    {
+      "$oid": "61c18c10527c12297e75223c"
+    }
+  ],
+  "slug": "ca-phe",
+  "deleted": false,
+  "__v": 0,
+  "createdAt": {
+    "$date": "2021-12-21T07:44:32.712Z"
+  },
+  "updatedAt": {
+    "$date": "2021-12-21T08:10:56.470Z"
+  }
+},{
+  "_id": {
+    "$oid": "61c185e04daf08de03311819"
+  },
+  "nameCategory": "đá xay",
+  "imageCategory": "1640072672664-1634628507827-DAXAY.png",
+  "listProduct": [
+    {
+      "$oid": "61c192a119313ace166f9018"
+    },
+    {
+      "$oid": "61c192dd19313ace166f901e"
+    },
+    {
+      "$oid": "61c1935219313ace166f9024"
+    },
+    {
+      "$oid": "61c1937719313ace166f902a"
+    },
+    {
+      "$oid": "61c1939b19313ace166f9030"
+    },
+    {
+      "$oid": "61c193b619313ace166f9036"
+    },
+    {
+      "$oid": "61c193d319313ace166f903c"
+    },
+    {
+      "$oid": "61c193ec19313ace166f9042"
+    },
+    {
+      "$oid": "61c1940119313ace166f9048"
+    },
+    {
+      "$oid": "61c1942419313ace166f904e"
+    },
+    {
+      "$oid": "61c1943e19313ace166f9054"
+    },
+    {
+      "$oid": "61c1945619313ace166f905a"
+    }
+  ],
+  "slug": "da-xay",
+  "deleted": false,
+  "__v": 0,
+  "createdAt": {
+    "$date": "2021-12-21T07:44:32.715Z"
+  },
+  "updatedAt": {
+    "$date": "2021-12-21T08:46:14.987Z"
+  }
+},{
+  "_id": {
+    "$oid": "61c185e04daf08de0331181b"
+  },
+  "nameCategory": "bánh ngọt",
+  "imageCategory": "1640072672666-1634628507831-BANHNGOT.png",
+  "listProduct": [
+    {
+      "$oid": "61c1955c19313ace166f906e"
+    },
+    {
+      "$oid": "61c1957c19313ace166f9074"
+    },
+    {
+      "$oid": "61c1959c19313ace166f907a"
+    }
+  ],
+  "slug": "banh-ngot",
+  "deleted": false,
+  "__v": 0,
+  "createdAt": {
+    "$date": "2021-12-21T07:44:32.726Z"
+  },
+  "updatedAt": {
+    "$date": "2021-12-21T08:51:40.195Z"
+  }
+},{
+  "_id": {
+    "$oid": "61c185e04daf08de03311818"
+  },
+  "nameCategory": "trà",
+  "imageCategory": "1640072672663-1634628507824-TEA.png",
+  "listProduct": [
+    {
+      "$oid": "61c18faa36b92baec9db3548"
+    },
+    {
+      "$oid": "61c1903b19313ace166f8fd5"
+    },
+    {
+      "$oid": "61c190c019313ace166f8fdb"
+    },
+    {
+      "$oid": "61c190f219313ace166f8fe1"
+    },
+    {
+      "$oid": "61c1912019313ace166f8fe7"
+    },
+    {
+      "$oid": "61c1914819313ace166f8fed"
+    },
+    {
+      "$oid": "61c1918119313ace166f8ff3"
+    },
+    {
+      "$oid": "61c191c119313ace166f8ff9"
+    },
+    {
+      "$oid": "61c191e819313ace166f9000"
+    },
+    {
+      "$oid": "61c1920c19313ace166f9006"
+    },
+    {
+      "$oid": "61c1923a19313ace166f900c"
+    },
+    {
+      "$oid": "61c1926d19313ace166f9012"
+    }
+  ],
+  "slug": "tra",
+  "deleted": false,
+  "__v": 0,
+  "createdAt": {
+    "$date": "2021-12-21T07:44:32.715Z"
+  },
+  "updatedAt": {
+    "$date": "2021-12-21T08:38:05.557Z"
+  }
+}]

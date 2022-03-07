@@ -1,0 +1,34 @@
+[{
+  "_id": {
+    "$oid": "61c194ef19313ace166f9062"
+  },
+  "nameIngredient": "Cà phê",
+  "imageIngredient":"https://baoquocte.vn/stores/news_dataimages/thanhtruc/042021/10/22/in_article/gia-ca-phe-hom-nay-114.jpg?rt=20210913142628",
+  "unit":"gr",
+  "quantity":5000,
+  "expiryDate":{"$:date":"2025-12-21T07:54:22.323Z"},
+  "__v": 0,
+  "createdAt": {
+    "$date": "2021-12-21T07:44:32.725Z"
+  },
+  "updatedAt": {
+    "$date": "2021-12-21T08:49:22.051Z"
+  }
+},{
+    "_id": {
+      "$oid": "61c1951119313ace166f9068"
+    },
+    "nameIngredient": "Sữa",
+    "imageIngredient": "https://baoquocte.vn/stores/news_dataimages/thanhtruc/042021/10/22/in_article/gia-ca-phe-hom-nay-114.jpg?rt=20210913142628",
+    "unit":"ml",
+    "quantity":5000,
+    "expiryDate":{"$:date":"2025-12-21T07:54:22.323Z"},
+    "__v": 0,
+    "createdAt": {
+      "$date": "2021-12-21T07:44:32.725Z"
+    },
+    "updatedAt": {
+      "$date": "2021-12-21T08:49:22.051Z"
+    }
+  }
+]

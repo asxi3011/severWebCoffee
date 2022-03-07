@@ -1,0 +1,20 @@
+[{
+  "_id": {
+    "$oid": "61c185e04daf08de0331331a"
+  },
+  "nameRecipe": "Cà phê sữa chuẩn vị",
+  "guide": "Nấu nước và cho cà phê vào ",
+  "listIngredient":
+    {
+      "idIngredient": [{"$oid": "61c194ef19313ace166f9062"}, {"$oid": "61c1951119313ace166f9068"}],
+      "use": [50,30]
+    },
+  "__v": 0,
+  "createdAt": {
+    "$date": "2021-12-21T07:44:32.725Z"
+  },
+  "updatedAt": {
+    "$date": "2021-12-21T08:49:22.051Z"
+  }
+}
+]

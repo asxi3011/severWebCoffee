@@ -1,0 +1,76 @@
+[{
+  "_id": {
+    "$oid": "61c185e04daf08de0331181a"
+  },
+  "nameCategory": "thưởng thức tại nhà ",
+  "imageCategory": "1640072672665-1634628507828-FOODHOME.png",
+  "slug": "thuong-thuc-tai-nha-",
+  "deleted": false,
+  "__v": 0,
+  "createdAt": {
+    "$date": "2021-12-21T07:44:32.725Z"
+  },
+  "updatedAt": {
+    "$date": "2021-12-21T08:49:22.051Z"
+  }
+},{
+  "_id": {
+    "$oid": "61c185e04daf08de03311817"
+  },
+  "nameCategory": "cà phê",
+  "imageCategory": "1640072672657-1634628507821-COFFE.png",
+  "slug": "ca-phe",
+  "deleted": false,
+  "__v": 0,
+  "createdAt": {
+    "$date": "2021-12-21T07:44:32.712Z"
+  },
+  "updatedAt": {
+    "$date": "2021-12-21T08:10:56.470Z"
+  }
+},{
+  "_id": {
+    "$oid": "61c185e04daf08de03311819"
+  },
+  "nameCategory": "đá xay",
+  "imageCategory": "1640072672664-1634628507827-DAXAY.png",
+  "slug": "da-xay",
+  "deleted": false,
+  "__v": 0,
+  "createdAt": {
+    "$date": "2021-12-21T07:44:32.715Z"
+  },
+  "updatedAt": {
+    "$date": "2021-12-21T08:46:14.987Z"
+  }
+},{
+  "_id": {
+    "$oid": "61c185e04daf08de0331181b"
+  },
+  "nameCategory": "bánh ngọt",
+  "imageCategory": "1640072672666-1634628507831-BANHNGOT.png",
+  "slug": "banh-ngot",
+  "deleted": false,
+  "__v": 0,
+  "createdAt": {
+    "$date": "2021-12-21T07:44:32.726Z"
+  },
+  "updatedAt": {
+    "$date": "2021-12-21T08:51:40.195Z"
+  }
+},{
+  "_id": {
+    "$oid": "61c185e04daf08de03311818"
+  },
+  "nameCategory": "trà",
+  "imageCategory": "1640072672663-1634628507824-TEA.png",
+  "slug": "tra",
+  "deleted": false,
+  "__v": 0,
+  "createdAt": {
+    "$date": "2021-12-21T07:44:32.715Z"
+  },
+  "updatedAt": {
+    "$date": "2021-12-21T08:38:05.557Z"
+  }
+}]
