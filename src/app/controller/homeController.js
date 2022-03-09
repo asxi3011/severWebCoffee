@@ -121,7 +121,7 @@ class homeControllers{
             service: 'gmail',
             auth: {
                 user: 'dautestdau@gmail.com',
-                pass: 'khongcanai3011@'
+                pass: 'singsangsung@'
             }
         });
         var content = '';
