@@ -302,7 +302,7 @@
                     var mail = emailCus.val();
                     console.log(response.data);
                     console.log(idOrder);
-                    var socket = io("http://localhost:3030/");
+                    var socket = io("/");
                     socket.emit("don-hang-moi", response.data);
                     axios.post('/sendMail', {
                         mail: mail,

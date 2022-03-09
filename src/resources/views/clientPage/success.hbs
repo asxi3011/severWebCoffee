@@ -71,7 +71,7 @@
             var priceTotal = sessionStorage.priceTotal;
             var price_ship = sessionStorage.priceShip;
             var payment = sessionStorage.payment;
-            var socket = io("http://localhost:3030/");
+            var socket = io("/");
             socket.emit("don-hang-moi");
             axios.post('/order', {
                       noteOrder: note,
@@ -89,7 +89,7 @@
             .then(function (response) {
                     clearCart();
                     var idOrder = response.data.idOrder;
-                    var socket = io("http://localhost:3030/");
+                    var socket = io("/");
                     socket.emit("don-hang-moi",response.data);
                     axios.post('/sendMail', {
                         mail: mail,
