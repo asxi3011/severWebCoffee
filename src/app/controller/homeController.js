@@ -4,16 +4,24 @@ const Category = require('../model/category');
 const Post = require("../model/post");
 const nodemailer =  require("nodemailer");
 class homeControllers{
-    index(req,res){
+    bestseller12(req,res){
         var bestseller = "bestseller";
-        var dataPost = Post.find().lean().limit(8);
-        Promise.all([Category.find().lean(),Product.find({status:bestseller}).lean().limit(12),dataPost])
-        .then(([dataCate,dataProduct,dataPost])=>{
-
-            res.render('clientPage/home',{dataCategory:dataCate,dataProducts:dataProduct,dataPost:dataPost});
+       
+        Product.find({status:bestseller}).lean().limit(12)
+        .then(data=>{
+            res.json({status:"success",dataBestseller:data,});
         })
-        .catch(()=>{
-            res.render("partials/Somethingwrong");
+        .catch((err)=>{
+            res.json({status:"fail",err:err});
+        })
+    }
+    post8(req,res){
+        Post.find().lean().limit(8)
+        .then(dataPost=>{
+            res.json({status:"success",dataPost:dataPost});
+        })
+        .catch(err=>{
+            res.json({status:"fail",err:err});
         })
     }
     detailProduct(req,res){
@@ -25,31 +33,30 @@ class homeControllers{
                 var newsize = sizeName.map((size,index)=>{
                     return {name:size,value:sizeValue[index]};
                 })  
-                res.render('clientPage/detailProduct',{product:data,size:newsize})
+                res.json({status:"success",product:data,size:newsize})
         })
-        .catch(()=>{
-            res.render("partials/Pagenotfound");
+        .catch((err)=>{
+            res.json({status:"fail",err:err})
         })
             
     }
-    products(req,res){
+    getProductsInCategory(req,res){
        var slug = req.params.slug;
        Category.findOne({slug:slug}).lean().then(data=>{
-            var product = Product.find({$and:[
+            Product.find({$and:[
                 {idCategory:data._id},
                 {status:{$in:["ready","bestseller"]}}
             ]}).lean()
-            Promise.all([Category.find().lean(),product])
-            .then(([dataCate,dataProduct])=>{
-                res.render('clientPage/products',{dataCategory:dataCate,dataProducts:dataProduct});
+            .then(dataProduct=>{
+                res.json({status:"success",dataProducts:dataProduct});
             })
-            .catch(()=>{
-                res.render("partials/Somethingwrong");
+            .catch((err)=>{
+                res.json({status:"fail",err:err})
             })
        })
        .catch((err)=>{
-           res.render("partials/Pagenotfound")
-       })
+        res.json({status:"fail",err:err})
+        })
     }
     getProduct(req,res,next){
         var idProduct=req.query.id;
@@ -67,8 +74,6 @@ class homeControllers{
                 res.send('đã có mã này rồi,vui lòng thử lại');
            }else{
                 var addressOrder=req.body.addressOrder;
-                var hotenOrder =req.body.hotenOrder;
-                var sdtOrder =req.body.sdtOrder;
                 var noteOrder= req.body.noteOrder;
                 var hotenOrder = req.body.hotenOrder;
                 var sdtOrder = req.body.sdtOrder;
@@ -96,9 +101,9 @@ class homeControllers{
                 })
                 newOrder.save(function(err) {
                     if(err){
-                        res.json(err);
+                        res.json({status:"fail",err:err});
                     }else{
-                        res.json({idOrder:newOrder.idOrder});
+                        res.json({status:"success",idOrder:newOrder.idOrder});
                     }
                 })
                 
@@ -108,9 +113,7 @@ class homeControllers{
 
        
     }
-    cart(req,res){
-        res.render('clientPage/cart')
-    }
+   
     sendMail(req, res) {
         //Tiến hành gửi mail, nếu có gì đó bạn có thể xử lý trước khi gửi mail
         var address =req.body.address;
@@ -165,28 +168,23 @@ class homeControllers{
         }
         transporter.sendMail(mainOptions, function(err, info){
             if (err) {
-                console.log(err);
-                //req.flash('mess', 'Lỗi gửi mail: '+err); //Gửi thông báo đến người dùng
-                res.redirect('/');
+                res.json({status:"fail",err:err})
             } else {
-                console.log("Gửi thành công");
-                res.json("ok");
+                res.json({status:"success"});
             }
         });
     };
-    checkOrder(req,res){
-        res.render("clientPage/checkOrder",{msg:"Theo dõi đơn hàng của bạn bằng cách nhập mã đơn hàng vào mục phía trên."});
-    }
+    
     getOrder(req,res){
         var idOrder = req.query.id;
         Order.findOne({idOrder:idOrder}).lean()
         .then(order=>{
             var listProductCart = order.listProductCart;           
             //res.json(listProductCart);
-           res.render("clientPage/checkOrder",{data:order,cartProduct:listProductCart})
+           res.json({status:"success",data:order,cartProduct:listProductCart});
         })
-        .catch(()=>{
-            res.render("clientPage/checkOrder",{msg:"Chúng tôi không tìm thấy đơn hàng của bạn. Mã đơn hàng không hợp lệ hoặc đã hết hạn. Vui lòng kiểm tra lại mã đơn hàng bạn đã nhập."});
+        .catch((err)=>{
+           res.json({status:"fail",err:err});
         })
     }
     detailPost(req,res){
@@ -196,20 +194,31 @@ class homeControllers{
                 res.render('clientPage/detailPost',{post:data});
         })
     }
-    getAllProduct(req,res){
-        var product =Product.find({status:{$in:["ready","bestseller"]}}).lean()
-        Promise.all([Category.find().lean(),product])
-            .then(([dataCate,dataProduct])=>{
-                res.render('clientPage/allProduct',{dataCategory:dataCate,dataProducts:dataProduct});
-            })
-            .catch(()=>{
-                res.render("partials/Somethingwrong");
-            })
+    getProducts(req,res){
+        Product.find({status:{$in:["ready","bestseller"]}}).lean()
+        .then(data=>{
+            res.json({status:"success",dataProducts:data});
+        })
+        .catch((err)=>{
+            res.json({status:"fail",err:err})
+        })
     }
-    getAllPost(req,res){
+    getCategories(req,res){
+        Category.find().lean()
+        .then(data=>{
+            res.json({status:"success",dataCategories:data});
+        })
+        .catch((err)=>{
+            res.json({status:"fail",err:err})
+        });
+    }
+    getPosts(req,res){
         Post.find().lean()
         .then(data=>{
-            res.render("clientPage/allPost",{data:data});
+            res.json({status:"success",dataPosts:data});
+        })
+        .catch((err)=>{
+            res.json({status:"fail",err:err});
         })
     }
     
