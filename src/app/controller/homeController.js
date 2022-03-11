@@ -191,7 +191,7 @@ class homeControllers{
         var slug = req.params.slug;
         Post.findOne({slug:slug}).lean()
         .then(data=>{
-                res.render('clientPage/detailPost',{post:data});
+                res.json('clientPage/detailPost',{post:data});
         })
     }
     getProducts(req,res){
