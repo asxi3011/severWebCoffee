@@ -193,6 +193,9 @@ class homeControllers{
         .then(data=>{
                 res.json({status:"success",post:data});
         })
+        .catch(err=>{
+            res.json({status:"fail",err:err})
+        })
     }
     getProducts(req,res){
         Product.find({status:{$in:["ready","bestseller"]}}).lean()
