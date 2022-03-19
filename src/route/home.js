@@ -10,7 +10,7 @@ const home = require('../app/controller/homeController');
             router.post('/sendMail',cors.setHeader,home.sendMail); // gửi mail đến người dùng với các dữ kiện body : name,mail,address,priceTotal,idOrder
                                                     //(lưu ý thuộc tính idOrder(dạng chuỗi) kh phải thuộc tính _id loại ObjectId của Order).  
                                                     
-            router.post('/create_payment_url',cors.setHeader,home.create_payment_url); // API của trang web thanh toán online.
+            router.post('/create_payment_url',home.create_payment_url); // API của trang web thanh toán online.
             router.get('/getProduct',cors.setHeader,home.getProduct);  // trả về thông tin chi tiết sản phẩm với query là id
             router.get('/vnpay_return',cors.setHeader,home.vnpay_return); // API trang giao diện của trang web thanh toán online.
 
