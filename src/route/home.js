@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const cors = require("../resources/validate/api.cors");
+
 const home = require('../app/controller/homeController');
 
             //==== HIEU =======
