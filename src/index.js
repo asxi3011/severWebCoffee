@@ -9,6 +9,11 @@ const multer  = require('multer');
 const upload = multer({ dest: 'uploads/' })
 const cors = require('cors');
 const app = express();
+app.use(
+  cors({
+      origin: "*",
+  })
+);
 app.use(express.urlencoded({extended: true}))
 app.use(express.json());
 app.set('views',(path.join(__dirname,'resources/views')));
@@ -88,11 +93,7 @@ app.engine('.hbs', exphbs(
 }}
 ));
 app.use(methodOverride('_method'));
-app.use(
-  cors({
-      origin: "*",
-  })
-);
+
 app.set('view engine', '.hbs');
 route(app);
 server.listen(port, () => {
