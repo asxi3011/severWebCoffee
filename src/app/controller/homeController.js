@@ -228,13 +228,13 @@ class homeControllers{
     create_payment_url(req, res, next) {
         var ipAddr = req.headers['x-forwarded-for'] ||
             req.connection.remoteAddress ||
-            req.socket.remoteAddress ||
+            req.socket.remoteAddress || "*";
             req.connection.socket.remoteAddress;
         var dateFormat = require('dateformat');
         var vnp_HashSecret = "WZYWFWSEXFIPQFIKBBURLRHTMXPMRTZV";
         var vnp_TmnCode = "7FJPJWEL";
         var vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-        var vnp_ReturnUrl = "http://localhost:3030/vnpay_return";
+        var vnp_ReturnUrl = "http://sever-coffeehouse.herokuapp.com/vnpay_return";
         var vnp_data = "https://sandbox.vnpayment.vn/merchant_webapi/merchant.html";  
         var tmnCode = vnp_TmnCode;
         var secretKey = vnp_HashSecret;
