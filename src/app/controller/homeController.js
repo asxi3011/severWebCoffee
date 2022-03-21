@@ -228,8 +228,8 @@ class homeControllers{
     create_payment_url(req, res, next) {
         var ipAddr = req.headers['x-forwarded-for'] ||
             req.connection.remoteAddress ||
-            req.socket.remoteAddress || "*";
-            req.connection.socket.remoteAddress;
+            req.socket.remoteAddress ||
+            req.connection.socket.remoteAddress || "0.0.0.0";
         var dateFormat = require('dateformat');
         var vnp_HashSecret = "WZYWFWSEXFIPQFIKBBURLRHTMXPMRTZV";
         var vnp_TmnCode = "7FJPJWEL";
