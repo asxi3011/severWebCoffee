@@ -22,7 +22,12 @@ app.use(cookieParser())
 
 
 const server = require('http').Server(app);
-const io = require('socket.io')(server);
+const io = require('socket.io')(server,{
+    origin: "*",
+    methods: ["GET", "POST"],
+    allowedHeaders: ["my-custom-header"],
+    credentials: true
+});
 const db = require('./config/db');
 io.on('connection', (socket) => {
   socket.on('don-hang-moi',(data)=>{
