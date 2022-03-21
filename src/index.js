@@ -87,7 +87,11 @@ app.engine('.hbs', exphbs(
 }}
 ));
 app.use(methodOverride('_method'));
-
+app.use(
+  cors({
+      origin: "*",
+  })
+);
 app.set('view engine', '.hbs');
 route(app);
 server.listen(port, () => {
