@@ -14,11 +14,7 @@ app.set('views',(path.join(__dirname,'resources/views')));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cookieParser())
 
-app.all('/', function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "X-Requested-With");
-  next()
-});
+
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
 const db = require('./config/db');
@@ -91,6 +87,11 @@ app.engine('.hbs', exphbs(
 }}
 ));
 app.use(methodOverride('_method'));
+app.all('/', function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "X-Requested-With");
+  next()
+});
 app.set('view engine', '.hbs');
 route(app);
 server.listen(port, () => {
