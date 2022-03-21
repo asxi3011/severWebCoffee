@@ -6,7 +6,7 @@ const cors = require("../resources/validate/api.cors");
 function route(app){
     app.use('/manager', manager);
     app.use('/me', me);
-    app.use('/',cors.setHeader, home);
+    app.use('/', home);
   
 }
 
