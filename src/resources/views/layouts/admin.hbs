@@ -160,7 +160,7 @@
             document.cookie = "Token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
             location.reload();
         })
-        var socket = io("http://localhost:3030/");
+        var socket = io("https://sever-coffeehouse.herokuapp.com/");
         socket.on("nhan-don-hang", function () {
 
             var soluong = countOrder();
