@@ -20,7 +20,7 @@
             </div>
             <div class="col-xl-3 col-md-6">
                 <div class="card bg-warning text-white mb-4">
-                    <div class="card-body">Đơn hàng hoàn thành hôm nay
+                    <div class="card-body">Đơn hoàn thành hôm nay
                         {{#with orderDone}}
                         <div class="fw-light mt-2 fs-normal">{{this}} đơn hàng</div>
                         {{/with}}
@@ -75,6 +75,7 @@
         var dataValueChart;
         var chartToDay = getDataChart();
         chartToDay.then(reponse => {
+            console.log(reponse);
             var data = reponse.data;
             if (data != null) {
                 dataNameChart = data.map(x => { return x.name });
