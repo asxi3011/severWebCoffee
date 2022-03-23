@@ -7,7 +7,9 @@
     position: relative;
 }
 .form-login-manager{
-    width: 36%;
+    z-index: 2;
+    width: 100%;
+    max-width: 400px;
     min-height: 40vh;
     background-color: rgba(255,255,255,0.6);
     box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
@@ -16,7 +18,7 @@
 }
 .test-img{
     position: absolute;
-    z-index: 2;
+    z-index: 1;
     left: 0;
     top:10%;
     img{
@@ -25,7 +27,7 @@
 }
 .test-img-2{
     position: absolute;
-    z-index: 2;
+    z-index: 1;
     right: 0;
     top:10%;
     
@@ -44,3 +46,4 @@
     color:#e26c67;
     font-weight: bold;
 }
+

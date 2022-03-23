@@ -470,3 +470,11 @@ button.btn_action{
     100% { right: 20px; }
 }
 
+@media (max-width: 63.9375em) {
+    .pd-form-login{
+        padding: 48px !important;
+    }
+    .mb-img{
+        display:none !important;
+    }
+}

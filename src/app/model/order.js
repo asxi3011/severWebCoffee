@@ -9,6 +9,7 @@ const order = new Schema({
     priceCharge:{type:Number,default:0},
     noteOrder:{type:String},
     statusOrder:{type:String,default:"inprogress"},  //in progess:đang xử lý  //Done: Hoàn tất thành công //Cancel: Hoàn tất hủy bỏ
+    emailOrder:{type:String},
     addressOrder:{type:String},
     hotenOrder:{type:String},
     sdtOrder:{type:String},
