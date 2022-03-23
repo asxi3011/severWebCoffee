@@ -33,6 +33,7 @@ Vào trang quản lí  bằng cách đăng nhập (username: admin và password 
       - Tìm kiếm bài viết 
 4. ***Chức năng đơn hàng*** :
     - Thời gian thực so với bên phía người sử dụng.Khi khách hàng chọn đặt hàng phía bên  admin sẽ ngay lập tức nhận thấy đơn hàng mà không cần phải reload lại trang .
+    -  Với Đơn hàng mới sau khi liên lạc với khách hàng và admin sẽ xét duyệt đơn hàng thành công hay thất bại.
     - Đơn hàng sẽ luôn trong trạng thái đang chờ khi hoàn thành xác nhận , thay đổi trạng thái thì đơn hàng sẽ qua bên phía đã hoàn thành(admin lúc này chỉ xem được).
 5. ***Bên trang Dashboard*** :
     - Tổng quan :
