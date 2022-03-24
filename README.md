@@ -47,18 +47,18 @@ Vào trang quản lí  bằng cách đăng nhập (username: admin và password 
         - Đơn hàng đã hủy  
         - Biểu đồ thể hiện 3 sản phẩm bán chạy nhất trong ngày (chỉ tính các đơn ở trạng thái done). :bar_chart:
 6. ***Các API cho trang Client : ***
-        - /order : (POST) Tạo đơn hàng với các dữ kiện body  : addressOrder,hotenOrder,sdtOrder,noteOrder,payment,priceTotal,listProductOrder,priceCharge,priceCoupon,nameCoupon,statusOrder (statusOrder khởi tạo mặc định "pending"),
-        - /sendMail : (POST) gửi mail đến người dùng với các dữ kiện body  : name,mail,address,priceTotal,idOrder (lưu ý thuộc tính idOrder(dạng chuỗi) kh phải thuộc tính _id loại ObjectId của Order.                                                      
-        - /create_payment_url : (POST) API của trang web thanh toán online với dữ kiện body : address,idOrder,priceTotal,name.
-        - /getProduct : (GET) trả về thông tin chi tiết sản phẩm với query là id
-        - /getOrder : (GET) trả thông tin đơn hàng với query là id 
-        - /getProducts : (GET) trả về danh sách sản phẩm
-        - /product/:slug : (GET) trả về thông tin chi tiết sản phẩm với params là slug
-        - /getCategories : (GET) trả về danh sách danh mục
-        - /getProductsInCategory/:slug : (GET) trả về danh sách các sản phẩm của 1 category nào đó với params là slug
-        - /news : (GET) trả về danh sách tin tức
-        - /news/:slug' : (GET) trả về chi tiết tin tức với params là slug
-        - /bestseller12 : (GET) trả về danh sách 12 sản phẩm best seller của quán
-        - /post8 : (GET) trả về danh sách 8 bài viết của quán
+    - /order : (POST) Tạo đơn hàng với các dữ kiện body  : addressOrder,hotenOrder,sdtOrder,noteOrder,payment,priceTotal,listProductOrder,priceCharge,priceCoupon,nameCoupon,statusOrder (statusOrder khởi tạo mặc định "pending"),
+    - /sendMail : (POST) gửi mail đến người dùng với các dữ kiện body  : name,mail,address,priceTotal,idOrder (lưu ý thuộc tính idOrder(dạng chuỗi) kh phải thuộc tính _id loại ObjectId của Order.                                                      
+    - /create_payment_url : (POST) API của trang web thanh toán online với dữ kiện body : address,idOrder,priceTotal,name.
+    - /getProduct : (GET) trả về thông tin chi tiết sản phẩm với query là id
+    - /getOrder : (GET) trả thông tin đơn hàng với query là id 
+    - /getProducts : (GET) trả về danh sách sản phẩm
+    - /product/:slug : (GET) trả về thông tin chi tiết sản phẩm với params là slug
+    - /getCategories : (GET) trả về danh sách danh mục
+    - /getProductsInCategory/:slug : (GET) trả về danh sách các sản phẩm của 1 category nào đó với params là slug
+    - /news : (GET) trả về danh sách tin tức
+    - /news/:slug' : (GET) trả về chi tiết tin tức với params là slug
+    - /bestseller12 : (GET) trả về danh sách 12 sản phẩm best seller của quán
+    - /post8 : (GET) trả về danh sách 8 bài viết của quán
 ## Lưu ý :
  Khi có đường dẫn admin/category , chưa đăng nhập vẫn bị redirect về trang đăng nhập. (sử dụng jwt kiểm tra token)
