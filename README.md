@@ -1,10 +1,15 @@
-# Cách cài đặt   :closed_book: 
+# Cách cài đặt   :wrench:
  - Tải trực tiếp qua file .zip hoặc git clone về máy
  - Mở Visual Code chạy terminal gõ : **npm install** để cài đặt các package cần thiết
  - Chạy dòng lệnh **npm start** để khởi động sever
  - Truy cập vào đường dẫn local dưới terminal để sử dụng
 ##
 - Trang web : [https://sever-coffeehouse.herokuapp.com/manager/login](https://sever-coffeehouse.herokuapp.com/manager/login) :pushpin:
+## Sourcecode : :card_index_dividers:
+- Folder src/app : chứa các file khởi tạo model và các controller xử lý
+- Folder src/config/db : chứa file cấu hình,kết nối với databse.
+- Folder src/resources : chứa các file giao diện (sccs,handlebars)
+- Folder src/route : Định hình các tuyến đường cho trang web
 ## Hướng dẫn sử dụng ứng dụng bên Admin :clipboard: :
 Vào trang quản lí  bằng cách đăng nhập (username: admin và password :1234)
 
