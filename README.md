@@ -46,7 +46,7 @@ Vào trang quản lí  bằng cách đăng nhập (username: admin và password 
         - Đơn hàng bán được trong ngày (chỉ tính các đơn ở trạng thái done).
         - Đơn hàng đã hủy  
         - Biểu đồ thể hiện 3 sản phẩm bán chạy nhất trong ngày (chỉ tính các đơn ở trạng thái done). :bar_chart:
-6. ***Các API cho trang Client : ***
+6. ***Các API cho trang Client*** : :handshake:
     - /order : (POST) Tạo đơn hàng với các dữ kiện body  : addressOrder,hotenOrder,sdtOrder,noteOrder,payment,priceTotal,listProductOrder,priceCharge,priceCoupon,nameCoupon,statusOrder (statusOrder khởi tạo mặc định "pending"),
     - /sendMail : (POST) gửi mail đến người dùng với các dữ kiện body  : name,mail,address,priceTotal,idOrder (lưu ý thuộc tính idOrder(dạng chuỗi) kh phải thuộc tính _id loại ObjectId của Order.                                                      
     - /create_payment_url : (POST) API của trang web thanh toán online với dữ kiện body : address,idOrder,priceTotal,name.
