@@ -115,7 +115,9 @@ class homeControllers{
 
        
     }
-   
+    getHome(req,res,next){
+        res.redirect("/manager/login");
+    }
     sendMail(req, res) {
         //Tiến hành gửi mail, nếu có gì đó bạn có thể xử lý trước khi gửi mail
         var address =req.body.address;

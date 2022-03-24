@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const home = require('../app/controller/homeController');
-
+            router.get('/',home.getHome);
             //==== HIEU =======
             router.post('/order',home.storeOrder); // Tạo đơn hàng với các dữ kiện body : addressOrder,hotenOrder,sdtOrder,noteOrder,payment,priceTotal,
                                 //    listProductOrder,priceCharge,priceCoupon,nameCoupon,statusOrder (statusOrder khởi tạo mặc định "pending"),
