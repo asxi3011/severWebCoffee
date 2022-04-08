@@ -28,12 +28,8 @@ class homeControllers{
         var slug = req.params.slug;
         Product.findOne({slug:slug}).lean()
         .then(data=>{
-                var sizeName = data.Size.nameSize;
-                var sizeValue = data.Size.extraSize;
-                var newsize = sizeName.map((size,index)=>{
-                    return {name:size,value:sizeValue[index]};
-                })  
-                res.json({status:"success",product:data,size:newsize})
+               
+                res.json({status:"success",product:data})
         })
         .catch((err)=>{
             res.json({status:"fail",err:err})

@@ -244,17 +244,17 @@ class meControllers{
                 var status = req.body.status;
                 var listPriceExtra =req.body.listPriceExtra;
                 var slug = ChangeToSlug(normalization(nameProduct));
-                var arraySize = {
-                    nameSize:listSize,
-                    extraSize:listPriceExtra,
-                };
+               
+                var newsize = listSize.map((size,index)=>{
+                    return {name:size,value:listPriceExtra[index]};
+                })  
                 try {
                     Product.findByIdAndUpdate({_id:idProduct},{
                             nameProduct:nameProduct,
                             idCategory:idCategory,
                             priceStandard:PriceRoot,
                             status:status, // ready : còn hàng //out: hết hàng
-                            Size:arraySize,
+                            Size:newsize,
                             descriptionProduct:productDescription,
                             imageRepresent:req.file.filename,
                             slug:slug,
