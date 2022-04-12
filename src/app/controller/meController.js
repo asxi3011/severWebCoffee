@@ -187,7 +187,7 @@ class meControllers{
         })
     }
     storeProduct(req,res,next){
-        uploadProduct(req,res,function(err){
+        uploadProduct(req,res,async function(err){
             var idCategory =req.body.Category;
             var nameProduct =normalization(req.body.nameProduct);
             var PriceRoot =req.body.PriceRoot;
@@ -195,10 +195,13 @@ class meControllers{
             var listSize = req.body.listSize;
             var listPriceExtra =req.body.listPriceExtra;
             var slug = ChangeToSlug(normalization(nameProduct));
-            var newsize = listSize.map((size,index)=>{
+            let newsize = await listSize.map((size,index)=>{
                 return {name:size,value:listPriceExtra[index]};
-            })  
+            }) 
+            console.log(1);
+            console.log(newsize);
             try {
+
                 var newProduct = new Product({
                     nameProduct:nameProduct,
                     priceStandard:parseFloat(PriceRoot),

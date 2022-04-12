@@ -6,10 +6,7 @@ const product = new Schema({
     nameProduct:{type:String},
     priceStandard:{type:Number},
     status:{type:String,default:"ready"}, // ready : còn hàng //out: hết hàng
-    Size:{
-        nameSize:{type:Array},
-        extraSize:{type:Array},
-    },
+    Size:[],
     idCategory:{type:ObjectId},
     soLuong:{type:Number},
     descriptionProduct:{type:String},
