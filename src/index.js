@@ -6,7 +6,7 @@ const route = require('./route/index.js')
 const methodOverride = require('method-override');
 var cookieParser = require('cookie-parser')
 const multer  = require('multer');
-const upload = multer({ dest: 'uploads/' })
+const upload = multer({ dest: 'src/public/uploads/' })
 const cors = require('cors');
 const app = express();
 app.use(
