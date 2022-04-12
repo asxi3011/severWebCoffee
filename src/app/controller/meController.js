@@ -195,10 +195,9 @@ class meControllers{
             var listSize = req.body.listSize;
             var listPriceExtra =req.body.listPriceExtra;
             var slug = ChangeToSlug(normalization(nameProduct));
-            var arraySize = {
-                nameSize:listSize,
-                extraSize:listPriceExtra,
-            };
+            var newsize = listSize.map((size,index)=>{
+                return {name:size,value:listPriceExtra[index]};
+            })  
             try {
                 var newProduct = new Product({
                     nameProduct:nameProduct,
@@ -206,7 +205,7 @@ class meControllers{
                     idCategory:idCategory,
                     descriptionProduct:productDescription,
                     imageRepresent:req.file.filename,
-                    Size:arraySize,
+                    Size:newsize,
                     slug,
                 })
                 newProduct.save(function(err){
@@ -280,6 +279,7 @@ class meControllers{
                 var status = req.body.status;
                 var listPriceExtra =req.body.listPriceExtra;
                 var slug = ChangeToSlug(normalization(nameProduct));
+
                 var arraySize = {
                     nameSize:listSize,
                     extraSize:listPriceExtra,
