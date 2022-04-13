@@ -297,7 +297,7 @@ class homeControllers{
         var signed = hmac.update(new Buffer(signData, 'utf-8')).digest("hex");     
         if(secureHash === signed){
             //Kiem tra xem du lieu trong db co hop le hay khong va thong bao ket qua
-            //res.json(vnp_Params['vnp_ResponseCode]']);
+            //
             var amount = parseFloat(req.query.vnp_Amount)/100;
             var bank =req.query.vnp_BankCode;
             var numberTran =req.query.vnp_BankTranNo;
@@ -340,9 +340,9 @@ class homeControllers{
                     des:"Số tiền giao dịch",
                 },
             ]
-            res.render('clientPage/success', {code:req.query.vnp_ResponseCode,data:data})
+            res.json(vnp_Params['vnp_ResponseCode]']);
         } else{
-            res.render('success', {code: '97'})
+            res.json({status:'loi bao mat'})
         }
     };
    
