@@ -340,7 +340,7 @@ class homeControllers{
                     des:"Số tiền giao dịch",
                 },
             ]
-            res.json(vnp_Params['vnp_ResponseCode]']);
+            res.send(vnp_Params['vnp_ResponseCode]']);
         } else{
             res.json({status:'loi bao mat'})
         }
