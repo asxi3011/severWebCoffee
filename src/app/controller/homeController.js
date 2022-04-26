@@ -234,7 +234,7 @@ class homeControllers{
         var vnp_HashSecret = "WZYWFWSEXFIPQFIKBBURLRHTMXPMRTZV";
         var vnp_TmnCode = "7FJPJWEL";
         var vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-        var vnp_ReturnUrl = "http://localhost:3000/cart";
+        var vnp_ReturnUrl = "http://localhost:3000/paymentOnline";
         var vnp_data = "https://sandbox.vnpayment.vn/merchant_webapi/merchant.html";  
         var tmnCode = vnp_TmnCode;
         var secretKey = vnp_HashSecret;
@@ -298,7 +298,7 @@ class homeControllers{
         if(secureHash === signed){
             //Kiem tra xem du lieu trong db co hop le hay khong va thong bao ket qua
             //
-            var amount = parseFloat(req.query.vnp_Amount)/100;
+            var amount = parseFloat(req.query.vnp_Amount)*100;
             var bank =req.query.vnp_BankCode;
             var numberTran =req.query.vnp_BankTranNo;
             var contentTran =req.query.vnp_OrderInfo;
@@ -313,34 +313,7 @@ class homeControllers{
             console.log(month);
             let timeTran = new Date(year,month-1,day,hour,min,second,30);
             console.log(timeTran);
-            var data =[
-                {
-                    name:"Số giao dịch",
-                    value:numberTran,
-                    des:"Được cấp bởi VNPAY",
-                },
-                {
-                    name:"Ngân hàng",
-                    value:bank,
-                    des:"Ngân hàng GD",
-                },
-                {
-                    name:"Thời gian",
-                    value: dateFormat(timeTran,"default"),
-                    des:"Thời gian thực hiện giao dịch",
-                },
-                {
-                    name:"Nội dung",
-                    value:contentTran,
-                    des:"Thông tin mô tả từ website merchant",
-                },
-                {
-                    name:"Số tiền",
-                    value:amount.toLocaleString("de-DE")+" VND",
-                    des:"Số tiền giao dịch",
-                },
-            ]
-            res.send(vnp_Params['vnp_ResponseCode]']);
+         
         } else{
             res.json({status:'loi bao mat'})
         }
