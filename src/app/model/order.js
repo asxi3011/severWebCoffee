@@ -17,6 +17,7 @@ const order = new Schema({
     priceCoupon:{type:Number,default:0},
     nameCoupon:{type:String},
     payment:{type:String},
+    paid:{type:Boolean,default:false},
 },{
     timestamps:true,
 })

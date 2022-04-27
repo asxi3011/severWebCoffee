@@ -242,9 +242,8 @@ class homeControllers{
         var returnUrl = vnp_ReturnUrl;
         var date = new Date();
         var createDate = dateFormat(date, 'yyyymmddHHmmss');
-        var orderId = dateFormat(date, 'HHmmss');
-        var amount = req.body.priceTotal;
-        var bankCode = "NCB";//req.body.bankCode;
+        var orderId = req.body.orderId;
+        var amount = req.body.priceTotal *100;
         var orderInfo = "Thanh toán đơn hàng coffehouse";//req.body.orderDescription;
         var orderType = "billpayment"//req.body.orderType;
         var locale = "vn"//req.body.language;
@@ -262,7 +261,7 @@ class homeControllers{
         vnp_Params['vnp_TxnRef'] = orderId;
         vnp_Params['vnp_OrderInfo'] = orderInfo;
         vnp_Params['vnp_OrderType'] = orderType;
-        vnp_Params['vnp_Amount'] = amount*100;
+        vnp_Params['vnp_Amount'] = parseInt(amount);
         vnp_Params['vnp_ReturnUrl'] = returnUrl;
         vnp_Params['vnp_IpAddr'] = ipAddr;
         vnp_Params['vnp_CreateDate'] = createDate;
@@ -298,22 +297,17 @@ class homeControllers{
         if(secureHash === signed){
             //Kiem tra xem du lieu trong db co hop le hay khong va thong bao ket qua
             //
-            var amount = parseFloat(req.query.vnp_Amount)*100;
+            var amount = req.query.vnp_Amount;
             var bank =req.query.vnp_BankCode;
             var numberTran =req.query.vnp_BankTranNo;
             var contentTran =req.query.vnp_OrderInfo;
             var dateFormat = require('dateformat');
             var date = req.query.vnp_PayDate
-            var year = parseInt (date.substr(0,4));
-            var month = parseInt (date.substr(4,2));
-            var day = parseInt (date.substr(6,2));
-            var hour = parseInt (date.substr(8,2));
-            var min = parseInt (date.substr(10,2))
-            var second = parseInt (date.substr(12,2));
+         
             console.log(month);
             let timeTran = new Date(year,month-1,day,hour,min,second,30);
             console.log(timeTran);
-         
+            res.json(113);
         } else{
             res.json({status:'loi bao mat'})
         }
