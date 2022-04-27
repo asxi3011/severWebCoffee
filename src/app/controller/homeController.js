@@ -236,6 +236,7 @@ class homeControllers{
         var vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
         var vnp_ReturnUrl = "http://localhost:3000/paymentOnline";
         var vnp_data = "https://sandbox.vnpayment.vn/merchant_webapi/merchant.html";  
+        var bankCode = req.body.bankCode;
         var tmnCode = vnp_TmnCode;
         var secretKey = vnp_HashSecret;
         var vnpUrl = vnp_Url;
