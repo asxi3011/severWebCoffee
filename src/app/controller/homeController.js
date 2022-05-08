@@ -1,5 +1,5 @@
 const Order = require('../model/order')
-const Product = require('../model/product');
+const Products = require('../model/product');
 const Category = require('../model/category');
 const Post = require("../model/post");
 const nodemailer =  require("nodemailer");
@@ -7,7 +7,7 @@ class homeControllers{
     bestseller12(req,res){
         var bestseller = "bestseller";
        
-        Product.find({status:bestseller}).lean().limit(12)
+        Products.find({status:bestseller}).lean().limit(12)
         .then(data=>{
             res.json({status:"success",dataBestseller:data,});
         })
@@ -26,7 +26,7 @@ class homeControllers{
     }
     detailProduct(req,res){
         var slug = req.params.slug;
-        Product.findOne({slug:slug}).lean()
+        Products.findOne({slug:slug}).lean()
         .then(data=>{
                
                 res.json({status:"success",product:data})
@@ -39,7 +39,7 @@ class homeControllers{
     getProductsInCategory(req,res){
        var slug = req.params.slug;
        Category.findOne({slug:slug}).lean().then(data=>{
-            Product.find({$and:[
+            Products.find({$and:[
                 {idCategory:data._id},
                 {status:{$in:["ready","bestseller"]}}
             ]}).lean()
@@ -56,7 +56,7 @@ class homeControllers{
     }
     getProduct(req,res,next){
         var idProduct=req.query.id;
-        Product.findById({_id:idProduct}).lean()
+        Products.findById({_id:idProduct}).lean()
         .then(data=>{
             res.json(data);
         })
@@ -110,6 +110,16 @@ class homeControllers{
        })
 
        
+    }
+    paymentSuccessOrder(req,res){
+        Order.findOneAndUpdate({idOrder:req.body.idOrder},{paid:true},{new:true},function(err,data){
+            if(err){
+                res.json(err);
+            }else{
+                res.json(data);
+            }
+        })
+     
     }
     getHome(req,res,next){
         res.redirect("/manager/login");
@@ -198,7 +208,7 @@ class homeControllers{
         })
     }
     getProducts(req,res){
-        Product.find({status:{$in:["ready","bestseller"]}}).lean()
+        Products.find({status:{$in:["ready","bestseller"]}}).lean()
         .then(data=>{
             res.json({status:"success",dataProducts:data});
         })
@@ -308,12 +318,26 @@ class homeControllers{
             console.log(month);
             let timeTran = new Date(year,month-1,day,hour,min,second,30);
             console.log(timeTran);
-            res.json(113);
+    
         } else{
             res.json({status:'loi bao mat'})
         }
     };
-   
+
+    search(req,res,next){
+        let search = req.query.q.toLowerCase();
+        const news = Post.find({title:{ $regex: search, $options: 'i' }}).lean();
+        const products = Products.find({nameProduct:{ $regex: search, $options: 's' }}).lean();
+        Promise.all([news,products])
+        .then(([news,products])=>{
+            if(news.length>0 || products.length>0){
+                res.json({news:news,products:products});
+            }else{
+                res.json('save kết quả sai');
+            }
+        })
+      
+    }
 }
 function sortObject(obj) {
     var sorted = {};
