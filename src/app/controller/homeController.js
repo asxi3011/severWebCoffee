@@ -331,9 +331,9 @@ class homeControllers{
         Promise.all([news,products])
         .then(([news,products])=>{
             if(news.length>0 || products.length>0){
-                res.json({news:news,products:products});
+                res.json({hadFound:true,news:news,products:products});
             }else{
-                res.json('save kết quả sai');
+                res.json({hadFound:false});
             }
         })
       
