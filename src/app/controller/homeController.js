@@ -75,6 +75,7 @@ class homeControllers{
                 var sdtOrder = req.body.sdtOrder;
                 var payment = req.body.payment;
                 var priceTotal = req.body.priceTotal;
+                var priceAll = req.body.priceAll;
                 var listProduct = req.body.listProductOrder;
                 var priceCharge = req.body.priceCharge;
                 var priceCoupon = req.body.priceCoupon;
@@ -94,6 +95,7 @@ class homeControllers{
                     priceCoupon,
                     nameCoupon,
                     statusOrder,
+                    priceAll,
                     listProductCart:listProduct,
                     emailOrder,
                 })

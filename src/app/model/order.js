@@ -15,6 +15,7 @@ const order = new Schema({
     sdtOrder:{type:String},
     listProductCart:{type:Array},
     priceCoupon:{type:Number,default:0},
+    priceAll:{type:Number},
     nameCoupon:{type:String},
     payment:{type:String},
     paid:{type:Boolean,default:false},
