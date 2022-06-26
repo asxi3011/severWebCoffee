@@ -5,6 +5,7 @@ const Schema = mongoose.Schema;
 const order = new Schema({
     
     idOrder:{type:String},
+    idAhamove:{type:String},
     priceTotal:{type:Number},
     priceCharge:{type:Number,default:0},
     noteOrder:{type:String},
