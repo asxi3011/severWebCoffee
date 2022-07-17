@@ -3,6 +3,7 @@ const Products = require("../model/product");
 const Category = require("../model/category");
 const Post = require("../model/post");
 const nodemailer = require("nodemailer");
+
 class homeControllers {
   bestseller12(req, res) {
     var bestseller = "bestseller";
@@ -82,7 +83,7 @@ class homeControllers {
           const noteOrder = req.body.noteOrder;
           const hotenOrder = req.body.hotenOrder;
           const sdtOrder = req.body.sdtOrder;
-          const userIDOrder = req.body.userID;
+          const docID = req.body.docID;
           const payment = req.body.payment;
           const priceTotal = req.body.priceTotal;
           const priceAll = req.body.priceAll;
@@ -92,10 +93,11 @@ class homeControllers {
           const nameCoupon = req.body.nameCoupon;
           const statusOrder = req.body.statusOrder;
           const emailOrder = req.body.emailOrder;
+          console.log("LOG HERHE",docID);
           const newOrder = new Order({
             idOrder: idDonHang,
             // priceStandard:{type:Number},
-            userIDOrder,
+            docID,
             noteOrder,
             hotenOrder,
             priceCharge,
@@ -213,6 +215,20 @@ class homeControllers {
           status: "success",
           data: order,
           cartProduct: listProductCart,
+        });
+      })
+      .catch((err) => {
+        res.json({ status: "fail", err: err });
+      });
+  }
+  getOrderForUser(req, res) {
+    const phone = req.body.phone;
+    Order.find({ sdtOrder: phone })
+      .lean()
+      .then((order) => {
+        res.json({
+          status: "success",
+          data: order.map((e) => e),
         });
       })
       .catch((err) => {

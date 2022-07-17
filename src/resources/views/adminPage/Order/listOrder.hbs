@@ -34,7 +34,7 @@
                 <i class="fas fa-eye"></i>
               </button>
               <button class="btn_active {{checkStatus statusOrder}} btn_action text-success" type="button"
-                value="{{this._id}}" title="Xác nhận đơn hàng"><i class="fas fa-check"></i></button>
+                value="{{this._id}}+{{this.priceTotal}}+{{this.docID}}" title="Xác nhận đơn hàng"><i class="fas fa-check"></i></button>
             </td>
           </tr>
           {{/each}}
@@ -72,9 +72,15 @@
     var ModalDelete = document.getElementById('ModalDelete');
     var btn_details_order = $('.btn_details_order');
     var btn_active = $(".btn_active");
+    
     btn_active.each(function () {
       $(this).on("click", function (e) {
-        activeDonHang($(this).val(), "done");
+   
+        const arrString = $(this).val().split("+");
+        const id= arrString[0];
+        const price= arrString[1];
+        const docID= arrString[2];
+        activeDonHang(id, "done",price,docID);
       })
     })
     var table_order = $("#table_order");
@@ -96,10 +102,12 @@
       frmGetDetails.submit();
     })
   })
-  function activeDonHang(id, status) {
+  function activeDonHang(id, status,price,docID) {
     axios.post('/me/activeDonHang', {
       id: id,
       status: status,
+      price:price,
+      docID:docID,
     })
       .then(function (response) {
         if (response.data == 'success') {

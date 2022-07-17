@@ -2,6 +2,8 @@ const Category = require("../model/category");
 const Product = require("../model/product");
 const Order = require("../model/order");
 const Post = require("../model/post");
+const { doc, updateDoc } = require("firebase/firestore");
+const db = require("../../../Firebase/config");
 const mongoose = require("mongoose");
 const ObjectId = mongoose.Types.ObjectId;
 const multer = require("multer");
@@ -474,6 +476,8 @@ class meControllers {
   activeDonHang(req, res, next) {
     var id = req.body.id;
     var status = req.body.status;
+    var price = req.body.price;
+    var docID = req.body.docID;
     Order.findByIdAndUpdate(
       { _id: id },
       { $set: { statusOrder: status } },
@@ -481,7 +485,28 @@ class meControllers {
         if (err) {
           res.json(err);
         } else {
-          res.json("success");
+          if(docID){
+            try {
+              const action = async () => {
+                const docRef = db.collection("users").doc(docID);
+                const info = await docRef.get();
+                const scoreNow = info._fieldsProto.score.integerValue;
+                const res = await docRef.update({
+                  score: Number(scoreNow) + Math.floor(Number(price) / 10000),
+                });
+                return res;
+              };
+              console.log("RUNNNING CONG DIEM NE")
+              action();
+  
+              res.json("success");
+            } catch (e) {
+              console.log(e);
+            }
+          }else{
+            res.json("success");
+          }
+         
         }
       }
     );
