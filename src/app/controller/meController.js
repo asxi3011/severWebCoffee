@@ -580,22 +580,17 @@ class meControllers {
     })
       .lean()
       .then((data) => {
-        var listProductToday = []; // mảng chứa các sản phẩm bán ra hôm nay
         var listFinal = []; // mảng cuối cùng , mảng gửi thông tin cho người dùng
         data.forEach((order) => {
           // từng đơn hàng
           var productCart = order.listProductCart; // đơn hàng có nhiều sản phẩm trong giỏ hàng
-          productCart.forEach((element) => {
-            for (var i = 1; i <= element.quanityProduct; i++) {
-              listProductToday.push(element.name_product);
-            }
-          });
-        });
-        var listUnitProductToday = unique(listProductToday); // x lúc này chứa các mảng tên nhưng không bị trùng lặp
+          const nameProduct = productCart.map((element) => element.nameProduct);
+          
+        var listUnitProductToday = unique(nameProduct); // x lúc này chứa các mảng tên nhưng không bị trùng lặp
         listUnitProductToday.forEach((element) => {
           // hàm này đếm chuẩn xác tên sản phẩm có bao nhiêu số lượng mua
           var count = 0;
-          listProductToday.forEach((elementProduct) => {
+          nameProduct.forEach((elementProduct) => {
             if (elementProduct === element) {
               count++;
             }
@@ -603,7 +598,8 @@ class meControllers {
           listFinal.push({ name: element, quantity: count });
         });
         res.json(listFinal);
-      });
+      })
+    });
   }
   //Bài Viết
   post(req, res, next) {

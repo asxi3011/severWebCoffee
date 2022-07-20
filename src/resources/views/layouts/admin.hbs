@@ -192,6 +192,7 @@
     async function countOrder() {
         try {
             const response = await axios.get('/me/countOrderPending');
+            console.log("HERE",response)
             return response;
         } catch (error) {
             console.error(error);

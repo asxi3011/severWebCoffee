@@ -75,7 +75,6 @@
         var dataValueChart;
         var chartToDay = getDataChart();
         chartToDay.then(reponse => {
-            console.log(reponse);
             var data = reponse.data;
             if (data != null) {
                 dataNameChart = data.map(x => { return x.name });
