@@ -580,6 +580,7 @@ class meControllers {
     })
       .lean()
       .then((data) => {
+        var listProductToday=[];
         var listFinal = []; // mảng cuối cùng , mảng gửi thông tin cho người dùng
         data.forEach((order) => {
           // từng đơn hàng
@@ -595,7 +596,7 @@ class meControllers {
         listUnitProductToday.forEach((element) => {
           // hàm này đếm chuẩn xác tên sản phẩm có bao nhiêu số lượng mua
           var count = 0;
-          nameProduct.forEach((elementProduct) => {
+          listProductToday.forEach((elementProduct) => {
             if (elementProduct === element) {
               count++;
             }
