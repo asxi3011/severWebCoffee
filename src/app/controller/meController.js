@@ -586,10 +586,11 @@ class meControllers {
           // từng đơn hàng
           var productCart = order.listProductCart; // đơn hàng có nhiều sản phẩm trong giỏ hàng
           productCart.forEach((element) => {
-            for (var i = 1; i <= element.quanityProduct; i++) {
-              listProductToday.push(element.name_product);
+            for (var i = 1; i <= element.quantities; i++) {
+              listProductToday.push(element.nameProduct);
             }
           });
+          console.log("HERE",productCart);
         });
         var listUnitProductToday = unique(listProductToday); // x lúc này chứa các mảng tên nhưng không bị trùng lặp
         listUnitProductToday.forEach((element) => {
