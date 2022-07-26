@@ -1,0 +1,120 @@
+<div class="container pd-admin ">
+  <div class="pd-bd-admin box-shadow-1 text-dark bg-child-admin">
+    <h3 class="text-center fw-bold">Slider</h3>
+    <div>
+      <div class="d-flex my-2 align-items-center justify-content-between">
+     
+      </div>
+        <div id='appendListCategory'>
+          {{#if data}}
+          <table id="table_Category" class="table table-text-form-40 table-striped my-3 align-middle text-center ">
+            <thead>
+              <tr>
+                <th class="">STT</th>
+                <th class="">Tên slider</th>
+                <th class="">Hình ảnh</th>
+                <th class="">Thao tác</th>
+              </tr>
+            </thead>
+            {{#each data}}
+            <tr>
+              <td class="">{{inc @index}}</td>
+              <td class="">{{nameSlider}}</td>
+              <td class="image-table-product"><img class="" src="/uploads/{{imageSlider}}" alt=""></td>
+              <td class="">
+                <div class="btn btn-dark-custom my-2 mx-2" data-bs-toggle="modal" data-bs-target="#ModalDelete"
+                  data-id="{{this._id}}">Xóa</div>
+                <button class="btn btn-blue-custom my-2 btn_edit_category" type="button"
+                  value="{{this._id}}">Sửa</i></button>
+              </td>
+            </tr>
+            {{/each}}
+          </table>
+          {{else}}
+            {{>empty}}
+          {{/if}}
+        </div>
+      <form method="POST" action="storeSlider" enctype="multipart/form-data">
+        <div id="appendLineAddCategory">
+        </div>
+        <div class="btn bg-gradient-primary mb-3 w-100 fw-bold text-white fs-4 my-3" id="btn_ThemLine_Category">
+          +
+        </div>
+        <div class="d-flex flex-row-reverse">
+          <button type="submit" id="btn_submit_Category" class="btn bg-gradient-primary" disabled>Thêm</button>
+        </div>
+      </form>
+    </div>
+    <form name="removeItemCategory" method="POST"></form>
+  </div>
+</div>
+<div class="modal fade" id="ModalDelete" tabindex="-1" aria-labelledby="TitleModalDelete" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="TitleModalDelete">Thông báo</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Bạn muốn xoá file này ?
+        <div class="fs-normal text-danger"> (Các dữ liệu con bên trong sẽ biến mất.)</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Huỷ bỏ</button>
+        <button type="button" class="btn btn-danger del-category">Xoá </button>
+      </div>
+    </div>
+  </div>
+</div>
+<form name="frmCategoryEdit" method="GET"></form>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Khai báo biến
+    var btnThemLine = $('#btn_ThemLine_Category');
+    var btnSubmit = $('#btn_submit_Category');
+    var btn_edit_category = $('.btn_edit_category');
+    var element_line_category = $('#appendLineAddCategory');
+    var ModalDelete = document.getElementById('ModalDelete');
+    var formRemoveItemCategory = document.forms['removeItemCategory'];
+    var storeCategory = document.forms['storeCategory'];
+    var frmCategoryEdit = document.forms['frmCategoryEdit'];
+    var name = 'nameSlider';
+    var image = 'imageSlider';
+    btnThemLine.on('click', function () {
+      element_line_category.append(renderCategroy(name, image))
+      var btn_of_line = $(`.btn-remove-Categroy`); //btn đỏ của từng dòng
+      var elementChildNodeAppendLine = element_line_category.children().length; //đếm length các phẩn tử con của id "appendLineAddCategory"
+      toggleDisabledWithLength(elementChildNodeAppendLine, btnSubmit);  //Vô hiệu hoá btn Lưu khi ấn nút thêm line xanh lá
+       btn_of_line.each(function (){
+          $(this).on("click",function () {
+            $(this).parent().remove();
+            var elementChildNodeAppendLine = element_line_category.children().length;
+            toggleDisabledWithLength(elementChildNodeAppendLine, btnSubmit);
+          })
+      })
+    })
+    //Show Modal Delete
+    ModalDelete.addEventListener('show.bs.modal', function (event) {
+      // Button that triggered the modal  
+      var button = event.relatedTarget;
+      var idCategory = button.getAttribute('data-id')
+      // Extract info from data-bs-* attributes
+      var delCategory = document.querySelector('.del-category');
+      delCategory.onclick = function () {
+        formRemoveItemCategory.action = `removeSlider/${idCategory}?_method=DELETE`;
+        formRemoveItemCategory.submit();
+      }
+    })
+    btn_edit_category.on('click', function () {
+      var id = $(this).val();
+      frmCategoryEdit.action = `slider/edit/${id}`;
+      frmCategoryEdit.submit();
+    })
+    var table_Category = $("#table_Category");
+    table_Category.DataTable({
+      "lengthMenu": [[10, -1], [10, "Tất cả"]]
+    });
+
+  })
+
+</script>

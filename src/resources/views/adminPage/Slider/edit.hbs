@@ -1,0 +1,47 @@
+{{!-- {{#if data}} --}}
+<div class="container pd-admin">
+  <div class="pd-bd-admin box-shadow-1 text-dark bg-child-admin">
+    <h3 class="text-center fw-bold">Sửa Slider</h3>
+    <form method="POST" action="/me/updateSlider?_method=PUT" enctype="multipart/form-data">
+      <div class="d-flex my-2 align-items-center">
+        <a href="/me/Slider">
+          <div class="btn bg-gradient-primary text-white">
+            <i class="fas text-white fa-chevron-left"></i> Quay lại
+          </div>
+        </a>
+      </div>
+      <div class="text-dark">
+        {{#with data}}
+        <div class="my-3">
+          <div class="my-3">
+            <label class="form-label fw-bold">Tên Slider</label>
+            <input name="nameSlider" type="text" value="{{nameSlider}}" class="form-control" required>
+          </div>
+          <input name="idSlider" type="text" value="{{_id}}" hidden>
+          <input id="imgSlider" name="imageSlider" type="file" hidden>
+          <label for="imgSlider">
+            <img class="img-preview" id="previewImgCategory" src="/uploads/{{this.imageSlider}}" alt="">
+          </label>
+          <label id="fileNameCategory" for="imgSlider" class="my-3">{{this.imageSlider}}</label>
+        </div>
+        {{/with}}
+        <div class="d-flex flex-row-reverse">
+          <button type="submit" class="btn btn-success my-2">Lưu</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<script>
+  var imgSlider = document.getElementById('imgSlider');
+  var previewImgCategory = document.getElementById('previewImgCategory');
+  var fileNameCategory = document.getElementById('fileNameCategory');
+  imgSlider.onchange = evt => {
+    const [file] = imgSlider.files
+    if (file) {
+      console.log(file);
+      previewImgCategory.src = URL.createObjectURL(file);
+      fileNameCategory.innerText = file.name;
+    }
+  }
+</script>

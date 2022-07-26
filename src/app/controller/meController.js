@@ -2,6 +2,8 @@ const Category = require("../model/category");
 const Product = require("../model/product");
 const Order = require("../model/order");
 const Post = require("../model/post");
+const Slider = require("../model/slider");
+const sharp = require('sharp');
 const { doc, updateDoc } = require("firebase/firestore");
 const db = require("../../../Firebase/config");
 const mongoose = require("mongoose");
@@ -19,6 +21,8 @@ var upload = multer({
 const uploadProduct = upload.single("imageProduct");
 const uploadPost = upload.single("imagePost");
 const uploadCategory = upload.array("imageCategory");
+const uploadSlider = upload.array("imageSlider");
+const uploadSliderSingle = upload.single("imageSlider");
 const uploadCategorySingle = upload.single("imageCategory");
 class meControllers {
   // Category > Item Category > Product
@@ -115,8 +119,8 @@ class meControllers {
     uploadCategorySingle(req, res, function (err) {
       var idCategory = req.body.idCategory;
       var nameCategory = req.body.nameCategory;
-      var file = req.file.filename;
       if (req.file) {
+        var file = req.file.filename;
         Category.findByIdAndUpdate(
           { _id: idCategory },
           {
@@ -160,6 +164,112 @@ class meControllers {
             res.redirect("back");
           }
         });
+      }
+    });
+  }
+
+  //Slider
+  Slider(req, res, next) {
+    Slider.find().lean()
+      .then((data) => {
+        res.render("adminPage/Slider/home", {
+          layout: "admin",
+          data: data,
+        });
+      })
+      .catch(() => {
+        res.render("partials/Pagenotfound", { layout: "admin" });
+      });
+  }
+  storeSlider(req, res, next) {
+    uploadSlider(req, res, function (err) {
+      if (err) {
+        res.render("partials/SomeThingWrong", { err: err });
+      } else {
+        var arrayImage = req.files;
+        var arrayNameSlider= req.body.nameSlider;
+        var arraySlider = [];        
+     
+        arrayNameSlider.forEach((element, index) => {          
+          var category = new Slider({
+            nameSlider: normalization(element),
+            imageSlider: arrayImage[index].filename,
+          });
+          arraySlider.push(category);
+        });
+        Slider.insertMany(arraySlider, function (err) {
+          if (err) {
+            res.render("partials/SomeThingWrong", { err: err });
+          } else {
+            res.redirect("back");
+          }
+        });
+      }
+    });
+  }
+  editSlider(req, res, next) {
+    var id = req.params.id;
+    Slider.findById({ _id: id })
+      .lean()
+      .then((data) => {
+        res.render("adminPage/Slider/edit", {
+          layout: "admin",
+          data: data,
+        });
+      })
+      .catch(() => {
+        res.render("partials/Pagenotfound", { layout: "admin" });
+      });
+  }
+  updateSlider(req, res, next) {
+    uploadSliderSingle(req, res, function (err) {
+      var idSlider = req.body.idSlider;
+      var nameSlider = req.body.nameSlider;
+      if (req.file) {
+        var file = req.file.filename;
+        // sharp(req.file.path).resize(40, 40).toFile(req.file.filename, function(err,info) {
+        //   if (err) {
+        //       console.error('sharp>>>', err)
+        //   }
+        //   console.log('ok okoko',info)
+        // })
+        Slider.findByIdAndUpdate(
+          { _id: idSlider },
+          {
+            $set: {
+              nameSlider: normalization(nameSlider),
+              imageSlider: req.file.filename,
+            },
+          },
+          function (err) {
+            if (err) {
+              res.render("partials/SomeThingWrong", { err: err });
+            } else {
+              res.redirect("./slider");
+            }
+          }
+        );
+      } else {
+        Slider.findByIdAndUpdate(
+          { _id: idSlider },
+          { $set: { nameSlider: normalization(nameSlider) } },
+          function (err) {
+            if (err) {
+              res.render("partials/SomeThingWrong", { err: err });
+            } else {
+              res.redirect("./slider");
+            }
+          }
+        );
+      }
+    });
+  }
+  removeSilder(req, res, next) {
+    Slider.findByIdAndDelete({ _id: req.params.id }, function (err) {
+      if (err) {
+        res.render("partials/SomeThingWrong", { err: err });
+      } else {       
+            res.redirect("back");
       }
     });
   }
@@ -737,4 +847,5 @@ function unique(arr) {
   }
   return newArr;
 }
+
 module.exports = new meControllers();

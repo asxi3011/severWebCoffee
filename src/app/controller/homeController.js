@@ -3,7 +3,7 @@ const Products = require("../model/product");
 const Category = require("../model/category");
 const Post = require("../model/post");
 const nodemailer = require("nodemailer");
-
+const Slider = require("../model/slider")
 class homeControllers {
   bestseller12(req, res) {
     var bestseller = "bestseller";
@@ -121,6 +121,11 @@ class homeControllers {
           });
         }
       });
+  }
+  slider(req,res){
+    Slider.find().lean().then(data=>{
+      res.json(data);
+    })
   }
   paymentSuccessOrder(req, res) {
     Order.findOneAndUpdate(

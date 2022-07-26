@@ -17,6 +17,12 @@ router.get('/Category/edit/:id',validate.postCreate,me.editCategory);
 router.put('/updateCategory',validate.postCreate,me.updateCategory) // doi sang method put
 router.post('/storeCategory',validate.postCreate,me.storeCategory)
 router.delete('/removeCategory/:id',validate.postCreate,me.removeCategory)
+//Page slider
+router.get('/slider',validate.postCreate,me.Slider);
+router.get('/slider/edit/:id',validate.postCreate,me.editSlider);
+router.put('/updateSlider',validate.postCreate,me.updateSlider) // doi sang method put
+router.post('/storeSlider',validate.postCreate,me.storeSlider)
+router.delete('/removeSlider/:id',validate.postCreate,me.removeSilder)
 //Product
 router.get('/Product',validate.postCreate,me.Product);
 router.get('/getProducts/:id',validate.postCreate,me.getProducts); // API cho giỏ hàng lấy thông tin sản phẩm

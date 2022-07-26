@@ -22,5 +22,6 @@ router.get("/news/", home.getPosts); // trả về danh sách tin tức
 router.get("/news/:slug", home.detailPost); // trả về chi tiết tin tức với params là slug
 router.get("/bestseller12", home.bestseller12); // trả về danh sách 12 sản phẩm best seller của quán
 router.get("/post8", home.post8); // trả về danh sách 8 bài viết của quán
+router.get("/slider", home.slider); // trả về danh sách 8 bài viết của quán
 
 module.exports = router;
